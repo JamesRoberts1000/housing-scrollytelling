@@ -36,8 +36,8 @@ def run_eda(df: pd.DataFrame) -> None:
     print("Dataset shape:", df.shape)
     print("\nColumns:")
     print(df.columns.tolist())
-    print("\nMissing values (top 10):")
-    print(df.isna().sum().sort_values(ascending=False).head(10))
+    print("\nMissing values (all columns):")
+    print(df.isna().sum().sort_values(ascending=False))
     print("\nPreview:")
     print(df.head(5))
 
