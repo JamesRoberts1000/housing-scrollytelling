@@ -12,6 +12,7 @@ IDENTIFIER_COLUMNS = [
 ]
 
 SUPPRESSED_VALUES = ["[x]", "[z]", "x", "z", "-"]
+TARGET_LOCAL_AUTHORITY = "dorset"
 
 
 def required_sheet_names() -> list[str]:
@@ -81,6 +82,8 @@ def clean_housing_data(input_path: Path, output_path: Path) -> pd.DataFrame:
 
     merged_df = merged_df.drop_duplicates(subset=IDENTIFIER_COLUMNS)
     merged_df = merged_df.sort_values(by=IDENTIFIER_COLUMNS).reset_index(drop=True)
+    local_authority = merged_df["Local authority name"].astype("string").str.strip().str.lower()
+    merged_df = merged_df[local_authority == TARGET_LOCAL_AUTHORITY].reset_index(drop=True)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     merged_df.to_csv(output_path, index=False)
