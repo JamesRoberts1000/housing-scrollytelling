@@ -1,0 +1,23 @@
+<script lang="ts">
+	type Props = {
+		id: string;
+		eyebrow: string;
+		title: string;
+		body: string;
+	};
+
+	let { id, eyebrow, title, body }: Props = $props();
+</script>
+
+<section
+	{id}
+	class="border-t border-line px-5 py-20 sm:px-10 lg:px-16"
+	aria-labelledby="{`${id}-heading`}"
+>
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">{eyebrow}</p>
+	<h2 id="{`${id}-heading`}" class="mt-3 max-w-prose font-serif text-3xl text-ink sm:text-4xl">{title}</h2>
+	<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{body}</p>
+	<div class="mt-10 rounded-md border border-dashed border-line bg-white/40 p-8 text-sm text-muted">
+		Visualisation placeholder — data wiring and chart design in a later milestone.
+	</div>
+</section>
