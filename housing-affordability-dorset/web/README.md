@@ -4,16 +4,68 @@ SvelteKit + TypeScript + Tailwind front end for the Dorset MSOA housing affordab
 
 ## Prerequisites
 
-- Node 20+ and npm (or pnpm/yarn, adjusting commands accordingly).
+- **Node.js 20 or newer** and a matching **npm** (this project’s `package.json` declares `"engines": { "node": ">=20" }`).
+- SvelteKit 2 and Vite 6 will not run on legacy Node (for example Node 6).
+
+### If `npm install` fails or `node -v` shows something old (common with conda)
+
+Inside `conda activate scrollytelling`, check:
+
+```bash
+which node
+node -v
+which npm
+npm -v
+```
+
+If `node` is **below v18** (your log showed **v6.13.1**), that Node/npm pair is too old for this app and can produce errors like `ENOTDIR` in `.staging` and **no `npx`**.
+
+**Fix option A — upgrade Node inside the conda env (conda-forge):**
+
+The `nodejs` package from conda-forge **includes npm**; do not install a separate `npm` package (it often does not exist on your channels and triggers `PackagesNotFoundError`).
+
+```bash
+conda activate scrollytelling
+conda install -c conda-forge "nodejs>=20"
+hash -r
+node -v
+npm -v
+```
+
+If the solver still struggles, try pinning a minor line explicitly, for example:
+
+`conda install -c conda-forge nodejs=22`
+
+**Fix option B — use Homebrew Node for frontend work (keeps Python in conda):**
+
+```bash
+brew install node
+hash -r
+node -v
+```
+
+Then run `npm install` from `housing-affordability-dorset/web` **without** conda’s old Node earlier on your `PATH` (open a fresh terminal, or put Homebrew’s `bin` before conda’s when working on the web app).
+
+### Clean reinstall after a failed install
+
+```bash
+cd housing-affordability-dorset/web
+rm -rf node_modules package-lock.json
+npm install
+npm run sync
+npm run dev
+```
 
 ## Setup
 
 ```bash
 cd housing-affordability-dorset/web
 npm install
-npx svelte-kit sync
+npm run sync
 npm run dev
 ```
+
+(`npm run sync` runs `svelte-kit sync` so you do not need `npx` on PATH.)
 
 Open the URL printed in the terminal (usually `http://localhost:5173`).
 
