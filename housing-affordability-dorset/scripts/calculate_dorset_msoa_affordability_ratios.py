@@ -88,6 +88,7 @@ def build_dorset_msoa_affordability_ratios(
 if __name__ == "__main__":
     project_root = Path(__file__).resolve().parents[1]
     housing_input = project_root / "data" / "processed" / "medianpricepaid_latest.csv"
+    # Tracked in git: commit this workbook when you refresh pay figures.
     earnings_input = (
         project_root
         / "data"
