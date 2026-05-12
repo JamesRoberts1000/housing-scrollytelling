@@ -5,7 +5,7 @@
 	<div
 		class="pointer-events-none absolute inset-0 opacity-[0.04]"
 		aria-hidden="true"
-		style="background-image: radial-gradient(circle at 30% 20%, #1d70b8 0, transparent 55%), radial-gradient(circle at 70% 60%, #505a5f 0, transparent 50%);"
+		style="background-image: radial-gradient(circle at 30% 20%, #206095 0, transparent 55%), radial-gradient(circle at 70% 60%, #505a5f 0, transparent 50%);"
 	></div>
 	<p class="relative max-w-prose text-sm uppercase tracking-[0.18em] text-muted">
 		Interactive story · Dorset MSOAs

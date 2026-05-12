@@ -52,7 +52,7 @@
 </script>
 
 <div
-	class="pointer-events-none z-[20] w-[min(calc(100vw-2rem),268px)] rounded-sm border border-line bg-white px-3 pb-2 pt-2 opacity-70 shadow-md backdrop-blur-[2px]"
+	class="pointer-events-none z-[20] w-[min(100%,268px,calc(100vw-2rem))] rounded-bl-sm rounded-br-sm rounded-tl-sm rounded-tr-none border border-line border-r-0 border-t-0 bg-white px-3 pb-2 pt-2 opacity-70 shadow-md backdrop-blur-[2px]"
 	aria-live="polite"
 >
 	<p class="text-[13px] font-bold leading-snug text-[#222222]">

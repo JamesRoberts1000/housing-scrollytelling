@@ -8,7 +8,7 @@ export default {
 				ink: '#0b0c0c',
 				paper: '#ffffff',
 				muted: '#505a5f',
-				accent: '#1d70b8',
+				accent: '#206095',
 				line: '#b1b4b6'
 			},
 			fontFamily: {

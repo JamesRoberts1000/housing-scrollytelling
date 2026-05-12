@@ -7,10 +7,9 @@
 	type Props = {
 		ratioByMsoa: Record<string, number>;
 		msoaDistribution: MsoaRatioPoint[];
-		step?: number;
 	};
 
-	let { ratioByMsoa, msoaDistribution, step = 0 }: Props = $props();
+	let { ratioByMsoa, msoaDistribution }: Props = $props();
 
 	let container = $state<HTMLDivElement | null>(null);
 	let mapInstance: import('maplibre-gl').Map | null = null;
@@ -161,15 +160,15 @@
 							['linear'],
 							['get', 'ratio'],
 							5,
-							'rgba(238, 244, 248, 0.55)',
+							'rgba(232, 240, 246, 0.55)',
 							10,
-							'rgba(198, 212, 227, 0.62)',
+							'rgba(160, 195, 218, 0.62)',
 							14,
-							'rgba(122, 147, 171, 0.68)',
+							'rgba(90, 140, 178, 0.68)',
 							18,
-							'rgba(42, 79, 111, 0.72)',
+							'rgba(32, 96, 149, 0.72)',
 							22,
-							'rgba(15, 31, 46, 0.78)'
+							'rgba(22, 65, 102, 0.78)'
 						]
 					],
 					'fill-opacity': 1
@@ -254,16 +253,10 @@
 </script>
 
 <div class="relative flex h-full min-h-0 w-full flex-col">
-	<!-- Range strip plot; pointer-events-none so the map receives hover -->
-	<div class="pointer-events-none absolute right-3 top-3 z-[25]">
+	<!-- Range strip plot; pointer-events-none so the map receives hover; flush to map top-right -->
+	<div class="pointer-events-none absolute right-0 top-0 z-[25] flex max-w-full justify-end">
 		<AffordabilityRangePanel distribution={msoaDistribution} hovered={hovered} />
 	</div>
 
 	<div bind:this={container} class="min-h-0 w-full flex-1"></div>
-
-	<div
-		class="pointer-events-none absolute bottom-10 left-3 max-w-[min(90%,20rem)] text-xs leading-snug text-muted drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:bottom-12 lg:left-4"
-	>
-		Ratio: median price (existing stock) ÷ Dorset median full-time pay · Step {step + 1}
-	</div>
 </div>
