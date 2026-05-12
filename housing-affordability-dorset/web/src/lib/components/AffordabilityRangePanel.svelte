@@ -52,15 +52,15 @@
 </script>
 
 <div
-	class="pointer-events-none z-[20] w-[min(calc(100vw-2rem),268px)] rounded-sm border border-line bg-white px-3 pb-2 pt-2 opacity-40 shadow-md backdrop-blur-[2px]"
+	class="pointer-events-none z-[20] w-[min(calc(100vw-2rem),268px)] rounded-sm border border-line bg-white px-3 pb-2 pt-2 opacity-70 shadow-md backdrop-blur-[2px]"
 	aria-live="polite"
 >
-	<p class="text-[13px] font-bold leading-snug text-ink">
+	<p class="text-[13px] font-bold leading-snug text-[#222222]">
 		Housing affordability across Dorset
 	</p>
 
 	{#if distribution.length === 0}
-		<p class="mt-2 text-xs text-muted">No ratio data.</p>
+		<p class="mt-2 text-xs text-[#222222]">No ratio data.</p>
 	{:else}
 		<svg
 			class="mt-1 block"
@@ -124,7 +124,7 @@
 						x={tx}
 						y={stripTop + stripH + 14}
 						text-anchor="middle"
-						fill="#505a5f"
+						fill="#222222"
 						font-size="10"
 						font-family="Open Sans, Helvetica, Arial, sans-serif"
 					>
@@ -135,12 +135,12 @@
 		</svg>
 
 		{#if hovered}
-			<p class="mt-1 text-[15px] font-bold leading-tight text-ink">{hovered.name}</p>
-			<p class="mt-0.5 text-[13px] text-muted leading-snug">
-				Ratio: <span class="tabular-nums text-ink">{hovered.ratio.toFixed(2)}×</span>
+			<p class="mt-1 text-[15px] font-bold leading-tight text-[#222222]">{hovered.name}</p>
+			<p class="mt-0.5 text-[13px] leading-snug text-[#222222]">
+				Ratio: <span class="tabular-nums">{hovered.ratio.toFixed(2)}×</span>
 			</p>
 		{:else}
-			<p class="mt-1 text-[13px] leading-snug text-muted">
+			<p class="mt-1 text-[13px] leading-snug text-[#222222]">
 				Hover over an area on the map to see its position in this range.
 			</p>
 		{/if}
