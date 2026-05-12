@@ -40,23 +40,35 @@
 	});
 </script>
 
+<!--
+  ONS-style scrolly: narrative ~left third, sticky map ~right two-thirds (md+).
+  Sticky must live inside a grid item that stretches to the full row height (tall narrative column).
+  Do not put `position:sticky` and a fixed height on the same element as the grid cell — that shrinks
+  the cell to ~92vh and the map scrolls away instead of sticking.
+-->
 <div
-	class="mx-auto grid max-w-6xl gap-12 px-5 pb-24 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:px-10"
+	class="grid w-full grid-cols-1 gap-10 pb-24 pt-8 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-8 md:pb-32 lg:gap-10"
 >
-	<div bind:this={stepsRoot} class="space-y-6">
+	<div
+		bind:this={stepsRoot}
+		class="space-y-6 px-5 sm:px-8 md:max-w-xl md:justify-self-end md:px-6 lg:px-8 xl:pr-12"
+	>
 		{#each captions as caption, i (i)}
 			<article
 				data-step-index={i}
-				class="min-h-[65vh] scroll-mt-28 rounded-md border border-line bg-white/50 p-6 shadow-sm sm:p-8"
+				class="min-h-[65vh] scroll-mt-28 rounded-sm border border-line bg-white p-6 shadow-sm sm:p-8"
 			>
-				<h3 class="font-serif text-2xl text-ink">{caption.title}</h3>
+				<h3 class="text-2xl font-bold tracking-tight text-ink">{caption.title}</h3>
 				<p class="mt-4 text-base leading-relaxed text-muted">{caption.body}</p>
 			</article>
 		{/each}
 	</div>
 
-	<div class="relative lg:sticky lg:top-28 lg:h-[min(78vh,calc(100vh-8rem))]">
-		<div class="h-full min-h-[320px] overflow-hidden rounded-md border border-line bg-paper shadow-sm">
+	<!-- Outer cell stretches with the narrative row; inner panel is sticky + viewport-tall -->
+	<div class="relative w-full min-h-[min(70vh,560px)] md:min-h-0">
+		<div
+			class="min-h-[320px] w-full overflow-hidden md:sticky md:top-24 md:z-10 md:h-[min(92vh,calc(100vh-5rem))]"
+		>
 			{@render graphic(activeStep)}
 		</div>
 	</div>

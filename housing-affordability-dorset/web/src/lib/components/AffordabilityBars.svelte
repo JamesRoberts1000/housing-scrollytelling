@@ -76,7 +76,7 @@
 				bar.setAttribute('y', String(by));
 				bar.setAttribute('width', String(w));
 				bar.setAttribute('height', String(h));
-				bar.setAttribute('fill', key === 'medianRatio' ? '#2a4f6f' : '#7a93ab');
+				bar.setAttribute('fill', key === 'medianRatio' ? '#1d70b8' : '#5694ca');
 				bar.setAttribute('rx', '2');
 				xg.appendChild(bar);
 			}
@@ -109,8 +109,8 @@
 		const legend = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 		legend.setAttribute('transform', `translate(0,${innerH + 44})`);
 		const items = [
-			{ label: 'Median ratio', color: '#2a4f6f' },
-			{ label: 'Lower quartile ratio', color: '#7a93ab' }
+			{ label: 'Median ratio', color: '#1d70b8' },
+			{ label: 'Lower quartile ratio', color: '#5694ca' }
 		];
 		let lx = 0;
 		for (const item of items) {

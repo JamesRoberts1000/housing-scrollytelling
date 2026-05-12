@@ -76,22 +76,38 @@
 
 		const bounds = bboxOfFeatureCollection(geojson);
 
+		// Carto Positron "light_all": muted roads + settlement labels (OSM data). Extra desaturation via raster paint.
 		mapInstance = new maplibregl.Map({
-			attributionControl: true,
+			attributionControl: { compact: true },
 			container,
 			bounds,
 			fitBoundsOptions: { padding: 28, maxZoom: 10 },
 			style: {
 				version: 8,
-				sources: {},
+				sources: {
+					'carto-light': {
+						type: 'raster',
+						tiles: ['https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'],
+						tileSize: 256,
+						attribution:
+							'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+					}
+				},
 				layers: [
 					{
-						id: 'background',
-						type: 'background',
-						paint: { 'background-color': '#f6f4f0' }
+						id: 'basemap',
+						type: 'raster',
+						source: 'carto-light',
+						minzoom: 0,
+						maxzoom: 22,
+						paint: {
+							'raster-opacity': 0.97,
+							'raster-saturation': -0.35,
+							'raster-contrast': -0.08
+						}
 					}
 				]
-			} as any
+			} as import('maplibre-gl').StyleSpecification
 		});
 
 		mapInstance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
@@ -111,24 +127,24 @@
 					'fill-color': [
 						'case',
 						['<', ['get', 'ratio'], 0],
-						'#e3e0da',
+						'rgba(227, 224, 218, 0.65)',
 						[
 							'interpolate',
 							['linear'],
 							['get', 'ratio'],
 							5,
-							'#eef4f8',
+							'rgba(238, 244, 248, 0.55)',
 							10,
-							'#c6d4e3',
+							'rgba(198, 212, 227, 0.62)',
 							14,
-							'#7a93ab',
+							'rgba(122, 147, 171, 0.68)',
 							18,
-							'#2a4f6f',
+							'rgba(42, 79, 111, 0.72)',
 							22,
-							'#0f1f2e'
+							'rgba(15, 31, 46, 0.78)'
 						]
 					],
-					'fill-opacity': 0.92
+					'fill-opacity': 1
 				}
 			});
 
@@ -137,8 +153,9 @@
 				type: 'line',
 				source: 'msoa',
 				paint: {
-					'line-color': '#c9c2b8',
-					'line-width': 0.35
+					'line-color': '#2a2a2a',
+					'line-opacity': 0.55,
+					'line-width': ['interpolate', ['linear'], ['zoom'], 8, 0.25, 12, 0.85]
 				}
 			});
 		});
@@ -153,7 +170,9 @@
 
 <div class="relative h-full w-full">
 	<div bind:this={container} class="h-full min-h-[280px] w-full"></div>
-	<div class="pointer-events-none absolute bottom-3 left-3 rounded bg-white/90 px-3 py-2 text-xs text-muted shadow-sm">
+	<div
+		class="pointer-events-none absolute bottom-10 left-3 max-w-[min(90%,20rem)] text-xs leading-snug text-muted drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:bottom-12 lg:left-4"
+	>
 		Ratio: median price (existing stock) ÷ Dorset median full-time pay · Step {step + 1}
 	</div>
 </div>

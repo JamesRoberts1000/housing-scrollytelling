@@ -83,6 +83,12 @@ The choropleth uses `static/geo/dorset_msoa_2021.geojson`, built from ONS MSOA D
 
 To regenerate (requires network), query the ArcGIS FeatureServer used in the project tooling, or replace the file with your own GeoJSON keyed by `MSOA21CD` matching the CSV `MSOA code` column.
 
+## Basemap and typography
+
+The map uses **Carto Positron** (`light_all`) raster tiles — light grey roads and settlement labels over OpenStreetMap data, with slight desaturation in MapLibre for a calmer backdrop. Attribution appears on the map (OpenStreetMap + CARTO).
+
+Page typography uses an **Arial-first** stack similar to public ONS/GOV.UK pages. The official **GDS Transport** font is not bundled here (licence); Arial is the usual fallback. Colours follow GOV.UK-style neutrals (e.g. `#0b0c0c` text, `#1d70b8` link/accent blue).
+
 ## Build
 
 ```bash

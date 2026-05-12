@@ -4,15 +4,16 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				ink: '#1c1c1c',
-				paper: '#f6f4f0',
-				muted: '#5c5c5c',
-				accent: '#2a4f6f',
-				line: '#d9d4cc'
+				// Aligned with GOV.UK / ONS-style neutrals (Arial stack; no proprietary GDS Transport font)
+				ink: '#0b0c0c',
+				paper: '#ffffff',
+				muted: '#505a5f',
+				accent: '#1d70b8',
+				line: '#b1b4b6'
 			},
 			fontFamily: {
-				sans: ['system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-				serif: ['Georgia', 'Times New Roman', 'serif']
+				// ONS public pages typically use Arial-based sans-serif (similar to GOV.UK body text)
+				sans: ['Arial', 'Helvetica', 'Helvetica Neue', 'sans-serif']
 			}
 		}
 	},

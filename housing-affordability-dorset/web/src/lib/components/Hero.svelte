@@ -3,16 +3,16 @@
 	aria-labelledby="hero-heading"
 >
 	<div
-		class="pointer-events-none absolute inset-0 opacity-[0.07]"
+		class="pointer-events-none absolute inset-0 opacity-[0.04]"
 		aria-hidden="true"
-		style="background-image: radial-gradient(circle at 30% 20%, #2a4f6f 0, transparent 55%), radial-gradient(circle at 70% 60%, #6b6b6b 0, transparent 50%);"
+		style="background-image: radial-gradient(circle at 30% 20%, #1d70b8 0, transparent 55%), radial-gradient(circle at 70% 60%, #505a5f 0, transparent 50%);"
 	></div>
-	<p class="relative max-w-prose font-serif text-sm uppercase tracking-[0.2em] text-muted">
+	<p class="relative max-w-prose text-sm uppercase tracking-[0.18em] text-muted">
 		Interactive story · Dorset MSOAs
 	</p>
 	<h1
 		id="hero-heading"
-		class="relative max-w-[18ch] font-serif text-4xl font-semibold leading-tight text-ink sm:text-5xl lg:text-6xl"
+		class="relative max-w-[18ch] text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl lg:text-6xl"
 	>
 		Can local people still afford to buy homes in Dorset?
 	</h1>

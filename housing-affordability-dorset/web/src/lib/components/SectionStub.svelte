@@ -15,9 +15,9 @@
 	aria-labelledby="{`${id}-heading`}"
 >
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">{eyebrow}</p>
-	<h2 id="{`${id}-heading`}" class="mt-3 max-w-prose font-serif text-3xl text-ink sm:text-4xl">{title}</h2>
+	<h2 id="{`${id}-heading`}" class="mt-3 max-w-prose text-3xl font-bold tracking-tight text-ink sm:text-4xl">{title}</h2>
 	<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{body}</p>
-	<div class="mt-10 rounded-md border border-dashed border-line bg-white/40 p-8 text-sm text-muted">
+	<div class="mt-10 rounded-sm border border-dashed border-line bg-[#f3f2f1] p-8 text-sm text-muted">
 		Visualisation placeholder — data wiring and chart design in a later milestone.
 	</div>
 </section>
