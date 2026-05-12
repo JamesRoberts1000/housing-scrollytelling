@@ -97,3 +97,22 @@ export function ratioByMsoaCode(rows: MsoaRatioRow[]): Map<string, number> {
 	}
 	return m;
 }
+
+/** Points for strip-plot / range UI (existing-dwelling headline ratio). */
+export type MsoaRatioPoint = {
+	code: string;
+	name: string;
+	ratio: number;
+};
+
+export function msoaRatioDistribution(rows: MsoaRatioRow[]): MsoaRatioPoint[] {
+	return rows
+		.map((r) => {
+			const code = String(r['MSOA code'] ?? '').trim();
+			const name = String(r['MSOA name'] ?? '').trim();
+			const ratio = num(String(r[MSOA_EXISTING_MEDIAN_RATIO_COL] ?? ''));
+			return { code, name, ratio };
+		})
+		.filter((x) => x.code && Number.isFinite(x.ratio) && x.ratio > 0)
+		.sort((a, b) => a.ratio - b.ratio);
+}

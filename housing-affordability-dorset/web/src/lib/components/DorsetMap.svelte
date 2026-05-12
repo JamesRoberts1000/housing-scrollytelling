@@ -1,15 +1,20 @@
 <script lang="ts">
+	import type { MsoaRatioPoint } from '$lib/data/loadAffordabilityData';
+	import AffordabilityRangePanel from '$lib/components/AffordabilityRangePanel.svelte';
+	import type { MapLayerMouseEvent } from 'maplibre-gl';
 	import { onDestroy, onMount } from 'svelte';
 
 	type Props = {
 		ratioByMsoa: Record<string, number>;
+		msoaDistribution: MsoaRatioPoint[];
 		step?: number;
 	};
 
-	let { ratioByMsoa, step = 0 }: Props = $props();
+	let { ratioByMsoa, msoaDistribution, step = 0 }: Props = $props();
 
 	let container = $state<HTMLDivElement | null>(null);
 	let mapInstance: import('maplibre-gl').Map | null = null;
+	let hovered = $state<MsoaRatioPoint | null>(null);
 
 	function walkCoords(coords: unknown, cb: (x: number, y: number) => void): void {
 		if (Array.isArray(coords) && coords.length && typeof coords[0] === 'number') {
@@ -59,6 +64,26 @@
 		];
 	}
 
+	function parseHoverProps(props: Record<string, unknown>): MsoaRatioPoint | null {
+		const code = String(props.MSOA21CD ?? '');
+		const name = String(props.MSOA21NM ?? '');
+		let r: unknown = props.ratio;
+		if (typeof r === 'string') r = parseFloat(r);
+		if (typeof r !== 'number' || !Number.isFinite(r) || r < 0 || !code) return null;
+		return { code, name, ratio: r };
+	}
+
+	function setHoverOutlineFilter(code: string | null): void {
+		if (!mapInstance?.getLayer('msoa-hover-outline')) return;
+		if (!code) {
+			mapInstance.setFilter('msoa-hover-outline', ['==', ['get', 'MSOA21CD'], '__none__']);
+			return;
+		}
+		mapInstance.setFilter('msoa-hover-outline', ['==', ['get', 'MSOA21CD'], code]);
+	}
+
+	let teardownHover: (() => void) | null = null;
+
 	onMount(async () => {
 		if (!container) return;
 		const maplibregl = (await import('maplibre-gl')).default;
@@ -76,7 +101,6 @@
 
 		const bounds = bboxOfFeatureCollection(geojson);
 
-		// Carto Positron "light_all": muted roads + settlement labels (OSM data). Extra desaturation via raster paint.
 		mapInstance = new maplibregl.Map({
 			attributionControl: { compact: true },
 			container,
@@ -158,10 +182,63 @@
 					'line-width': ['interpolate', ['linear'], ['zoom'], 8, 0.25, 12, 0.85]
 				}
 			});
+
+			mapInstance.addLayer({
+				id: 'msoa-hover-outline',
+				type: 'line',
+				source: 'msoa',
+				paint: {
+					'line-color': '#f47738',
+					'line-width': 3,
+					'line-opacity': 1
+				},
+				filter: ['==', ['get', 'MSOA21CD'], '__none__']
+			});
+
+			const onMove = (e: MapLayerMouseEvent) => {
+				if (!mapInstance) return;
+				const f = e.features?.[0];
+				const props = f?.properties as Record<string, unknown> | undefined;
+				if (!props) {
+					hovered = null;
+					setHoverOutlineFilter(null);
+					mapInstance.getCanvas().style.cursor = '';
+					return;
+				}
+				const parsed = parseHoverProps(props);
+				if (!parsed) {
+					hovered = null;
+					setHoverOutlineFilter(null);
+					mapInstance.getCanvas().style.cursor = '';
+					return;
+				}
+				const canonical =
+					msoaDistribution.find((d) => d.code === parsed.code) ?? parsed;
+				hovered = canonical;
+				setHoverOutlineFilter(canonical.code);
+				mapInstance.getCanvas().style.cursor = 'pointer';
+			};
+
+			const onLeave = () => {
+				if (!mapInstance) return;
+				hovered = null;
+				setHoverOutlineFilter(null);
+				mapInstance.getCanvas().style.cursor = '';
+			};
+
+			mapInstance.on('mousemove', 'msoa-fill', onMove);
+			mapInstance.on('mouseleave', 'msoa-fill', onLeave);
+
+			teardownHover = () => {
+				mapInstance?.off('mousemove', 'msoa-fill', onMove);
+				mapInstance?.off('mouseleave', 'msoa-fill', onLeave);
+			};
 		});
 	});
 
 	onDestroy(() => {
+		teardownHover?.();
+		teardownHover = null;
 		mapInstance?.remove();
 		mapInstance = null;
 	});
@@ -169,7 +246,13 @@
 </script>
 
 <div class="relative h-full w-full">
+	<!-- Range strip plot (ONS-style); pointer-events-none so the map receives hover -->
+	<div class="absolute right-3 top-14 z-[25] md:right-4 md:top-16">
+		<AffordabilityRangePanel distribution={msoaDistribution} hovered={hovered} />
+	</div>
+
 	<div bind:this={container} class="h-full min-h-[280px] w-full"></div>
+
 	<div
 		class="pointer-events-none absolute bottom-10 left-3 max-w-[min(90%,20rem)] text-xs leading-snug text-muted drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:bottom-12 lg:left-4"
 	>

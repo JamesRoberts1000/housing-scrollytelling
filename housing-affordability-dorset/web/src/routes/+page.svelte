@@ -31,7 +31,7 @@
 </script>
 
 {#snippet mapGraphic(step: number)}
-	<DorsetMap ratioByMsoa={data.ratioByMsoa} {step} />
+	<DorsetMap ratioByMsoa={data.ratioByMsoa} msoaDistribution={data.msoaDistribution} {step} />
 {/snippet}
 
 <Hero />
