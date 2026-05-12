@@ -17,21 +17,26 @@
 		},
 		{
 			title: 'Internal inequality',
-			body: 'The gap between the least and most pressured MSOAs is wide. Later sections will unpack rural, coastal, and age patterns behind this map.'
+			body: 'The map now emphasises the extremes: areas in the top quarter of ratios stay vivid while the middle band fades back, so the spread between the most and least pressured neighbourhoods is easier to see at a glance.'
 		},
 		{
 			title: 'Places to watch',
-			body: 'Named areas such as St Leonards, Lyme Regis, Corfe Castle, Weymouth, and Portland will be highlighted and annotated in a later milestone.'
+			body: 'Several MSOAs anchor the Dorset story — including St Leonards, the Lyme Regis coast, Corfe Castle, Weymouth town centre, and Underhill & The Grove. Labels appear on the map while this step is active.'
 		},
 		{
 			title: 'How to read the colours',
-			body: 'Darker blues indicate higher ratios (prices further above a single pay benchmark). Use the narrative scroll to situate Dorset against national context above.'
+			body: 'Darker blues indicate higher ratios (prices further above a single pay benchmark). Hover any area to highlight it on the map and on the range strip. Scroll back to section 2 to situate Dorset against England and the South West.'
 		}
 	];
 </script>
 
-{#snippet mapGraphic(_step: number)}
-	<DorsetMap ratioByMsoa={data.ratioByMsoa} msoaDistribution={data.msoaDistribution} />
+{#snippet mapGraphic(step: number)}
+	<DorsetMap
+		ratioByMsoa={data.ratioByMsoa}
+		msoaDistribution={data.msoaDistribution}
+		msoaNameByCode={data.msoaNameByCode}
+		{step}
+	/>
 {/snippet}
 
 <Hero />
@@ -57,7 +62,7 @@
 			Zoom into Dorset
 		</h2>
 		<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-			Scroll the captions alongside the map. Active step: {activeStep + 1} of {mapCaptions.length}.
+			Scroll the captions alongside the map — the view updates to match each beat of the story.
 		</p>
 	</div>
 
