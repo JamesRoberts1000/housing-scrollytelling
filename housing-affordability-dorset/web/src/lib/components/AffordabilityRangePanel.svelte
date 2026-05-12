@@ -22,6 +22,7 @@
 	const stripTop = 6;
 	const stripH = 30;
 	const innerW = width - padding.left - padding.right;
+	const svgHeight = stripTop + stripH + padding.bottom;
 
 	let extent = $derived.by(() => {
 		const vals = distribution.map((d) => d.ratio).filter((v) => Number.isFinite(v));
@@ -63,9 +64,11 @@
 		<p class="mt-2 text-xs text-[#222222]">No ratio data.</p>
 	{:else}
 		<svg
-			class="mt-1 block"
-			width={width}
-			height={stripTop + stripH + padding.bottom}
+			class="mt-1 mx-auto block w-full max-w-full"
+			style:aspect-ratio="{width} / {svgHeight}"
+			viewBox={`0 0 ${width} ${svgHeight}`}
+			preserveAspectRatio="xMidYMid meet"
+			width="100%"
 			role="img"
 			aria-label="Distribution of affordability ratios; hover the map to highlight one MSOA."
 		>
