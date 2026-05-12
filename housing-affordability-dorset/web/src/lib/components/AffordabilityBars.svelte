@@ -21,6 +21,7 @@
 		svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
 		svg.setAttribute('role', 'img');
 		svg.setAttribute('aria-label', 'Affordability ratios for England, South West, and Dorset');
+		svg.setAttribute('font-family', 'Open Sans, Helvetica, Arial, sans-serif');
 		svg.classList.add('w-full', 'h-auto');
 
 		const innerW = width - margin.left - margin.right;

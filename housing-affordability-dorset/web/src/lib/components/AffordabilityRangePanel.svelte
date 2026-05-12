@@ -15,9 +15,12 @@
 	let { distribution, hovered }: Props = $props();
 
 	const width = 268;
-	const padding = { top: 6, right: 10, bottom: 26, left: 10 };
-	const stripTop = 38;
-	const stripH = 34;
+	/* Inner SVG padding below axis ticks (tick + label) */
+	/* bottom: room for tick marks + numeric axis labels (no clipping) */
+	const padding = { top: 4, right: 10, bottom: 24, left: 10 };
+	/* Vertically compact: small gutter above strip + shorter bar + tighter axis */
+	const stripTop = 6;
+	const stripH = 30;
 	const innerW = width - padding.left - padding.right;
 
 	let extent = $derived.by(() => {
@@ -49,21 +52,18 @@
 </script>
 
 <div
-	class="pointer-events-none z-[20] w-[min(calc(100vw-2rem),268px)] rounded-sm border border-line bg-white/95 p-3 shadow-md backdrop-blur-[2px]"
+	class="pointer-events-none z-[20] w-[min(calc(100vw-2rem),268px)] rounded-sm border border-line bg-white px-3 pb-2 pt-2 opacity-40 shadow-md backdrop-blur-[2px]"
 	aria-live="polite"
 >
 	<p class="text-[13px] font-bold leading-snug text-ink">
-		Affordability ratio across Dorset MSOAs
-	</p>
-	<p class="mt-1 text-[11px] leading-snug text-muted">
-		Median price (existing stock) ÷ Dorset median full-time pay
+		Housing affordability across Dorset
 	</p>
 
 	{#if distribution.length === 0}
-		<p class="mt-3 text-xs text-muted">No ratio data.</p>
+		<p class="mt-2 text-xs text-muted">No ratio data.</p>
 	{:else}
 		<svg
-			class="mt-2 block"
+			class="mt-1 block"
 			width={width}
 			height={stripTop + stripH + padding.bottom}
 			role="img"
@@ -116,17 +116,17 @@
 						x1={tx}
 						y1={stripTop + stripH}
 						x2={tx}
-						y2={stripTop + stripH + 5}
+						y2={stripTop + stripH + 4}
 						stroke="#505a5f"
 						stroke-width="1"
 					/>
 					<text
 						x={tx}
-						y={stripTop + stripH + 18}
+						y={stripTop + stripH + 14}
 						text-anchor="middle"
 						fill="#505a5f"
 						font-size="10"
-						font-family="Arial, Helvetica, sans-serif"
+						font-family="Open Sans, Helvetica, Arial, sans-serif"
 					>
 						{t.toFixed(1)}×
 					</text>
@@ -135,12 +135,12 @@
 		</svg>
 
 		{#if hovered}
-			<p class="mt-2 text-[15px] font-bold leading-tight text-ink">{hovered.name}</p>
-			<p class="mt-1 text-[13px] text-muted">
+			<p class="mt-1 text-[15px] font-bold leading-tight text-ink">{hovered.name}</p>
+			<p class="mt-0.5 text-[13px] text-muted leading-snug">
 				Ratio: <span class="tabular-nums text-ink">{hovered.ratio.toFixed(2)}×</span>
 			</p>
 		{:else}
-			<p class="mt-2 text-[13px] leading-snug text-muted">
+			<p class="mt-1 text-[13px] leading-snug text-muted">
 				Hover over an area on the map to see its position in this range.
 			</p>
 		{/if}

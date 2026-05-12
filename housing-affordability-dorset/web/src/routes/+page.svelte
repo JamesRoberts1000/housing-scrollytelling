@@ -38,7 +38,7 @@
 
 <section id="section-2" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="section-2-heading">
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
-	<h2 id="section-2-heading" class="mt-3 max-w-prose text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+	<h2 id="section-2-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
 		Dorset in national context
 	</h2>
 	<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
@@ -53,7 +53,7 @@
 <section id="section-3" class="overflow-visible border-t border-line py-16" aria-labelledby="section-3-heading">
 	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
 		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 3</p>
-		<h2 id="section-3-heading" class="mt-3 max-w-prose text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+		<h2 id="section-3-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
 			Zoom into Dorset
 		</h2>
 		<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">

@@ -58,8 +58,8 @@
 				data-step-index={i}
 				class="min-h-[65vh] scroll-mt-28 rounded-sm border border-line bg-white p-6 shadow-sm sm:p-8"
 			>
-				<h3 class="text-2xl font-bold tracking-tight text-ink">{caption.title}</h3>
-				<p class="mt-4 text-base leading-relaxed text-muted">{caption.body}</p>
+				<h3 class="text-[30px] font-bold leading-tight tracking-tight text-ink">{caption.title}</h3>
+				<p class="mt-4 text-[21px] leading-relaxed text-muted">{caption.body}</p>
 			</article>
 		{/each}
 	</div>

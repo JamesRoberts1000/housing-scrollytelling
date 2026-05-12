@@ -5,7 +5,7 @@
 @layer base {
 	html {
 		scroll-behavior: smooth;
-		font-family: Arial, Helvetica, 'Helvetica Neue', sans-serif;
+		font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

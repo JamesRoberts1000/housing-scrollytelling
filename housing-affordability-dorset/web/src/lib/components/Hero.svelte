@@ -12,7 +12,7 @@
 	</p>
 	<h1
 		id="hero-heading"
-		class="relative max-w-[18ch] text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl lg:text-6xl"
+		class="relative max-w-[18ch] text-[54px] font-bold leading-tight tracking-tight text-ink"
 	>
 		Can local people still afford to buy homes in Dorset?
 	</h1>

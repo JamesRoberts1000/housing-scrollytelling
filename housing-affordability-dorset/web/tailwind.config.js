@@ -4,7 +4,7 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				// Aligned with GOV.UK / ONS-style neutrals (Arial stack; no proprietary GDS Transport font)
+				// Aligned with GOV.UK / ONS-style neutrals (no proprietary GDS Transport font)
 				ink: '#0b0c0c',
 				paper: '#ffffff',
 				muted: '#505a5f',
@@ -12,8 +12,7 @@ export default {
 				line: '#b1b4b6'
 			},
 			fontFamily: {
-				// ONS public pages typically use Arial-based sans-serif (similar to GOV.UK body text)
-				sans: ['Arial', 'Helvetica', 'Helvetica Neue', 'sans-serif']
+				sans: ['Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif']
 			}
 		}
 	},

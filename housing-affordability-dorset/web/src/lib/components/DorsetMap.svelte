@@ -134,8 +134,6 @@
 			} as import('maplibre-gl').StyleSpecification
 		});
 
-		mapInstance.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
-
 		mapInstance.on('load', () => {
 			if (!mapInstance) return;
 			mapInstance.addSource('msoa', {
@@ -246,8 +244,8 @@
 </script>
 
 <div class="relative h-full w-full">
-	<!-- Range strip plot (ONS-style); pointer-events-none so the map receives hover -->
-	<div class="absolute right-3 top-14 z-[25] md:right-4 md:top-16">
+	<!-- Range strip plot; pointer-events-none so the map receives hover -->
+	<div class="absolute right-3 top-3 z-[25]">
 		<AffordabilityRangePanel distribution={msoaDistribution} hovered={hovered} />
 	</div>
 
