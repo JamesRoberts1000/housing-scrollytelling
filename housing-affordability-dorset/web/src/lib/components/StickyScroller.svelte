@@ -44,7 +44,9 @@
   ONS-style scrolly: narrative ~left third, sticky map ~right two-thirds (md+).
   Sticky must live inside a grid item that stretches to the full row height (tall narrative column).
   Do not put `position:sticky` and a fixed height on the same element as the grid cell — that shrinks
-  the cell to ~92vh and the map scrolls away instead of sticking.
+  the cell incorrectly and the map scrolls away instead of sticking.
+  Map panel uses the small viewport height (svh) and sticks flush to the viewport top so the canvas
+  can fill the visible screen (no reserved top-24 band).
 -->
 <div
 	class="grid w-full grid-cols-1 gap-10 pb-24 pt-8 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-8 md:pb-32 lg:gap-10"
@@ -64,10 +66,10 @@
 		{/each}
 	</div>
 
-	<!-- Outer cell stretches with the narrative row; inner panel is sticky + viewport-tall -->
-	<div class="relative w-full min-h-[min(70vh,560px)] md:min-h-0">
+	<!-- Outer cell stretches with the narrative row; inner panel is sticky + viewport-tall (md+) -->
+	<div class="relative w-full min-h-0 md:min-h-0">
 		<div
-			class="min-h-[320px] w-full overflow-hidden md:sticky md:top-24 md:z-10 md:h-[min(92vh,calc(100vh-5rem))]"
+			class="min-h-[320px] w-full overflow-hidden max-md:h-[100svh] md:sticky md:top-0 md:z-10 md:h-[100svh]"
 		>
 			{@render graphic(activeStep)}
 		</div>

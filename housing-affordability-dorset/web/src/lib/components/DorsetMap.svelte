@@ -83,6 +83,7 @@
 	}
 
 	let teardownHover: (() => void) | null = null;
+	let resizeObserver: ResizeObserver | null = null;
 
 	onMount(async () => {
 		if (!container) return;
@@ -133,6 +134,11 @@
 				]
 			} as import('maplibre-gl').StyleSpecification
 		});
+
+		resizeObserver = new ResizeObserver(() => {
+			mapInstance?.resize();
+		});
+		resizeObserver.observe(container);
 
 		mapInstance.on('load', () => {
 			if (!mapInstance) return;
@@ -231,10 +237,14 @@
 				mapInstance?.off('mousemove', 'msoa-fill', onMove);
 				mapInstance?.off('mouseleave', 'msoa-fill', onLeave);
 			};
+
+			queueMicrotask(() => mapInstance?.resize());
 		});
 	});
 
 	onDestroy(() => {
+		resizeObserver?.disconnect();
+		resizeObserver = null;
 		teardownHover?.();
 		teardownHover = null;
 		mapInstance?.remove();
@@ -243,13 +253,13 @@
 
 </script>
 
-<div class="relative h-full w-full">
+<div class="relative flex h-full min-h-0 w-full flex-col">
 	<!-- Range strip plot; pointer-events-none so the map receives hover -->
-	<div class="absolute right-3 top-3 z-[25]">
+	<div class="pointer-events-none absolute right-3 top-3 z-[25]">
 		<AffordabilityRangePanel distribution={msoaDistribution} hovered={hovered} />
 	</div>
 
-	<div bind:this={container} class="h-full min-h-[280px] w-full"></div>
+	<div bind:this={container} class="min-h-0 w-full flex-1"></div>
 
 	<div
 		class="pointer-events-none absolute bottom-10 left-3 max-w-[min(90%,20rem)] text-xs leading-snug text-muted drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] sm:bottom-12 lg:left-4"
