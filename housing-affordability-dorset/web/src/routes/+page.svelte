@@ -49,10 +49,17 @@
 	];
 </script>
 
-{#snippet barsGraphic(_step: number)}
+{#snippet section2Intro()}
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
+	<h2 id="section-2-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+		Dorset in context
+	</h2>
+{/snippet}
+
+{#snippet barsGraphic(step: number)}
 	<div class="flex h-full min-h-0 w-full items-center justify-center px-5 py-8 sm:px-8">
 		<div class="w-full max-w-4xl">
-			<AffordabilityBars data={data.bars} />
+			<AffordabilityBars data={data.bars} {step} />
 		</div>
 	</div>
 {/snippet}
@@ -69,16 +76,14 @@
 <Hero />
 
 <section id="section-2" class="overflow-visible border-t border-line py-16" aria-labelledby="section-2-heading">
-	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
-		<h2 id="section-2-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			Dorset in context
-		</h2>
-	</div>
-
-	<div class="mt-12">
-		<StickyScroller captions={barsCaptions} graphic={barsGraphic} bind:activeStep={barsActiveStep} />
-	</div>
+	<StickyScroller
+		captions={barsCaptions}
+		graphic={barsGraphic}
+		intro={section2Intro}
+		bind:activeStep={barsActiveStep}
+		compactGraphic
+		compactSteps
+	/>
 </section>
 
 <section id="section-3" class="overflow-visible border-t border-line py-16" aria-labelledby="section-3-heading">
