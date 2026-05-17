@@ -2,9 +2,13 @@
 	import type { Snippet } from 'svelte';
 
 	type Caption = {
-		title: string;
-		body: string;
+		title?: string;
+		body: string | string[];
 	};
+
+	function bodyParagraphs(body: string | string[]): string[] {
+		return Array.isArray(body) ? body : [body];
+	}
 
 	type Props = {
 		captions: Caption[];
@@ -60,8 +64,18 @@
 				data-step-index={i}
 				class="min-h-[65vh] scroll-mt-28 rounded-sm border border-line bg-white p-6 shadow-sm sm:p-8"
 			>
-				<h3 class="text-[30px] font-bold leading-tight tracking-tight text-ink">{caption.title}</h3>
-				<p class="mt-4 text-[21px] leading-relaxed text-muted">{caption.body}</p>
+				{#if caption.title}
+					<h3 class="text-[30px] font-bold leading-tight tracking-tight text-ink">{caption.title}</h3>
+				{/if}
+				{#each bodyParagraphs(caption.body) as para, j (j)}
+					<p
+						class="text-[21px] leading-relaxed text-muted"
+						class:mt-4={j === 0}
+						class:mt-3={j > 0}
+					>
+						{para}
+					</p>
+				{/each}
 			</article>
 		{/each}
 	</div>

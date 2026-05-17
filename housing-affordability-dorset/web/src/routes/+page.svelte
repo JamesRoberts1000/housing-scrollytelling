@@ -9,6 +9,25 @@
 	let { data }: { data: PageData } = $props();
 
 	let activeStep = $state(0);
+	let barsActiveStep = $state(0);
+
+	const barsCaptions: { body: string | string[] }[] = [
+		{
+			body: 'Housing affordability in Dorset is higher than both the England and South West averages.'
+		},
+		{
+			body: [
+				'In Dorset, median house prices were around 9.9 times annual earnings.',
+				'Across England, the equivalent figure was 7.6.'
+			]
+		},
+		{
+			body: [
+				'Lower quartile affordability ratios were also higher in Dorset.',
+				'This suggests greater affordability pressures for lower-income households.'
+			]
+		}
+	];
 
 	const mapCaptions: { title: string; body: string }[] = [
 		{
@@ -30,6 +49,14 @@
 	];
 </script>
 
+{#snippet barsGraphic(_step: number)}
+	<div class="flex h-full min-h-0 w-full items-center justify-center px-5 py-8 sm:px-8">
+		<div class="w-full max-w-4xl">
+			<AffordabilityBars data={data.bars} />
+		</div>
+	</div>
+{/snippet}
+
 {#snippet mapGraphic(step: number)}
 	<DorsetMap
 		ratioByMsoa={data.ratioByMsoa}
@@ -41,17 +68,16 @@
 
 <Hero />
 
-<section id="section-2" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="section-2-heading">
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
-	<h2 id="section-2-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-		Dorset in national context
-	</h2>
-	<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-		Dorset’s workplace-based affordability pressures sit above England and the South West on both median and
-		lower-quartile headline ratios (ONS-style house price to earnings measures).
-	</p>
-	<div class="mt-12 max-w-4xl">
-		<AffordabilityBars data={data.bars} />
+<section id="section-2" class="overflow-visible border-t border-line py-16" aria-labelledby="section-2-heading">
+	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
+		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
+		<h2 id="section-2-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			Dorset in context
+		</h2>
+	</div>
+
+	<div class="mt-12">
+		<StickyScroller captions={barsCaptions} graphic={barsGraphic} bind:activeStep={barsActiveStep} />
 	</div>
 </section>
 
