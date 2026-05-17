@@ -7,18 +7,57 @@
 		aria-hidden="true"
 		style="background-image: radial-gradient(circle at 30% 20%, #206095 0, transparent 55%), radial-gradient(circle at 70% 60%, #505a5f 0, transparent 50%);"
 	></div>
-	<p class="relative max-w-prose text-sm uppercase tracking-[0.18em] text-muted">
-		Interactive story · Dorset MSOAs
-	</p>
 	<h1
 		id="hero-heading"
-		class="relative max-w-[18ch] text-[54px] font-bold leading-tight tracking-tight text-ink"
+		class="relative max-w-[22ch] text-[54px] font-bold leading-tight tracking-tight text-ink"
 	>
-		Can local people still afford to buy homes in Dorset?
+		How does housing affordability vary across Dorset?
 	</h1>
 	<p class="relative max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
 		Housing affordability varies across Dorset’s neighbourhoods — from relatively accessible coastal
 		towns to rural areas where homes cost many times annual earnings.
 	</p>
-	<p class="relative text-sm text-muted" aria-hidden="true">Scroll to explore</p>
+	<div class="relative flex items-center" aria-hidden="true">
+		<svg
+			class="scroll-hint-icon"
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<path d="M12 5v14M5 12l7 7 7-7" />
+		</svg>
+		<p class="text-sm text-muted">Scroll to explore</p>
+	</div>
 </section>
+
+<style>
+	.scroll-hint-icon {
+		width: 48px;
+		height: 48px;
+		margin-right: 10px;
+		flex-shrink: 0;
+		color: #505a5f;
+		animation: scroll-hint-bounce 2s ease infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scroll-hint-icon {
+			animation: none;
+		}
+	}
+
+	@keyframes scroll-hint-bounce {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(10px);
+		}
+	}
+</style>
