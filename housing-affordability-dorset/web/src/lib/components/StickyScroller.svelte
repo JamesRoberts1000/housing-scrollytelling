@@ -13,21 +13,21 @@
 	type Props = {
 		captions: Caption[];
 		graphic: Snippet<[number]>;
-		/** Section heading in the narrative column */
-		intro?: Snippet;
+		/** Full-width centred section heading above the scrolly grid */
+		heading?: Snippet;
 		activeStep?: number;
 		/** Shorter sticky panel (e.g. bar chart) instead of full viewport height */
 		compactGraphic?: boolean;
 		/** Shorter min-height on step cards (bar-chart section) */
 		compactSteps?: boolean;
-		/** On narrow screens, show graphic between intro and step cards (Section 2 bar chart) */
+		/** On narrow screens, show graphic before step cards (Section 2 bar chart) */
 		leadWithGraphicOnMobile?: boolean;
 	};
 
 	let {
 		captions,
 		graphic,
-		intro,
+		heading,
 		activeStep = $bindable(0),
 		compactGraphic = false,
 		compactSteps = false,
@@ -96,31 +96,32 @@
 </script>
 
 <!--
-  Narrative always column 1, graphic column 2 on md+ (DOM: intro → steps → graphic).
-  leadWithGraphicOnMobile: intro → graphic → steps on narrow screens only.
+  heading: full-width centred title above the two-column grid.
+  Narrative column 1, graphic column 2 on md+ (DOM: steps → graphic).
+  leadWithGraphicOnMobile: graphic → steps on narrow screens only.
   activeStep: the step card with the largest overlap in the bottom third of the viewport.
 -->
-<div
-	class="grid w-full grid-cols-1 gap-6 pb-24 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-8 md:pb-32 lg:gap-10"
-	class:pt-8={!compactGraphic}
-	class:pt-0={compactGraphic}
->
-	{#if intro}
-		<div
-			class="scroll-mt-28 px-5 sm:px-8 md:col-start-1 md:row-start-1 md:max-w-xl md:justify-self-end md:px-6 lg:px-8 xl:pr-12"
-			class:order-1={leadWithGraphicOnMobile}
+<div class="w-full">
+	{#if heading}
+		<header
+			class="scroll-mt-28 px-5 pb-8 text-center sm:px-10 md:pb-10 lg:px-16"
+			class:pt-8={!compactGraphic}
+			class:pt-0={compactGraphic}
 		>
-			{@render intro()}
-		</div>
+			{@render heading()}
+		</header>
 	{/if}
 
 	<div
+		class="grid w-full grid-cols-1 gap-6 pb-24 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-8 md:pb-32 lg:gap-10"
+		class:pt-8={!heading && !compactGraphic}
+		class:pt-0={heading || compactGraphic}
+	>
+	<div
 		bind:this={stepsRoot}
-		class="px-5 sm:px-8 md:col-start-1 md:max-w-xl md:justify-self-end md:px-6 lg:px-8 xl:pr-12"
+		class="px-5 sm:px-8 md:col-start-1 md:row-start-1 md:max-w-xl md:justify-self-end md:px-6 lg:px-8 xl:pr-12"
 		class:order-3={leadWithGraphicOnMobile}
 		class:md:order-none={leadWithGraphicOnMobile}
-		class:md:row-start-1={!intro}
-		class:md:row-start-2={!!intro}
 	>
 		{#each captions as caption, i (i)}
 			<article
@@ -149,7 +150,6 @@
 
 	<div
 		class="relative w-full min-h-0 md:col-start-2 md:row-start-1"
-		class:md:row-span-2={!!intro}
 		class:order-2={leadWithGraphicOnMobile}
 		class:md:order-none={leadWithGraphicOnMobile}
 	>
@@ -165,5 +165,6 @@
 		>
 			{@render graphic(activeStep)}
 		</div>
+	</div>
 	</div>
 </div>

@@ -13,7 +13,7 @@
 	>
 		How does housing affordability vary across Dorset?
 	</h1>
-	<p class="relative max-w-2xl text-lg leading-relaxed text-[#EEEEEE] sm:text-xl">
+	<p class="relative max-w-2xl text-[30px] leading-relaxed text-[#EEEEEE]">
 		Housing affordability varies across Dorset’s neighbourhoods — from relatively accessible coastal
 		towns to rural areas where homes cost many times annual earnings.
 	</p>
@@ -31,7 +31,7 @@
 		>
 			<path d="M12 5v14M5 12l7 7 7-7" />
 		</svg>
-		<p class="text-sm text-[#EEEEEE]">Scroll to explore</p>
+		<p class="text-[21px] text-[#EEEEEE]">Scroll to explore</p>
 	</div>
 </section>
 

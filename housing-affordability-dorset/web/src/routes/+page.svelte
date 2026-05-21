@@ -146,10 +146,52 @@
 	];
 </script>
 
-{#snippet section2Intro()}
+{#snippet section2Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
-	<h2 id="section-2-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-2-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
 		Dorset in context
+	</h2>
+{/snippet}
+
+{#snippet section3Heading()}
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 3</p>
+	<h2 id="section-3-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		Variation Across Dorset
+	</h2>
+{/snippet}
+
+{#snippet section4Heading()}
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 4</p>
+	<h2 id="section-4-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		The rural affordability problem
+	</h2>
+{/snippet}
+
+{#snippet section5Heading()}
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 5</p>
+	<h2 id="section-5-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		Coastal Dorset is divided
+	</h2>
+{/snippet}
+
+{#snippet section6Heading()}
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 6</p>
+	<h2 id="section-6-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		Ageing and affordability
+	</h2>
+{/snippet}
+
+{#snippet section7Heading()}
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 7</p>
+	<h2 id="section-7-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		Housing type changes the story
+	</h2>
+{/snippet}
+
+{#snippet section8Heading()}
+	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 8</p>
+	<h2 id="section-8-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		Different Housing Markets
 	</h2>
 {/snippet}
 
@@ -199,7 +241,7 @@
 	<StickyScroller
 		captions={barsCaptions}
 		graphic={barsGraphic}
-		intro={section2Intro}
+		heading={section2Heading}
 		bind:activeStep={barsActiveStep}
 		compactGraphic
 		compactSteps
@@ -208,117 +250,73 @@
 </section>
 
 <section id="section-3" class="overflow-visible border-t border-line py-16" aria-labelledby="section-3-heading">
-	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 3</p>
-		<h2 id="section-3-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			Variation Across Dorset
-		</h2>
-	</div>
-
-	<div class="mt-12">
-		<StickyScroller captions={mapCaptions} graphic={mapGraphic} bind:activeStep />
-	</div>
+	<StickyScroller
+		captions={mapCaptions}
+		graphic={mapGraphic}
+		heading={section3Heading}
+		bind:activeStep
+	/>
 </section>
 
 <section id="section-4" class="overflow-visible border-t border-line py-16" aria-labelledby="section-4-heading">
-	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 4</p>
-		<h2 id="section-4-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			The rural affordability problem
-		</h2>
-	</div>
-
-	<div class="mt-12">
-		<StickyScroller
-			captions={ruralCaptions}
-			graphic={ruralGraphic}
-			bind:activeStep={ruralActiveStep}
-			compactGraphic
-			compactSteps
-		/>
-	</div>
+	<StickyScroller
+		captions={ruralCaptions}
+		graphic={ruralGraphic}
+		heading={section4Heading}
+		bind:activeStep={ruralActiveStep}
+		compactGraphic
+		compactSteps
+	/>
 </section>
 
 <section id="section-5" class="overflow-visible border-t border-line py-16" aria-labelledby="section-5-heading">
-	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 5</p>
-		<h2 id="section-5-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			Coastal Dorset is divided
-		</h2>
-	</div>
-
-	<div class="mt-12">
-		<StickyScroller
-			captions={coastalCaptions}
-			graphic={coastalGraphic}
-			bind:activeStep={coastalActiveStep}
-			compactGraphic
-			compactSteps
-		/>
-	</div>
+	<StickyScroller
+		captions={coastalCaptions}
+		graphic={coastalGraphic}
+		heading={section5Heading}
+		bind:activeStep={coastalActiveStep}
+		compactGraphic
+		compactSteps
+	/>
 </section>
 
 <section id="section-6" class="overflow-visible border-t border-line py-16" aria-labelledby="section-6-heading">
-	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 6</p>
-		<h2 id="section-6-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			Ageing and affordability
-		</h2>
-	</div>
-
-	<div class="mt-12">
-		<StickyScroller
-			captions={ageingCaptions}
-			graphic={ageingGraphic}
-			bind:activeStep={ageingActiveStep}
-			compactGraphic
-			compactSteps
-		/>
-	</div>
+	<StickyScroller
+		captions={ageingCaptions}
+		graphic={ageingGraphic}
+		heading={section6Heading}
+		bind:activeStep={ageingActiveStep}
+		compactGraphic
+		compactSteps
+	/>
 </section>
 
 <section id="section-7" class="overflow-visible border-t border-line py-16" aria-labelledby="section-7-heading">
-	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 7</p>
-		<h2 id="section-7-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			Housing type changes the story
-		</h2>
-	</div>
-
-	<div class="mt-12">
-		<StickyScroller
-			captions={housingTypeCaptions}
-			graphic={housingTypeGraphic}
-			bind:activeStep={housingTypeActiveStep}
-			compactGraphic
-			compactSteps
-		/>
-	</div>
+	<StickyScroller
+		captions={housingTypeCaptions}
+		graphic={housingTypeGraphic}
+		heading={section7Heading}
+		bind:activeStep={housingTypeActiveStep}
+		compactGraphic
+		compactSteps
+	/>
 </section>
 
 <section id="section-8" class="overflow-visible border-t border-line py-16" aria-labelledby="section-8-heading">
-	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 8</p>
-		<h2 id="section-8-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			Different Housing Markets
-		</h2>
-	</div>
-
-	<div class="mt-12">
-		<StickyScroller
-			captions={marketsCaptions}
-			graphic={marketsGraphic}
-			bind:activeStep={marketsActiveStep}
-			compactGraphic
-			compactSteps
-		/>
-	</div>
+	<StickyScroller
+		captions={marketsCaptions}
+		graphic={marketsGraphic}
+		heading={section8Heading}
+		bind:activeStep={marketsActiveStep}
+		compactGraphic
+		compactSteps
+	/>
 </section>
 
 <section id="section-9" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="section-9-heading">
-	<div class="mx-auto max-w-6xl">
+	<div class="mx-auto max-w-6xl text-center">
 		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 9</p>
-		<h2 id="section-9-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+		<h2 id="section-9-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
 			Conclusion
 		</h2>
 		<div class="mt-8 max-w-2xl space-y-5 text-lg leading-relaxed text-muted">
@@ -336,8 +334,8 @@
 </section>
 
 <section id="methodology" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="methodology-heading">
-	<div class="mx-auto max-w-6xl">
-		<h2 id="methodology-heading" class="max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<div class="mx-auto max-w-6xl text-center">
+		<h2 id="methodology-heading" class="mx-auto max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
 			Methodology
 		</h2>
 
