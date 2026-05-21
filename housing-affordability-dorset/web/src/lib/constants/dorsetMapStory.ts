@@ -1,21 +1,18 @@
-/**
- * Section 3 “places to watch” — MSOA21CD values aligned with GeoJSON + affordability CSV.
- * Labels are shortened for on-map symbol text.
- */
-export const SECTION3_WATCH_MSOA_CODES = [
-	'E02004246',
-	'E02004273',
-	'E02004267',
+/** MSOA21CD values aligned with GeoJSON + affordability CSV. */
+export const MSOA_ST_LEONARDS = 'E02004246';
+export const MSOA_UNDERHILL_GROVE = 'E02004288';
+
+/** Weymouth / Portland cluster (affordable step). */
+export const MSOA_WEYMOUTH_PORTLAND = [
 	'E02004284',
-	'E02004288'
+	'E02004285',
+	'E02004286',
+	'E02004287',
+	'E02004289'
 ] as const;
 
-export type WatchMsoaCode = (typeof SECTION3_WATCH_MSOA_CODES)[number];
-
-export const SECTION3_WATCH_MAP_LABEL: Record<WatchMsoaCode, string> = {
+export const SECTION3_MAP_LABEL: Record<string, string> = {
 	E02004246: 'St Leonards',
-	E02004273: 'Lyme Regis area',
-	E02004267: 'Corfe Castle',
-	E02004284: 'Weymouth town',
+	E02004284: 'Weymouth',
 	E02004288: 'Underhill & Grove'
 };

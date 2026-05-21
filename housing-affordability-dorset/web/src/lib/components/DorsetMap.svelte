@@ -1,7 +1,9 @@
 <script lang="ts">
 	import {
-		SECTION3_WATCH_MAP_LABEL,
-		SECTION3_WATCH_MSOA_CODES
+		MSOA_ST_LEONARDS,
+		MSOA_UNDERHILL_GROVE,
+		MSOA_WEYMOUTH_PORTLAND,
+		SECTION3_MAP_LABEL
 	} from '$lib/constants/dorsetMapStory';
 	import type { MsoaRatioPoint } from '$lib/data/loadAffordabilityData';
 	import AffordabilityRangePanel from '$lib/components/AffordabilityRangePanel.svelte';
@@ -139,6 +141,43 @@
 		}
 	}
 
+	function setStoryOutlineForCodes(codes: readonly string[] | null): void {
+		if (!mapInstance?.getLayer('msoa-story-outline')) return;
+		if (!codes?.length) {
+			mapInstance.setLayoutProperty('msoa-story-outline', 'visibility', 'none');
+			return;
+		}
+		mapInstance.setFilter('msoa-story-outline', ['in', 'MSOA21CD', ...codes]);
+		mapInstance.setLayoutProperty('msoa-story-outline', 'visibility', 'visible');
+	}
+
+	function fitToCodes(codes: readonly string[], maxZoom = 11): void {
+		if (!mapInstance || !maplibregl || !geojsonForMap) return;
+		const bb = bboxForCodes(geojsonForMap, new Set(codes));
+		if (!bb) return;
+		const b = new maplibregl.LngLatBounds(bb[0], bb[1]);
+		mapInstance.fitBounds(b, { padding: 56, maxZoom, duration: reducedMotionMs() });
+	}
+
+	function placeMarkers(codes: readonly string[]): void {
+		if (!mapInstance || !maplibregl || !geojsonForMap) return;
+		for (const code of codes) {
+			const f = geojsonForMap.features.find((x) => String(x.properties?.MSOA21CD) === code);
+			const geom = f?.geometry;
+			if (!geom || (geom.type !== 'Polygon' && geom.type !== 'MultiPolygon')) continue;
+			const ll = centroidOfGeometry(geom.coordinates);
+			if (!ll) continue;
+			const el = document.createElement('div');
+			el.className =
+				'pointer-events-none max-w-[9.5rem] rounded-sm border border-line bg-white/90 px-1.5 py-0.5 text-center text-[10px] font-semibold leading-tight text-ink shadow-sm';
+			el.textContent = SECTION3_MAP_LABEL[code] ?? code;
+			const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+				.setLngLat(ll)
+				.addTo(mapInstance);
+			storyMarkers.push(marker);
+		}
+	}
+
 	function reducedMotionMs(): number {
 		if (typeof window === 'undefined') return 650;
 		return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 850;
@@ -147,7 +186,6 @@
 	function applyStep(s: number): void {
 		if (!mapInstance || !mapReady || !fullBounds || !geojsonForMap || !maplibregl) return;
 
-		const dur = reducedMotionMs();
 		const { low, high } = ratioQuartileThresholds(msoaDistribution);
 
 		const fitFull = () => {
@@ -155,15 +193,8 @@
 			mapInstance!.fitBounds(b, { padding: 28, maxZoom: 10, duration: dur });
 		};
 
-		if (mapInstance.getLayer('msoa-story-outline')) {
-			mapInstance.setLayoutProperty(
-				'msoa-story-outline',
-				'visibility',
-				s === 2 ? 'visible' : 'none'
-			);
-		}
-
 		clearStoryMarkers();
+		setStoryOutlineForCodes(null);
 
 		if (s === 1) {
 			mapInstance.setPaintProperty('msoa-fill', 'fill-opacity', [
@@ -183,30 +214,22 @@
 			mapInstance.setPaintProperty('msoa-fill', 'fill-opacity', 1);
 		}
 
-		if (s === 2) {
-			const watch = new Set<string>(SECTION3_WATCH_MSOA_CODES);
-			const bb = bboxForCodes(geojsonForMap, watch);
-			if (bb) {
-				const b = new maplibregl.LngLatBounds(bb[0], bb[1]);
-				mapInstance.fitBounds(b, { padding: 56, maxZoom: 11, duration: dur });
-			}
-			for (const code of SECTION3_WATCH_MSOA_CODES) {
-				const f = geojsonForMap.features.find((x) => String(x.properties?.MSOA21CD) === code);
-				const geom = f?.geometry;
-				if (!geom || (geom.type !== 'Polygon' && geom.type !== 'MultiPolygon')) continue;
-				const ll = centroidOfGeometry(geom.coordinates);
-				if (!ll) continue;
-				const el = document.createElement('div');
-				el.className =
-					'pointer-events-none max-w-[9.5rem] rounded-sm border border-line bg-white/90 px-1.5 py-0.5 text-center text-[10px] font-semibold leading-tight text-ink shadow-sm';
-				el.textContent = SECTION3_WATCH_MAP_LABEL[code] ?? code;
-				const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-					.setLngLat(ll)
-					.addTo(mapInstance);
-				storyMarkers.push(marker);
-			}
-		} else if (s === 0 || s === 3) {
+		if (s === 0) {
 			fitFull();
+		} else if (s === 2) {
+			const codes = [MSOA_ST_LEONARDS];
+			setStoryOutlineForCodes(codes);
+			fitToCodes(codes, 12);
+			placeMarkers(codes);
+		} else if (s === 3) {
+			const codes = [...MSOA_WEYMOUTH_PORTLAND];
+			setStoryOutlineForCodes(codes);
+			fitToCodes(codes, 11);
+		} else if (s === 4) {
+			const codes = [MSOA_UNDERHILL_GROVE];
+			setStoryOutlineForCodes(codes);
+			fitToCodes(codes, 12);
+			placeMarkers(codes);
 		}
 	}
 
@@ -228,14 +251,18 @@
 		const response = await fetch('/geo/dorset_msoa_2021.geojson');
 		const geojson = (await response.json()) as FeatureCollection;
 
-		const watchSet = new Set<string>(SECTION3_WATCH_MSOA_CODES);
+		const labelCodes = new Set<string>([
+			MSOA_ST_LEONARDS,
+			MSOA_UNDERHILL_GROVE,
+			...MSOA_WEYMOUTH_PORTLAND
+		]);
 
 		for (const feature of geojson.features) {
 			const code = String(feature.properties?.MSOA21CD ?? '');
 			const raw = ratioByMsoa[code];
 			const ratio = typeof raw === 'number' && Number.isFinite(raw) ? raw : -1;
 			const displayName = (msoaNameByCode[code] ?? String(feature.properties?.MSOA21NM ?? '')).trim();
-			const mapLabel = watchSet.has(code) ? (SECTION3_WATCH_MAP_LABEL[code as keyof typeof SECTION3_WATCH_MAP_LABEL] ?? '') : '';
+			const mapLabel = labelCodes.has(code) ? (SECTION3_MAP_LABEL[code] ?? '') : '';
 			feature.properties = { ...feature.properties, ratio, displayName, mapLabel };
 		}
 
@@ -339,7 +366,6 @@
 				filter: ['==', ['get', 'MSOA21CD'], '__none__']
 			});
 
-			const watchCodes = [...SECTION3_WATCH_MSOA_CODES] as string[];
 			mapInstance.addLayer(
 				{
 					id: 'msoa-story-outline',
@@ -351,7 +377,7 @@
 						'line-opacity': 0.92,
 						'line-width': ['interpolate', ['linear'], ['zoom'], 8, 1.25, 12, 3]
 					},
-					filter: ['in', 'MSOA21CD', ...watchCodes]
+					filter: ['==', ['get', 'MSOA21CD'], '__none__']
 				},
 				'msoa-hover-outline'
 			);

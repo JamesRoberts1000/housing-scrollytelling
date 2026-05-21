@@ -27,6 +27,8 @@
 	};
 
 	let handles = $state<ChartHandles | null>(null);
+	/** Highest scroll step reached — chart elements stay visible once revealed */
+	let maxStepReached = $state(0);
 
 	function formatRatio(n: number): string {
 		return `${n.toFixed(1)}×`;
@@ -58,7 +60,12 @@
 		});
 	}
 
-	function applyStep(s: number, h: ChartHandles, rows: BarDatum[]): void {
+	function applyStep(
+		current: number,
+		revealed: number,
+		h: ChartHandles,
+		rows: BarDatum[]
+	): void {
 		const reduced = prefersReducedMotion();
 		const dur = reduced ? '0.01ms' : '0.65s';
 		const fade = reduced ? '0.01ms' : '0.5s';
@@ -73,63 +80,92 @@
 
 			if (median) {
 				median.style.transition = `y ${dur} ease, height ${dur} ease, opacity ${fade} ease, fill ${fade} ease`;
-				if (s >= 0) {
-					setBarGeometry(median, row.medianRatio, h.y, h.innerH, s === 0 && !reduced);
-					median.setAttribute('opacity', s >= 0 ? '1' : '0');
-					if (s === 0) {
-						median.setAttribute('fill', isDorset ? '#206095' : '#6a9fc4');
-						median.setAttribute('opacity', isDorset ? '1' : '0.42');
-					} else if (s === 1) {
+				if (revealed >= 0) {
+					const grown = median.getAttribute('data-grown') === '1';
+					if (!grown) {
+						setBarGeometry(
+							median,
+							row.medianRatio,
+							h.y,
+							h.innerH,
+							revealed === 0 && !reduced
+						);
+						median.setAttribute('data-grown', '1');
+					} else {
+						setBarGeometry(median, row.medianRatio, h.y, h.innerH, false);
+					}
+					if (revealed >= 2) {
+						median.setAttribute('fill', '#206095');
+						median.setAttribute('opacity', '0.85');
+					} else if (revealed >= 1) {
 						median.setAttribute('fill', '#206095');
 						median.setAttribute('opacity', isDorset ? '1' : '0.55');
 					} else {
-						median.setAttribute('fill', '#206095');
-						median.setAttribute('opacity', '0.85');
+						median.setAttribute('fill', isDorset ? '#206095' : '#6a9fc4');
+						median.setAttribute('opacity', isDorset ? '1' : '0.42');
 					}
 				}
 			}
 
 			if (lq) {
 				lq.style.transition = `y ${dur} ease, height ${dur} ease, opacity ${fade} ease`;
-				if (s >= 2) {
-					setBarGeometry(lq, row.lowerQuartileRatio, h.y, h.innerH, s === 2 && !reduced);
+				if (revealed >= 2) {
+					const grown = lq.getAttribute('data-grown') === '1';
+					if (!grown) {
+						setBarGeometry(
+							lq,
+							row.lowerQuartileRatio,
+							h.y,
+							h.innerH,
+							revealed === 2 && !reduced
+						);
+						lq.setAttribute('data-grown', '1');
+					} else {
+						setBarGeometry(lq, row.lowerQuartileRatio, h.y, h.innerH, false);
+					}
 					lq.setAttribute('opacity', '1');
-				} else {
-					lq.setAttribute('y', String(h.innerH));
-					lq.setAttribute('height', '0');
-					lq.setAttribute('opacity', '0');
 				}
 			}
 
 			if (mLabel) {
 				mLabel.style.transition = `opacity ${fade} ease`;
-				mLabel.setAttribute('opacity', s >= 1 ? '1' : '0');
+				const showMedianLabel = revealed >= 1;
+				mLabel.setAttribute('opacity', showMedianLabel ? '1' : '0');
+				mLabel.setAttribute('visibility', showMedianLabel ? 'visible' : 'hidden');
 				mLabel.textContent = formatRatio(row.medianRatio);
-				mLabel.setAttribute('font-weight', isDorset && s === 1 ? '700' : '600');
-				mLabel.setAttribute('fill', isDorset && s === 1 ? '#206095' : '#5c5c5c');
+				mLabel.setAttribute('y', String(h.y(row.medianRatio) - 12));
+				mLabel.setAttribute('font-weight', isDorset && current === 1 ? '700' : '600');
+				mLabel.setAttribute('fill', isDorset && current === 1 ? '#206095' : '#5c5c5c');
 			}
 
 			if (lLabel) {
 				lLabel.style.transition = `opacity ${fade} ease`;
-				lLabel.setAttribute('opacity', s >= 2 ? '1' : '0');
+				const showLqLabel = revealed >= 2;
+				lLabel.setAttribute('opacity', showLqLabel ? '1' : '0');
+				lLabel.setAttribute('visibility', showLqLabel ? 'visible' : 'hidden');
 				lLabel.textContent = formatRatio(row.lowerQuartileRatio);
+				lLabel.setAttribute('y', String(h.y(row.lowerQuartileRatio) - 12));
 			}
 
 			if (group) {
 				group.style.transition = `opacity ${fade} ease`;
-				group.setAttribute('opacity', s >= 0 ? '1' : '0');
+				group.setAttribute('opacity', revealed >= 0 ? '1' : '0');
 			}
 		}
 
-		h.legendMedian.setAttribute('opacity', s >= 0 ? '1' : '0');
-		h.legendLq.setAttribute('opacity', s >= 2 ? '1' : '0');
+		h.legendMedian.setAttribute('opacity', revealed >= 0 ? '1' : '0');
+		h.legendLq.setAttribute('opacity', revealed >= 2 ? '1' : '0');
 	}
 
 	function draw(el: HTMLDivElement, rows: BarDatum[]): ChartHandles {
 		el.replaceChildren();
 		const width = Math.min(el.clientWidth || 640, 920);
-		const height = 400;
-		const margin = { top: 44, right: 24, bottom: 56, left: 52 };
+		const height = 440;
+		const margin = { top: 52, right: 24, bottom: 64, left: 56 };
+		const fsAxis = 18;
+		const fsLabel = 20;
+		const fsValue = 20;
+		const fsLegend = 18;
 
 		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 		svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -217,7 +253,7 @@
 			mLabel.setAttribute('x', String(mx + w / 2));
 			mLabel.setAttribute('y', String(y(row.medianRatio) - 8));
 			mLabel.setAttribute('text-anchor', 'middle');
-			mLabel.setAttribute('font-size', '13');
+			mLabel.setAttribute('font-size', String(fsValue));
 			mLabel.setAttribute('opacity', '0');
 			xg.appendChild(mLabel);
 			medianLabels.set(row.label, mLabel);
@@ -226,7 +262,7 @@
 			lLabel.setAttribute('x', String(lx + w / 2));
 			lLabel.setAttribute('y', String(y(row.lowerQuartileRatio) - 8));
 			lLabel.setAttribute('text-anchor', 'middle');
-			lLabel.setAttribute('font-size', '13');
+			lLabel.setAttribute('font-size', String(fsValue));
 			lLabel.setAttribute('fill', '#5c5c5c');
 			lLabel.setAttribute('font-weight', '600');
 			lLabel.setAttribute('opacity', '0');
@@ -240,10 +276,10 @@
 			const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 			text.textContent = label;
 			text.setAttribute('x', String((x0(label) ?? 0) + x0.bandwidth() / 2));
-			text.setAttribute('y', String(innerH + 28));
+			text.setAttribute('y', String(innerH + 32));
 			text.setAttribute('text-anchor', 'middle');
 			text.setAttribute('fill', '#5c5c5c');
-			text.setAttribute('font-size', '13');
+			text.setAttribute('font-size', String(fsLabel));
 			if (label === 'Dorset') text.setAttribute('font-weight', '600');
 			g.appendChild(text);
 		}
@@ -255,42 +291,42 @@
 			text.setAttribute('y', String(y(tick) + 4));
 			text.setAttribute('text-anchor', 'end');
 			text.setAttribute('fill', '#5c5c5c');
-			text.setAttribute('font-size', '12');
+			text.setAttribute('font-size', String(fsAxis));
 			g.appendChild(text);
 		}
 
 		const legend = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-		legend.setAttribute('transform', `translate(0,${innerH + 44})`);
+		legend.setAttribute('transform', `translate(0,${innerH + 48})`);
 
 		const legendMedian = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 		const rMed = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-		rMed.setAttribute('width', '12');
-		rMed.setAttribute('height', '12');
+		rMed.setAttribute('width', '16');
+		rMed.setAttribute('height', '16');
 		rMed.setAttribute('fill', '#206095');
 		legendMedian.appendChild(rMed);
 		const tMed = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 		tMed.textContent = 'Median ratio';
-		tMed.setAttribute('x', '18');
-		tMed.setAttribute('y', '10');
+		tMed.setAttribute('x', '22');
+		tMed.setAttribute('y', '13');
 		tMed.setAttribute('fill', '#5c5c5c');
-		tMed.setAttribute('font-size', '12');
+		tMed.setAttribute('font-size', String(fsLegend));
 		legendMedian.appendChild(tMed);
 		legendMedian.setAttribute('opacity', '0');
 		legend.appendChild(legendMedian);
 
 		const legendLq = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-		legendLq.setAttribute('transform', 'translate(200,0)');
+		legendLq.setAttribute('transform', 'translate(240,0)');
 		const rLq = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-		rLq.setAttribute('width', '12');
-		rLq.setAttribute('height', '12');
+		rLq.setAttribute('width', '16');
+		rLq.setAttribute('height', '16');
 		rLq.setAttribute('fill', '#6a9fc4');
 		legendLq.appendChild(rLq);
 		const tLq = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 		tLq.textContent = 'Lower quartile ratio';
-		tLq.setAttribute('x', '18');
-		tLq.setAttribute('y', '10');
+		tLq.setAttribute('x', '22');
+		tLq.setAttribute('y', '13');
 		tLq.setAttribute('fill', '#5c5c5c');
-		tLq.setAttribute('font-size', '12');
+		tLq.setAttribute('font-size', String(fsLegend));
 		legendLq.appendChild(tLq);
 		legendLq.setAttribute('opacity', '0');
 		legend.appendChild(legendLq);
@@ -315,27 +351,44 @@
 	}
 
 	$effect(() => {
+		void data;
+		maxStepReached = 0;
+	});
+
+	$effect(() => {
+		maxStepReached = Math.max(maxStepReached, step);
+	});
+
+	$effect(() => {
 		if (!browser || !host) return;
 		const rows = data;
-		handles = draw(host, rows);
-		applyStep(step, handles, rows);
+		const el = host;
+
+		const rebuild = () => {
+			const h = draw(el, rows);
+			handles = h;
+			return h;
+		};
+
+		rebuild();
+
 		const ro = new ResizeObserver(() => {
-			if (!host) return;
-			handles = draw(host, rows);
-			applyStep(step, handles, rows);
+			rebuild();
 		});
-		ro.observe(host);
+		ro.observe(el);
 		return () => ro.disconnect();
 	});
 
 	$effect(() => {
-		const s = step;
-		if (!handles) return;
-		applyStep(s, handles, data);
+		const current = step;
+		const revealed = maxStepReached;
+		const h = handles;
+		if (!h) return;
+		applyStep(current, revealed, h, data);
 	});
 </script>
 
-<div bind:this={host} class="min-h-[400px] w-full"></div>
+<div bind:this={host} class="min-h-[440px] w-full"></div>
 
 <style>
 	:global(.bar-median),

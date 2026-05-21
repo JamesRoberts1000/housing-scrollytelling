@@ -29,22 +29,27 @@
 		}
 	];
 
-	const mapCaptions: { title: string; body: string }[] = [
+	const mapCaptions: { title?: string; body: string | string[] }[] = [
 		{
-			title: 'A patchwork of housing markets',
-			body: 'Each MSOA blends prices, earnings, and housing mix differently. The choropleth uses median prices for existing homes divided by Dorset median full-time pay — a headline affordability pressure measure, not a loan affordability test.'
+			body: 'Housing affordability varies widely between Dorset’s neighbourhoods.'
 		},
 		{
-			title: 'Internal inequality',
-			body: 'The map now emphasises the extremes: areas in the top quarter of ratios stay vivid while the middle band fades back, so the spread between the most and least pressured neighbourhoods is easier to see at a glance.'
+			body: ['Some MSOAs had affordability ratios below 6.', 'Others were above 15.']
 		},
 		{
-			title: 'Places to watch',
-			body: 'Several MSOAs anchor the Dorset story — including St Leonards, the Lyme Regis coast, Corfe Castle, Weymouth town centre, and Underhill & The Grove. Labels appear on the map while this step is active.'
+			body: [
+				'St Leonards had the highest affordability ratio in Dorset.',
+				'Median house prices were around £676,500.'
+			]
 		},
 		{
-			title: 'How to read the colours',
-			body: 'Darker blues indicate higher ratios (prices further above a single pay benchmark). Hover any area to highlight it on the map and on the range strip. Scroll back to section 2 to situate Dorset against England and the South West.'
+			body: 'More affordable areas were concentrated in parts of Weymouth and Portland.'
+		},
+		{
+			body: [
+				'Underhill and The Grove had one of the lowest affordability ratios in Dorset.',
+				'Median house prices were around £205,000.'
+			]
 		}
 	];
 </script>
@@ -83,6 +88,7 @@
 		bind:activeStep={barsActiveStep}
 		compactGraphic
 		compactSteps
+		leadWithGraphicOnMobile
 	/>
 </section>
 
@@ -90,11 +96,8 @@
 	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
 		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 3</p>
 		<h2 id="section-3-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
-			Zoom into Dorset
+			Variation Across Dorset
 		</h2>
-		<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-			Scroll the captions alongside the map — the view updates to match each beat of the story.
-		</p>
 	</div>
 
 	<div class="mt-12">
