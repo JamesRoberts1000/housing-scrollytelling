@@ -5,9 +5,9 @@ export default {
 		extend: {
 			colors: {
 				// Aligned with GOV.UK / ONS-style neutrals (no proprietary GDS Transport font)
-				ink: '#0b0c0c',
+				ink: '#222222',
 				paper: '#ffffff',
-				muted: '#505a5f',
+				muted: '#222222',
 				accent: '#206095',
 				line: '#b1b4b6'
 			},

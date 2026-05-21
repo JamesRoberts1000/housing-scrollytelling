@@ -1,8 +1,8 @@
 <script lang="ts">
 	import AffordabilityBars from '$lib/components/AffordabilityBars.svelte';
+	import ChartPlaceholder from '$lib/components/ChartPlaceholder.svelte';
 	import DorsetMap from '$lib/components/DorsetMap.svelte';
 	import Hero from '$lib/components/Hero.svelte';
-	import SectionStub from '$lib/components/SectionStub.svelte';
 	import StickyScroller from '$lib/components/StickyScroller.svelte';
 	import type { PageData } from './$types';
 
@@ -10,6 +10,11 @@
 
 	let activeStep = $state(0);
 	let barsActiveStep = $state(0);
+	let ruralActiveStep = $state(0);
+	let coastalActiveStep = $state(0);
+	let ageingActiveStep = $state(0);
+	let housingTypeActiveStep = $state(0);
+	let marketsActiveStep = $state(0);
 
 	const barsCaptions: { body: string | string[] }[] = [
 		{
@@ -52,6 +57,93 @@
 			]
 		}
 	];
+
+	const ruralCaptions: { body: string | string[] }[] = [
+		{
+			body: 'Rural areas generally had higher affordability ratios than urban areas.'
+		},
+		{
+			body: [
+				'The average affordability ratio in rural MSOAs was around 11.1.',
+				'In urban MSOAs it was around 9.6.'
+			]
+		},
+		{
+			body: 'Many of the least affordable areas were rural or semi-rural settlements.'
+		},
+		{
+			body: 'Urban areas tended to have a wider mix of housing types and lower median prices.'
+		}
+	];
+
+	const coastalCaptions: { body: string | string[] }[] = [
+		{
+			body: 'Coastal areas did not always have the highest affordability ratios.'
+		},
+		{
+			body: 'Some coastal MSOAs, including parts of Weymouth and Portland, had relatively low house prices.'
+		},
+		{
+			body: 'Other coastal areas, including Lyme Regis and parts of Purbeck, had some of the highest affordability ratios in Dorset.'
+		},
+		{
+			body: 'This reflects differences between coastal towns and smaller amenity or heritage settlements.'
+		}
+	];
+
+	const ageingCaptions: { body: string | string[] }[] = [
+		{
+			body: 'Areas with older populations often had higher affordability ratios.'
+		},
+		{
+			body: 'Several MSOAs with large proportions of residents aged 65 years and over also had high median house prices.'
+		},
+		{
+			body: 'Lyme Regis, Charmouth and Marshwood Vale had both a high affordability ratio and an older age profile.'
+		},
+		{
+			body: 'More affordable areas generally had younger populations.'
+		}
+	];
+
+	const housingTypeCaptions: { body: string | string[] }[] = [
+		{
+			body: 'Housing affordability varied by property type.'
+		},
+		{
+			body: 'Detached homes had the highest prices across most MSOAs.'
+		},
+		{
+			body: 'Flats were generally more affordable than detached or semi-detached homes.'
+		},
+		{
+			body: 'In some areas, flat prices were substantially lower than overall house prices.'
+		},
+		{
+			body: 'Parts of Weymouth and Portland had comparatively affordable flat prices.'
+		},
+		{
+			body: 'Some rural areas had relatively few flats or smaller dwellings available.'
+		},
+		{
+			body: 'In several coastal and retirement areas, flat prices remained comparatively high.'
+		}
+	];
+
+	const marketsCaptions: { body: string | string[] }[] = [
+		{
+			body: 'The data suggests Dorset contains several different housing markets.'
+		},
+		{
+			body: 'Some rural areas had high house prices, limited smaller housing and older populations.'
+		},
+		{
+			body: 'Parts of Weymouth and Portland had lower prices and more affordable flats and terraces.'
+		},
+		{
+			body: 'Some coastal and retirement areas had high prices across multiple property types.'
+		}
+	];
 </script>
 
 {#snippet section2Intro()}
@@ -76,6 +168,29 @@
 		msoaNameByCode={data.msoaNameByCode}
 		{step}
 	/>
+{/snippet}
+
+{#snippet ruralGraphic(step: number)}
+	<ChartPlaceholder
+		label="Rural vs urban affordability distribution"
+		{step}
+	/>
+{/snippet}
+
+{#snippet coastalGraphic(step: number)}
+	<ChartPlaceholder label="Coastal vs inland affordability" {step} />
+{/snippet}
+
+{#snippet ageingGraphic(step: number)}
+	<ChartPlaceholder label="Age and affordability scatter" {step} />
+{/snippet}
+
+{#snippet housingTypeGraphic(step: number)}
+	<ChartPlaceholder label="Affordability by housing type" {step} />
+{/snippet}
+
+{#snippet marketsGraphic(step: number)}
+	<ChartPlaceholder label="Housing market typology" {step} />
 {/snippet}
 
 <Hero />
@@ -105,44 +220,141 @@
 	</div>
 </section>
 
-<SectionStub
-	id="section-4"
-	eyebrow="Section 4"
-	title="The rural affordability problem"
-	body="Rural Dorset often shows higher headline ratios than urban areas, reflecting constrained supply and demand for larger homes. Distribution charts and rural overlays will land here."
-/>
+<section id="section-4" class="overflow-visible border-t border-line py-16" aria-labelledby="section-4-heading">
+	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
+		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 4</p>
+		<h2 id="section-4-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			The rural affordability problem
+		</h2>
+	</div>
 
-<SectionStub
-	id="section-5"
-	eyebrow="Section 5"
-	title="Coastal Dorset is divided"
-	body="Not all coastlines behave like luxury markets. This section will contrast amenity coastlines with working coastal towns, including Weymouth and Portland as affordability pressure valves."
-/>
+	<div class="mt-12">
+		<StickyScroller
+			captions={ruralCaptions}
+			graphic={ruralGraphic}
+			bind:activeStep={ruralActiveStep}
+			compactGraphic
+			compactSteps
+		/>
+	</div>
+</section>
 
-<SectionStub
-	id="section-6"
-	eyebrow="Section 6"
-	title="Ageing and affordability"
-	body="Older populations overlap with pressured markets in several MSOAs. A scatter with careful causal framing will follow."
-/>
+<section id="section-5" class="overflow-visible border-t border-line py-16" aria-labelledby="section-5-heading">
+	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
+		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 5</p>
+		<h2 id="section-5-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			Coastal Dorset is divided
+		</h2>
+	</div>
 
-<SectionStub
-	id="section-7"
-	eyebrow="Section 7"
-	title="Housing type changes the story"
-	body="Flats and smaller homes can look relatively accessible in some towns while detached markets dominate elsewhere — small multiples and morphing transitions will be added later."
-/>
+	<div class="mt-12">
+		<StickyScroller
+			captions={coastalCaptions}
+			graphic={coastalGraphic}
+			bind:activeStep={coastalActiveStep}
+			compactGraphic
+			compactSteps
+		/>
+	</div>
+</section>
 
-<SectionStub
-	id="section-8"
-	eyebrow="Section 8"
-	title="Dorset’s multiple housing systems"
-	body="A typology synthesis will cluster rural lifestyle markets, working coastal towns, and retirement-driven apartment markets."
-/>
+<section id="section-6" class="overflow-visible border-t border-line py-16" aria-labelledby="section-6-heading">
+	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
+		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 6</p>
+		<h2 id="section-6-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			Ageing and affordability
+		</h2>
+	</div>
 
-<SectionStub
-	id="section-9"
-	eyebrow="Section 9"
-	title="Conclusion"
-	body="Dorset is not one housing market. Affordability depends on location, housing mix, tenure options, and who the homes are built for — a simplified map recap and methodology notes will close the piece."
-/>
+	<div class="mt-12">
+		<StickyScroller
+			captions={ageingCaptions}
+			graphic={ageingGraphic}
+			bind:activeStep={ageingActiveStep}
+			compactGraphic
+			compactSteps
+		/>
+	</div>
+</section>
+
+<section id="section-7" class="overflow-visible border-t border-line py-16" aria-labelledby="section-7-heading">
+	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
+		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 7</p>
+		<h2 id="section-7-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			Housing type changes the story
+		</h2>
+	</div>
+
+	<div class="mt-12">
+		<StickyScroller
+			captions={housingTypeCaptions}
+			graphic={housingTypeGraphic}
+			bind:activeStep={housingTypeActiveStep}
+			compactGraphic
+			compactSteps
+		/>
+	</div>
+</section>
+
+<section id="section-8" class="overflow-visible border-t border-line py-16" aria-labelledby="section-8-heading">
+	<div class="mx-auto max-w-6xl px-5 sm:px-10 lg:px-10">
+		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 8</p>
+		<h2 id="section-8-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			Different Housing Markets
+		</h2>
+	</div>
+
+	<div class="mt-12">
+		<StickyScroller
+			captions={marketsCaptions}
+			graphic={marketsGraphic}
+			bind:activeStep={marketsActiveStep}
+			compactGraphic
+			compactSteps
+		/>
+	</div>
+</section>
+
+<section id="section-9" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="section-9-heading">
+	<div class="mx-auto max-w-6xl">
+		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 9</p>
+		<h2 id="section-9-heading" class="mt-3 max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			Conclusion
+		</h2>
+		<div class="mt-8 max-w-2xl space-y-5 text-lg leading-relaxed text-muted">
+			<p>Housing affordability varies considerably across Dorset.</p>
+			<p>Differences in affordability were linked to rurality, age structure and housing type.</p>
+			<p>
+				Some urban and coastal areas remained comparatively affordable for first-time buyers, particularly
+				where lower-cost flats and terraces were available.
+			</p>
+			<p>
+				Other rural and amenity areas had consistently high prices across most property types.
+			</p>
+		</div>
+	</div>
+</section>
+
+<section id="methodology" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="methodology-heading">
+	<div class="mx-auto max-w-6xl">
+		<h2 id="methodology-heading" class="max-w-prose text-[30px] font-bold leading-tight tracking-tight text-ink">
+			Methodology
+		</h2>
+
+		<h3 class="mt-10 text-xl font-bold text-ink">About the data</h3>
+		<div class="mt-4 max-w-2xl space-y-5 text-lg leading-relaxed text-muted">
+			<p>Housing affordability was measured using median house prices divided by annual earnings.</p>
+			<p>Data is shown for Middle Super Output Areas (MSOAs) in Dorset.</p>
+			<p>Supplementary datasets were used to classify areas by:</p>
+		</div>
+		<ul class="mt-3 max-w-2xl list-disc space-y-2 pl-6 text-lg leading-relaxed text-muted">
+			<li>rural and urban status</li>
+			<li>coastal location</li>
+			<li>age structure</li>
+			<li>property type</li>
+		</ul>
+
+		<h3 class="mt-10 text-xl font-bold text-ink">Source</h3>
+		<p class="mt-4 max-w-2xl text-lg leading-relaxed text-muted">Office for National Statistics</p>
+	</div>
+</section>

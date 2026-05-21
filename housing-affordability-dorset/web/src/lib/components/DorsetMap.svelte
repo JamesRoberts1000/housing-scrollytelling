@@ -188,6 +188,8 @@
 
 		const { low, high } = ratioQuartileThresholds(msoaDistribution);
 
+		const dur = reducedMotionMs();
+
 		const fitFull = () => {
 			const b = new maplibregl.LngLatBounds(fullBounds![0], fullBounds![1]);
 			mapInstance!.fitBounds(b, { padding: 28, maxZoom: 10, duration: dur });
@@ -274,6 +276,15 @@
 			container,
 			bounds: fullBounds,
 			fitBoundsOptions: { padding: 28, maxZoom: 10 },
+			dragPan: false,
+			scrollZoom: false,
+			boxZoom: false,
+			dragRotate: false,
+			dragPitch: false,
+			keyboard: false,
+			doubleClickZoom: false,
+			touchZoomRotate: false,
+			touchPitch: false,
 			style: {
 				version: 8,
 				sources: {

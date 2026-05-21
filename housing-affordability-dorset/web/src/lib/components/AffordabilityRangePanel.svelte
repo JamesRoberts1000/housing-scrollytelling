@@ -56,12 +56,12 @@
 	class="pointer-events-none z-[20] w-[min(100%,268px,calc(100vw-2rem))] rounded-bl-sm rounded-br-sm rounded-tl-sm rounded-tr-none border border-line border-r-0 border-t-0 bg-white px-3 pb-2 pt-2 opacity-70 shadow-md backdrop-blur-[2px]"
 	aria-live="polite"
 >
-	<p class="text-[13px] font-bold leading-snug text-[#222222]">
+	<p class="text-[13px] font-bold leading-snug text-ink">
 		Housing affordability across Dorset
 	</p>
 
 	{#if distribution.length === 0}
-		<p class="mt-2 text-xs text-[#222222]">No ratio data.</p>
+		<p class="mt-2 text-xs text-ink">No ratio data.</p>
 	{:else}
 		<svg
 			class="mt-1 mx-auto block w-full max-w-full"
@@ -120,7 +120,7 @@
 						y1={stripTop + stripH}
 						x2={tx}
 						y2={stripTop + stripH + 4}
-						stroke="#505a5f"
+						stroke="#222222"
 						stroke-width="1"
 					/>
 					<text
@@ -138,12 +138,12 @@
 		</svg>
 
 		{#if hovered}
-			<p class="mt-1 text-[15px] font-bold leading-tight text-[#222222]">{hovered.name}</p>
-			<p class="mt-0.5 text-[13px] leading-snug text-[#222222]">
+			<p class="mt-1 text-[15px] font-bold leading-tight text-ink">{hovered.name}</p>
+			<p class="mt-0.5 text-[13px] leading-snug text-ink">
 				Ratio: <span class="tabular-nums">{hovered.ratio.toFixed(2)}×</span>
 			</p>
 		{:else}
-			<p class="mt-1 text-[13px] leading-snug text-[#222222]">
+			<p class="mt-1 text-[13px] leading-snug text-ink">
 				Hover over an area on the map to see its position in this range.
 			</p>
 		{/if}

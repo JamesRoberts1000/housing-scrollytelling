@@ -41,7 +41,7 @@
 		height: 48px;
 		margin-right: 10px;
 		flex-shrink: 0;
-		color: #505a5f;
+		color: #222222;
 		animation: scroll-hint-bounce 2s ease infinite;
 	}
 

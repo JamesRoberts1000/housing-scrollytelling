@@ -42,37 +42,63 @@
 		const elements = [...stepsRoot.querySelectorAll<HTMLElement>('[data-step-index]')];
 		if (!elements.length) return;
 
+		/** Overlap height (px) between an element and the bottom third of the viewport. */
+		function overlapWithBottomThird(rect: DOMRect): number {
+			const vh = window.innerHeight;
+			const bandTop = vh * (2 / 3);
+			const y0 = Math.max(rect.top, bandTop);
+			const y1 = Math.min(rect.bottom, vh);
+			return Math.max(0, y1 - y0);
+		}
+
+		function updateActiveStep(): void {
+			let bestEl: HTMLElement | null = null;
+			let bestOverlap = 0;
+
+			for (const el of elements) {
+				const overlap = overlapWithBottomThird(el.getBoundingClientRect());
+				if (overlap > bestOverlap) {
+					bestOverlap = overlap;
+					bestEl = el;
+				}
+			}
+
+			if (!bestEl || bestOverlap <= 0) return;
+
+			const idx = Number(bestEl.dataset.stepIndex);
+			if (!Number.isNaN(idx)) activeStep = idx;
+		}
+
+		let scrollRaf = 0;
+		const onScroll = () => {
+			cancelAnimationFrame(scrollRaf);
+			scrollRaf = requestAnimationFrame(updateActiveStep);
+		};
+
 		const observer = new IntersectionObserver(
-			(entries) => {
-				const visible = entries.filter((entry) => entry.isIntersecting);
-				if (!visible.length) return;
-
-				const viewportMid = window.innerHeight * 0.5;
-				const best = visible.reduce((pick, entry) => {
-					if (!pick) return entry;
-					const pickRect = pick.boundingClientRect;
-					const entryRect = entry.boundingClientRect;
-					const pickMid = pickRect.top + pickRect.height / 2;
-					const entryMid = entryRect.top + entryRect.height / 2;
-					const pickDist = Math.abs(pickMid - viewportMid);
-					const entryDist = Math.abs(entryMid - viewportMid);
-					return entryDist < pickDist ? entry : pick;
-				});
-
-				const idx = Number(best.target.dataset.stepIndex);
-				if (!Number.isNaN(idx)) activeStep = idx;
-			},
-			{ threshold: [0.15, 0.35, 0.55, 0.75], rootMargin: '-18% 0px -28% 0px' }
+			() => updateActiveStep(),
+			{
+				threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+				rootMargin: '-66.666% 0px 0px 0px'
+			}
 		);
 
 		for (const el of elements) observer.observe(el);
-		return () => observer.disconnect();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		updateActiveStep();
+
+		return () => {
+			observer.disconnect();
+			window.removeEventListener('scroll', onScroll);
+			cancelAnimationFrame(scrollRaf);
+		};
 	});
 </script>
 
 <!--
   Narrative always column 1, graphic column 2 on md+ (DOM: intro → steps → graphic).
   leadWithGraphicOnMobile: intro → graphic → steps on narrow screens only.
+  activeStep: the step card with the largest overlap in the bottom third of the viewport.
 -->
 <div
 	class="grid w-full grid-cols-1 gap-6 pb-24 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-8 md:pb-32 lg:gap-10"
@@ -90,7 +116,7 @@
 
 	<div
 		bind:this={stepsRoot}
-		class="space-y-6 px-5 sm:px-8 md:col-start-1 md:max-w-xl md:justify-self-end md:px-6 lg:px-8 xl:pr-12"
+		class="px-5 sm:px-8 md:col-start-1 md:max-w-xl md:justify-self-end md:px-6 lg:px-8 xl:pr-12"
 		class:order-3={leadWithGraphicOnMobile}
 		class:md:order-none={leadWithGraphicOnMobile}
 		class:md:row-start-1={!intro}
@@ -99,22 +125,24 @@
 		{#each captions as caption, i (i)}
 			<article
 				data-step-index={i}
-				class="scroll-mt-28 rounded-sm border border-line bg-white p-6 shadow-sm sm:p-8"
-				class:min-h-[65vh]={!compactSteps}
-				class:min-h-[45vh]={compactSteps}
+				class="flex flex-col justify-end scroll-mt-28 pb-6"
+				class:min-h-[100svh]={!compactSteps}
+				class:min-h-[min(100svh,560px)]={compactSteps}
 			>
-				{#if caption.title}
-					<h3 class="text-[30px] font-bold leading-tight tracking-tight text-ink">{caption.title}</h3>
-				{/if}
-				{#each bodyParagraphs(caption.body) as para, j (j)}
-					<p
-						class="text-[21px] leading-relaxed text-muted"
-						class:mt-4={j === 0}
-						class:mt-3={j > 0}
-					>
-						{para}
-					</p>
-				{/each}
+				<div class="rounded-sm border border-line bg-white p-6 shadow-sm sm:p-8">
+					{#if caption.title}
+						<h3 class="text-[30px] font-bold leading-tight tracking-tight text-ink">{caption.title}</h3>
+					{/if}
+					{#each bodyParagraphs(caption.body) as para, j (j)}
+						<p
+							class="text-[21px] leading-relaxed text-ink"
+							class:mt-4={j === 0}
+							class:mt-3={j > 0}
+						>
+							{para}
+						</p>
+					{/each}
+				</div>
 			</article>
 		{/each}
 	</div>

@@ -135,7 +135,7 @@
 				mLabel.textContent = formatRatio(row.medianRatio);
 				mLabel.setAttribute('y', String(h.y(row.medianRatio) - 12));
 				mLabel.setAttribute('font-weight', isDorset && current === 1 ? '700' : '600');
-				mLabel.setAttribute('fill', isDorset && current === 1 ? '#206095' : '#5c5c5c');
+				mLabel.setAttribute('fill', isDorset && current === 1 ? '#206095' : '#222222');
 			}
 
 			if (lLabel) {
@@ -263,7 +263,7 @@
 			lLabel.setAttribute('y', String(y(row.lowerQuartileRatio) - 8));
 			lLabel.setAttribute('text-anchor', 'middle');
 			lLabel.setAttribute('font-size', String(fsValue));
-			lLabel.setAttribute('fill', '#5c5c5c');
+			lLabel.setAttribute('fill', '#222222');
 			lLabel.setAttribute('font-weight', '600');
 			lLabel.setAttribute('opacity', '0');
 			xg.appendChild(lLabel);
@@ -278,7 +278,7 @@
 			text.setAttribute('x', String((x0(label) ?? 0) + x0.bandwidth() / 2));
 			text.setAttribute('y', String(innerH + 32));
 			text.setAttribute('text-anchor', 'middle');
-			text.setAttribute('fill', '#5c5c5c');
+			text.setAttribute('fill', '#222222');
 			text.setAttribute('font-size', String(fsLabel));
 			if (label === 'Dorset') text.setAttribute('font-weight', '600');
 			g.appendChild(text);
@@ -290,7 +290,7 @@
 			text.setAttribute('x', '-10');
 			text.setAttribute('y', String(y(tick) + 4));
 			text.setAttribute('text-anchor', 'end');
-			text.setAttribute('fill', '#5c5c5c');
+			text.setAttribute('fill', '#222222');
 			text.setAttribute('font-size', String(fsAxis));
 			g.appendChild(text);
 		}
@@ -308,7 +308,7 @@
 		tMed.textContent = 'Median ratio';
 		tMed.setAttribute('x', '22');
 		tMed.setAttribute('y', '13');
-		tMed.setAttribute('fill', '#5c5c5c');
+		tMed.setAttribute('fill', '#222222');
 		tMed.setAttribute('font-size', String(fsLegend));
 		legendMedian.appendChild(tMed);
 		legendMedian.setAttribute('opacity', '0');
@@ -325,7 +325,7 @@
 		tLq.textContent = 'Lower quartile ratio';
 		tLq.setAttribute('x', '22');
 		tLq.setAttribute('y', '13');
-		tLq.setAttribute('fill', '#5c5c5c');
+		tLq.setAttribute('fill', '#222222');
 		tLq.setAttribute('font-size', String(fsLegend));
 		legendLq.appendChild(tLq);
 		legendLq.setAttribute('opacity', '0');
