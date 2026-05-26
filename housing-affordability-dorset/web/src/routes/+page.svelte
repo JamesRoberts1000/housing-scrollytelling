@@ -148,49 +148,49 @@
 
 {#snippet section2Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
-	<h2 id="section-2-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-2-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Dorset in context
 	</h2>
 {/snippet}
 
 {#snippet section3Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 3</p>
-	<h2 id="section-3-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-3-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Variation Across Dorset
 	</h2>
 {/snippet}
 
 {#snippet section4Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 4</p>
-	<h2 id="section-4-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-4-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		The rural affordability problem
 	</h2>
 {/snippet}
 
 {#snippet section5Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 5</p>
-	<h2 id="section-5-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-5-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Coastal Dorset is divided
 	</h2>
 {/snippet}
 
 {#snippet section6Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 6</p>
-	<h2 id="section-6-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-6-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Ageing and affordability
 	</h2>
 {/snippet}
 
 {#snippet section7Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 7</p>
-	<h2 id="section-7-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-7-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Housing type changes the story
 	</h2>
 {/snippet}
 
 {#snippet section8Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 8</p>
-	<h2 id="section-8-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+	<h2 id="section-8-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Different Housing Markets
 	</h2>
 {/snippet}
@@ -316,10 +316,10 @@
 <section id="section-9" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="section-9-heading">
 	<div class="mx-auto max-w-6xl text-center">
 		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 9</p>
-		<h2 id="section-9-heading" class="mx-auto mt-3 max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		<h2 id="section-9-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 			Conclusion
 		</h2>
-		<div class="mt-8 max-w-2xl space-y-5 text-lg leading-relaxed text-muted">
+		<div class="mx-auto mt-8 w-full max-w-[680px] space-y-5 text-left text-lg leading-relaxed text-muted">
 			<p>Housing affordability varies considerably across Dorset.</p>
 			<p>Differences in affordability were linked to rurality, age structure and housing type.</p>
 			<p>
@@ -335,17 +335,17 @@
 
 <section id="methodology" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="methodology-heading">
 	<div class="mx-auto max-w-6xl text-center">
-		<h2 id="methodology-heading" class="mx-auto max-w-4xl text-[30px] font-bold leading-tight tracking-tight text-ink">
+		<h2 id="methodology-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 			Methodology
 		</h2>
 
 		<h3 class="mt-10 text-xl font-bold text-ink">About the data</h3>
-		<div class="mt-4 max-w-2xl space-y-5 text-lg leading-relaxed text-muted">
+		<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-lg leading-relaxed text-muted">
 			<p>Housing affordability was measured using median house prices divided by annual earnings.</p>
 			<p>Data is shown for Middle Super Output Areas (MSOAs) in Dorset.</p>
 			<p>Supplementary datasets were used to classify areas by:</p>
 		</div>
-		<ul class="mt-3 max-w-2xl list-disc space-y-2 pl-6 text-lg leading-relaxed text-muted">
+		<ul class="mx-auto mt-3 w-full max-w-[680px] list-disc space-y-2 pl-6 text-left text-lg leading-relaxed text-muted">
 			<li>rural and urban status</li>
 			<li>coastal location</li>
 			<li>age structure</li>
@@ -353,6 +353,6 @@
 		</ul>
 
 		<h3 class="mt-10 text-xl font-bold text-ink">Source</h3>
-		<p class="mt-4 max-w-2xl text-lg leading-relaxed text-muted">Office for National Statistics</p>
+		<p class="mx-auto mt-4 w-full max-w-[680px] text-left text-lg leading-relaxed text-muted">Office for National Statistics</p>
 	</div>
 </section>
