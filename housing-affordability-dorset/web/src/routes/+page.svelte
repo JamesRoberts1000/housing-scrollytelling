@@ -18,17 +18,15 @@
 
 	const barsCaptions: { body: string | string[] }[] = [
 		{
-			body: 'Housing affordability in Dorset is higher than both the England and South West averages.'
+		body: [
+			'Housing affordability in Dorset is higher (worse) than both the England and South West averages.',
+			'**In Dorset, median house prices were around 9.9 times annual earnings.**',
+			'Across England, the equivalent figure was 7.6.'
+		]
 		},
 		{
 			body: [
-				'In Dorset, median house prices were around 9.9 times annual earnings.',
-				'Across England, the equivalent figure was 7.6.'
-			]
-		},
-		{
-			body: [
-				'Lower quartile affordability ratios were also higher in Dorset.',
+			'**Lower quartile** affordability ratios were also higher in Dorset.',
 				'This suggests greater affordability pressures for lower-income households.'
 			]
 		}
@@ -151,6 +149,22 @@
 	<h2 id="section-2-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Dorset in context
 	</h2>
+	<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-[21px] leading-relaxed text-muted">
+		<p>Housing affordability compares house prices with earnings.</p>
+		<p>
+			In this article, affordability is measured by dividing median house prices by median annual earnings. A higher ratio
+			means homes are less affordable relative to local incomes.
+		</p>
+		<p>For example, an affordability ratio of 10 means house prices are around 10 times annual earnings. The Office for National
+		Statistics considers an area affordable if average homes cost up to 5 times the average earnings of those working nearby.</p>
+		<p>
+			The analysis uses data for Middle Super Output Areas (MSOAs). These are statistical neighbourhoods
+			designed to contain similar population sizes.
+		</p>
+		<p>
+			The affordability ratios shown in this analysis are based on median house prices and median workplace-based earnings, unless stated otherwise.
+		</p>
+	</div>
 {/snippet}
 
 {#snippet section3Heading()}
@@ -196,8 +210,9 @@
 {/snippet}
 
 {#snippet barsGraphic(step: number)}
-	<div class="flex h-full min-h-0 w-full items-center justify-center px-5 py-8 sm:px-8">
+	<div class="flex h-full min-h-0 w-full items-start justify-center px-5 pt-12 pb-8 sm:px-8 sm:pt-16">
 		<div class="w-full max-w-4xl">
+			<h3 class="mb-3 text-center text-[24px] font-bold leading-tight text-ink">Housing affordability comparison</h3>
 			<AffordabilityBars data={data.bars} {step} />
 		</div>
 	</div>
@@ -237,7 +252,7 @@
 
 <Hero />
 
-<section id="section-2" class="overflow-visible border-t border-line py-16" aria-labelledby="section-2-heading">
+<section id="section-2" class="overflow-visible border-t border-line pt-24 pb-16 sm:pt-28" aria-labelledby="section-2-heading">
 	<StickyScroller
 		captions={barsCaptions}
 		graphic={barsGraphic}
@@ -245,7 +260,10 @@
 		bind:activeStep={barsActiveStep}
 		compactGraphic
 		compactSteps
+		compactStepMinHeight={580}
 		leadWithGraphicOnMobile
+		introGraphicOnly
+		advanceOnTopEdge
 	/>
 </section>
 

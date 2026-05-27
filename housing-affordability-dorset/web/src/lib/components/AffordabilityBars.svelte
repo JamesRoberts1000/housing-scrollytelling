@@ -96,20 +96,20 @@
 					}
 					if (revealed >= 2) {
 						median.setAttribute('fill', '#206095');
-						median.setAttribute('opacity', '0.85');
+						median.setAttribute('opacity', '1');
 					} else if (revealed >= 1) {
 						median.setAttribute('fill', '#206095');
-						median.setAttribute('opacity', isDorset ? '1' : '0.55');
+						median.setAttribute('opacity', '1');
 					} else {
-						median.setAttribute('fill', isDorset ? '#206095' : '#6a9fc4');
-						median.setAttribute('opacity', isDorset ? '1' : '0.42');
+						median.setAttribute('fill', '#206095');
+						median.setAttribute('opacity', '1');
 					}
 				}
 			}
 
 			if (lq) {
 				lq.style.transition = `y ${dur} ease, height ${dur} ease, opacity ${fade} ease`;
-				if (revealed >= 2) {
+				if (current >= 1) {
 					const grown = lq.getAttribute('data-grown') === '1';
 					if (!grown) {
 						setBarGeometry(
@@ -117,30 +117,35 @@
 							row.lowerQuartileRatio,
 							h.y,
 							h.innerH,
-							revealed === 2 && !reduced
+							current === 1 && !reduced
 						);
 						lq.setAttribute('data-grown', '1');
 					} else {
 						setBarGeometry(lq, row.lowerQuartileRatio, h.y, h.innerH, false);
 					}
 					lq.setAttribute('opacity', '1');
+				} else {
+					lq.setAttribute('opacity', '0');
+					lq.setAttribute('y', String(h.innerH));
+					lq.setAttribute('height', '0');
+					lq.removeAttribute('data-grown');
 				}
 			}
 
 			if (mLabel) {
 				mLabel.style.transition = `opacity ${fade} ease`;
-				const showMedianLabel = revealed >= 1;
+				const showMedianLabel = revealed >= 0;
 				mLabel.setAttribute('opacity', showMedianLabel ? '1' : '0');
 				mLabel.setAttribute('visibility', showMedianLabel ? 'visible' : 'hidden');
 				mLabel.textContent = formatRatio(row.medianRatio);
 				mLabel.setAttribute('y', String(h.y(row.medianRatio) - 12));
-				mLabel.setAttribute('font-weight', isDorset && current === 1 ? '700' : '600');
-				mLabel.setAttribute('fill', isDorset && current === 1 ? '#206095' : '#222222');
+				mLabel.setAttribute('font-weight', '600');
+				mLabel.setAttribute('fill', '#222222');
 			}
 
 			if (lLabel) {
 				lLabel.style.transition = `opacity ${fade} ease`;
-				const showLqLabel = revealed >= 2;
+				const showLqLabel = current >= 1;
 				lLabel.setAttribute('opacity', showLqLabel ? '1' : '0');
 				lLabel.setAttribute('visibility', showLqLabel ? 'visible' : 'hidden');
 				lLabel.textContent = formatRatio(row.lowerQuartileRatio);
@@ -153,8 +158,8 @@
 			}
 		}
 
-		h.legendMedian.setAttribute('opacity', revealed >= 0 ? '1' : '0');
-		h.legendLq.setAttribute('opacity', revealed >= 2 ? '1' : '0');
+		h.legendMedian.setAttribute('opacity', current >= 1 ? '1' : '0');
+		h.legendLq.setAttribute('opacity', current >= 1 ? '1' : '0');
 	}
 
 	function draw(el: HTMLDivElement, rows: BarDatum[]): ChartHandles {

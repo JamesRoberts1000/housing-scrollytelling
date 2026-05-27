@@ -1,5 +1,5 @@
 <section
-	class="relative flex min-h-[85vh] flex-col justify-end gap-6 bg-[#09476D] px-5 pb-20 pt-28 text-[#EEEEEE] sm:px-10 lg:px-16"
+	class="relative flex min-h-[85vh] flex-col justify-end gap-6 bg-[#09476D] px-5 pb-28 pt-28 text-[#EEEEEE] sm:px-10 sm:pb-32 lg:px-16"
 	aria-labelledby="hero-heading"
 >
 	<div

@@ -10,6 +10,14 @@
 		return Array.isArray(body) ? body : [body];
 	}
 
+function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
+	const parts = para.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+	return parts.map((part) => {
+		const bold = part.startsWith('**') && part.endsWith('**') && part.length > 4;
+		return { text: bold ? part.slice(2, -2) : part, bold };
+	});
+}
+
 	type Props = {
 		captions: Caption[];
 		graphic: Snippet<[number]>;
@@ -20,8 +28,16 @@
 		compactGraphic?: boolean;
 		/** Shorter min-height on step cards (bar-chart section) */
 		compactSteps?: boolean;
+	/** Pixel min-height used when compactSteps is enabled */
+	compactStepMinHeight?: number;
 		/** On narrow screens, show graphic before step cards (Section 2 bar chart) */
 		leadWithGraphicOnMobile?: boolean;
+		/** Keep viewport for graphic before first caption enters */
+		introGraphicOnly?: boolean;
+		/** Vertical trigger line as viewport fraction (0 top → 1 bottom) */
+		triggerLine?: number;
+		/** Advance step when next card reaches top edge */
+		advanceOnTopEdge?: boolean;
 	};
 
 	let {
@@ -31,7 +47,11 @@
 		activeStep = $bindable(0),
 		compactGraphic = false,
 		compactSteps = false,
-		leadWithGraphicOnMobile = false
+	compactStepMinHeight = 560,
+		leadWithGraphicOnMobile = false,
+		introGraphicOnly = false,
+		triggerLine = 2 / 3,
+		advanceOnTopEdge = false
 	}: Props = $props();
 
 	let stepsRoot = $state<HTMLDivElement | null>(null);
@@ -42,31 +62,35 @@
 		const elements = [...stepsRoot.querySelectorAll<HTMLElement>('[data-step-index]')];
 		if (!elements.length) return;
 
-		/** Overlap height (px) between an element and the bottom third of the viewport. */
-		function overlapWithBottomThird(rect: DOMRect): number {
-			const vh = window.innerHeight;
-			const bandTop = vh * (2 / 3);
-			const y0 = Math.max(rect.top, bandTop);
-			const y1 = Math.min(rect.bottom, vh);
-			return Math.max(0, y1 - y0);
-		}
-
 		function updateActiveStep(): void {
-			let bestEl: HTMLElement | null = null;
-			let bestOverlap = 0;
-
-			for (const el of elements) {
-				const overlap = overlapWithBottomThird(el.getBoundingClientRect());
-				if (overlap > bestOverlap) {
-					bestOverlap = overlap;
-					bestEl = el;
+			if (advanceOnTopEdge) {
+				let nextStep = 0;
+				for (const el of elements) {
+					const rect = el.getBoundingClientRect();
+					const idx = Number(el.dataset.stepIndex);
+					if (!Number.isNaN(idx) && rect.top <= 0) {
+						nextStep = Math.max(nextStep, idx);
+					}
 				}
+				activeStep = nextStep;
+				return;
 			}
 
-			if (!bestEl || bestOverlap <= 0) return;
-
-			const idx = Number(bestEl.dataset.stepIndex);
-			if (!Number.isNaN(idx)) activeStep = idx;
+			const vh = window.innerHeight;
+			const markerY = vh * triggerLine;
+			let containingEl: HTMLElement | null = null;
+			for (const el of elements) {
+				const rect = el.getBoundingClientRect();
+				// Activate the step whose card currently contains the marker line.
+				if (rect.top <= markerY && rect.bottom >= markerY) {
+					containingEl = el;
+					break;
+				}
+			}
+			if (containingEl) {
+				const idx = Number(containingEl.dataset.stepIndex);
+				if (!Number.isNaN(idx)) activeStep = idx;
+			}
 		}
 
 		let scrollRaf = 0;
@@ -123,14 +147,20 @@
 		class:order-3={leadWithGraphicOnMobile}
 		class:md:order-none={leadWithGraphicOnMobile}
 	>
+		{#if introGraphicOnly}
+			<div
+				aria-hidden="true"
+				class="scroll-mt-28 pb-6"
+				style:min-height={compactSteps ? `min(100svh, ${compactStepMinHeight}px)` : '100svh'}
+			></div>
+		{/if}
 		{#each captions as caption, i (i)}
 			<article
 				data-step-index={i}
 				class="flex flex-col justify-end scroll-mt-28 pb-6"
-				class:min-h-[100svh]={!compactSteps}
-				class:min-h-[min(100svh,560px)]={compactSteps}
+				style:min-height={compactSteps ? `min(100svh, ${compactStepMinHeight}px)` : '100svh'}
 			>
-				<div class="rounded-sm border border-line bg-white p-6 shadow-sm sm:p-8">
+				<div class="rounded-sm bg-white p-6 sm:p-8">
 					{#if caption.title}
 						<h3 class="text-[30px] font-bold leading-tight tracking-tight text-ink">{caption.title}</h3>
 					{/if}
@@ -140,7 +170,9 @@
 							class:mt-4={j === 0}
 							class:mt-3={j > 0}
 						>
-							{para}
+							{#each parseBoldSegments(para) as segment}
+								<span class:font-bold={segment.bold}>{segment.text}</span>
+							{/each}
 						</p>
 					{/each}
 				</div>
@@ -154,14 +186,16 @@
 		class:md:order-none={leadWithGraphicOnMobile}
 	>
 		<div
-			class="min-h-[280px] w-full overflow-hidden md:sticky md:top-0 md:z-10"
+			class="min-h-[280px] w-full md:sticky md:top-0 md:z-10"
+			class:overflow-hidden={!compactGraphic}
+			class:overflow-visible={compactGraphic}
 			class:max-md:h-[100svh]={!compactGraphic}
 			class:md:h-[100svh]={!compactGraphic}
 			class:max-md:sticky={compactGraphic}
 			class:max-md:top-0={compactGraphic}
 			class:max-md:z-10={compactGraphic}
-			class:max-md:h-[min(48vh,420px)]={compactGraphic}
-			class:md:h-[min(92vh,480px)]={compactGraphic}
+			class:max-md:h-[min(56vh,480px)]={compactGraphic}
+			class:md:h-[min(92vh,580px)]={compactGraphic}
 		>
 			{@render graphic(activeStep)}
 		</div>
