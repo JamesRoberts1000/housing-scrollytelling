@@ -305,6 +305,8 @@
 		bind:activeStep={ruralActiveStep}
 		compactGraphic
 		compactSteps
+		triggerOnCaption
+		triggerLine={0.5}
 	/>
 </section>
 
