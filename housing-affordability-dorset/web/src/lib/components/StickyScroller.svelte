@@ -38,6 +38,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		triggerLine?: number;
 		/** Advance step when next card reaches top edge */
 		advanceOnTopEdge?: boolean;
+		/** Use the caption card box for the trigger line, not the full-height step article */
+		triggerOnCaption?: boolean;
 	};
 
 	let {
@@ -51,22 +53,32 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		leadWithGraphicOnMobile = false,
 		introGraphicOnly = false,
 		triggerLine = 2 / 3,
-		advanceOnTopEdge = false
+		advanceOnTopEdge = false,
+		triggerOnCaption = false
 	}: Props = $props();
 
 	let stepsRoot = $state<HTMLDivElement | null>(null);
 
 	$effect(() => {
 		void captions;
+		void triggerOnCaption;
+		void triggerLine;
+		void advanceOnTopEdge;
 		if (!stepsRoot) return;
 		const elements = [...stepsRoot.querySelectorAll<HTMLElement>('[data-step-index]')];
 		if (!elements.length) return;
+
+		function triggerRect(el: HTMLElement): DOMRect {
+			if (!triggerOnCaption) return el.getBoundingClientRect();
+			const caption = el.querySelector<HTMLElement>('[data-caption]');
+			return (caption ?? el).getBoundingClientRect();
+		}
 
 		function updateActiveStep(): void {
 			if (advanceOnTopEdge) {
 				let nextStep = 0;
 				for (const el of elements) {
-					const rect = el.getBoundingClientRect();
+					const rect = triggerRect(el);
 					const idx = Number(el.dataset.stepIndex);
 					if (!Number.isNaN(idx) && rect.top <= 0) {
 						nextStep = Math.max(nextStep, idx);
@@ -80,7 +92,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 			const markerY = vh * triggerLine;
 			let containingEl: HTMLElement | null = null;
 			for (const el of elements) {
-				const rect = el.getBoundingClientRect();
+				const rect = triggerRect(el);
 				// Activate the step whose card currently contains the marker line.
 				if (rect.top <= markerY && rect.bottom >= markerY) {
 					containingEl = el;
@@ -160,7 +172,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 				class="flex flex-col justify-end scroll-mt-28 pb-6"
 				style:min-height={compactSteps ? `min(100svh, ${compactStepMinHeight}px)` : '100svh'}
 			>
-				<div class="rounded-sm bg-white p-6 sm:p-8">
+				<div data-caption class="rounded-sm bg-white p-6 sm:p-8">
 					{#if caption.title}
 						<h3 class="text-[30px] font-bold leading-tight tracking-tight text-ink">{caption.title}</h3>
 					{/if}

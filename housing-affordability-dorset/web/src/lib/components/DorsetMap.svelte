@@ -100,22 +100,6 @@
 		return [sx / n, sy / n];
 	}
 
-	function ratioQuartileThresholds(points: MsoaRatioPoint[]): { low: number; high: number } {
-		const r = points.map((p) => p.ratio).filter((x) => Number.isFinite(x));
-		r.sort((a, b) => a - b);
-		if (r.length < 2) return { low: 0, high: 1e9 };
-		const q = (p: number) => {
-			const pos = (r.length - 1) * p;
-			const lo = Math.floor(pos);
-			const hi = Math.ceil(pos);
-			if (lo === hi) return r[lo] ?? 0;
-			const a = r[lo] ?? 0;
-			const b = r[hi] ?? 0;
-			return a + (b - a) * (pos - lo);
-		};
-		return { low: q(0.25), high: q(0.75) };
-	}
-
 	function parseHoverProps(props: Record<string, unknown>): MsoaRatioPoint | null {
 		const code = String(props.MSOA21CD ?? '');
 		const name = String(props.MSOA21NM ?? '');
@@ -180,13 +164,11 @@
 
 	function reducedMotionMs(): number {
 		if (typeof window === 'undefined') return 650;
-		return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 850;
+		return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1850;
 	}
 
 	function applyStep(s: number): void {
 		if (!mapInstance || !mapReady || !fullBounds || !geojsonForMap || !maplibregl) return;
-
-		const { low, high } = ratioQuartileThresholds(msoaDistribution);
 
 		const dur = reducedMotionMs();
 
@@ -198,36 +180,18 @@
 		clearStoryMarkers();
 		setStoryOutlineForCodes(null);
 
-		if (s === 1) {
-			mapInstance.setPaintProperty('msoa-fill', 'fill-opacity', [
-				'case',
-				['<', ['get', 'ratio'], 0],
-				0.55,
-				[
-					'any',
-					['<=', ['get', 'ratio'], low],
-					['>=', ['get', 'ratio'], high]
-				],
-				1,
-				0.28
-			]);
-			fitFull();
-		} else {
-			mapInstance.setPaintProperty('msoa-fill', 'fill-opacity', 1);
-		}
-
 		if (s === 0) {
 			fitFull();
-		} else if (s === 2) {
+		} else if (s === 1) {
 			const codes = [MSOA_ST_LEONARDS];
 			setStoryOutlineForCodes(codes);
 			fitToCodes(codes, 12);
 			placeMarkers(codes);
-		} else if (s === 3) {
+		} else if (s === 2) {
 			const codes = [...MSOA_WEYMOUTH_PORTLAND];
 			setStoryOutlineForCodes(codes);
 			fitToCodes(codes, 11);
-		} else if (s === 4) {
+		} else if (s === 3) {
 			const codes = [MSOA_UNDERHILL_GROVE];
 			setStoryOutlineForCodes(codes);
 			fitToCodes(codes, 12);

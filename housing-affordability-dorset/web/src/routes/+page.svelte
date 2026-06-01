@@ -34,14 +34,14 @@
 
 	const mapCaptions: { title?: string; body: string | string[] }[] = [
 		{
-			body: 'Housing affordability varies widely between Dorset’s neighbourhoods.'
-		},
-		{
-			body: ['Some MSOAs had affordability ratios below 6.', 'Others were above 15.']
+			body: [
+				'Housing affordability varies widely between Dorset’s neighbourhoods.',
+				'Affordability ratios range from just **under 6 to over 15**.',
+			]
 		},
 		{
 			body: [
-				'St Leonards had the highest affordability ratio in Dorset.',
+				'**St Leonards** had the highest affordability ratio in Dorset at 19.',
 				'Median house prices were around £676,500.'
 			]
 		},
@@ -50,7 +50,7 @@
 		},
 		{
 			body: [
-				'Underhill and The Grove had one of the lowest affordability ratios in Dorset.',
+				'**Underhill and The Grove** had one of the lowest affordability ratios in Dorset at just under 6.',
 				'Median house prices were around £205,000.'
 			]
 		}
@@ -172,6 +172,20 @@
 	<h2 id="section-3-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Variation Across Dorset
 	</h2>
+	<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-[21px] leading-relaxed text-muted">
+		<p>
+			The map below shows affordability ratios for neighbourhoods across Dorset. Darker areas indicate higher house
+			prices relative to earnings, while lighter areas indicate lower affordability ratios.
+		</p>
+		<p>
+			Although Dorset's overall affordability ratio is higher than the England average, there are substantial differences
+			between individual neighbourhoods.
+		</p>
+		<p>
+			No MSOA in Dorset had an affordability ratio below 5, a level often used by the Office for National Statistics to
+			indicate broadly affordable housing.
+		</p>
+	</div>
 {/snippet}
 
 {#snippet section4Heading()}
@@ -273,6 +287,7 @@
 		graphic={mapGraphic}
 		heading={section3Heading}
 		bind:activeStep
+		triggerOnCaption
 	/>
 </section>
 
