@@ -1,6 +1,7 @@
 <script lang="ts">
 	import AffordabilityBars from '$lib/components/AffordabilityBars.svelte';
 	import ChartPlaceholder from '$lib/components/ChartPlaceholder.svelte';
+	import CoastalInlandComparison from '$lib/components/CoastalInlandComparison.svelte';
 	import RuralUrbanComparison from '$lib/components/RuralUrbanComparison.svelte';
 	import DorsetMap from '$lib/components/DorsetMap.svelte';
 	import Hero from '$lib/components/Hero.svelte';
@@ -77,16 +78,31 @@
 
 	const coastalCaptions: { body: string | string[] }[] = [
 		{
-			body: 'Coastal areas did not always have the highest affordability ratios.'
+			body: [
+				'Coastal areas did not always have the highest affordability ratios.',
+				'**Median affordability ratios were similar for coastal and inland neighbourhoods.**'
+			]
 		},
 		{
-			body: 'Some coastal MSOAs, including parts of Weymouth and Portland, had relatively low house prices.'
+			body: [
+				'Coastal MSOAs still varied widely — from around **6× to over 15×** annual earnings.',
+				'The least affordable areas in Dorset were not always on the coast.'
+			]
 		},
 		{
-			body: 'Other coastal areas, including Lyme Regis and parts of Purbeck, had some of the highest affordability ratios in Dorset.'
+			body: [
+				'Some coastal neighbourhoods were among the more affordable in Dorset.',
+				'**Weymouth, Portland and Underhill & The Grove** had comparatively low affordability ratios.'
+			]
 		},
 		{
-			body: 'This reflects differences between coastal towns and smaller amenity or heritage settlements.'
+			body: [
+				'Other coastal areas had much higher ratios.',
+				'**Lyme Regis** and **Corfe Castle & Langton Matravers** were among the less affordable coastal neighbourhoods.'
+			]
+		},
+		{
+			body: 'This reflects different types of coastal housing markets — working towns and urban coasts compared with smaller amenity and heritage settlements.'
 		}
 	];
 
@@ -207,8 +223,15 @@
 {#snippet section5Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 5</p>
 	<h2 id="section-5-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
-		Coastal Dorset is divided
+		How does affordability differ between coastal and inland areas?
 	</h2>
+	<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-[21px] leading-relaxed text-muted">
+		<p>Dorset's coastline includes a mixture of towns, villages and rural communities.</p>
+		<p>
+			The chart below compares affordability ratios in coastal and inland neighbourhoods. While some coastal areas had
+			high affordability ratios, others were among the more affordable parts of Dorset.
+		</p>
+	</div>
 {/snippet}
 
 {#snippet section6Heading()}
@@ -255,7 +278,7 @@
 {/snippet}
 
 {#snippet coastalGraphic(step: number)}
-	<ChartPlaceholder label="Coastal vs inland affordability" {step} />
+	<CoastalInlandComparison data={data.coastalInland} {step} />
 {/snippet}
 
 {#snippet ageingGraphic(step: number)}
@@ -318,6 +341,8 @@
 		bind:activeStep={coastalActiveStep}
 		compactGraphic
 		compactSteps
+		triggerOnCaption
+		triggerLine={0.5}
 	/>
 </section>
 

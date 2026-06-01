@@ -1,5 +1,6 @@
 import { quantileSorted } from 'd3';
-import type { MsoaRuralUrbanRow } from '$lib/types/ruralUrban';
+
+export type RatioRow = { ratio: number };
 
 export type BoxStats = {
 	min: number;
@@ -31,7 +32,7 @@ export function boxStats(values: number[]): BoxStats | null {
 	};
 }
 
-export function ratioExtent(rows: MsoaRuralUrbanRow[], pad = 0.08): [number, number] {
+export function ratioExtent(rows: RatioRow[], pad = 0.08): [number, number] {
 	const vals = rows.map((r) => r.ratio).filter((v) => Number.isFinite(v));
 	if (!vals.length) return [0, 1];
 	let lo = Math.min(...vals);
