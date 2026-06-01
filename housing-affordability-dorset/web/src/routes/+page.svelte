@@ -1,5 +1,6 @@
 <script lang="ts">
 	import AffordabilityBars from '$lib/components/AffordabilityBars.svelte';
+	import AgeAffordabilityScatter from '$lib/components/AgeAffordabilityScatter.svelte';
 	import ChartPlaceholder from '$lib/components/ChartPlaceholder.svelte';
 	import CoastalInlandComparison from '$lib/components/CoastalInlandComparison.svelte';
 	import RuralUrbanComparison from '$lib/components/RuralUrbanComparison.svelte';
@@ -108,16 +109,32 @@
 
 	const ageingCaptions: { body: string | string[] }[] = [
 		{
-			body: 'Areas with older populations often had higher affordability ratios.'
+			body: [
+				'Areas with older populations often had higher affordability ratios.',
+				'Each point on the chart represents one neighbourhood (MSOA).'
+			]
 		},
 		{
-			body: 'Several MSOAs with large proportions of residents aged 65 years and over also had high median house prices.'
+			body: [
+				'There was a moderate positive association between the share of residents aged 65 and over, and affordability ratios.',
+				'The pattern was not uniform across Dorset.'
+			]
 		},
 		{
-			body: 'Lyme Regis, Charmouth and Marshwood Vale had both a high affordability ratio and an older age profile.'
+			body: [
+				'**St Leonards**, **Lyme Regis** and **Corfe Castle & Langton Matravers** combined relatively old populations with high affordability ratios.'
+			]
 		},
 		{
-			body: 'More affordable areas generally had younger populations.'
+			body: [
+				'**Underhill & The Grove**, **Weymouth** and **Southwell & Weston** (Portland) had lower ratios despite their coastal location.'
+			]
+		},
+		{
+			body: 'All neighbourhoods with an **affordability ratio below 8** also had a younger than average population.'
+		},
+		{
+			body: 'Whilst areas with older populations tended to have higher affordability ratios, location, housing type and local housing markets still mattered.'
 		}
 	];
 
@@ -237,8 +254,15 @@
 {#snippet section6Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 6</p>
 	<h2 id="section-6-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
-		Ageing and affordability
+		Housing affordability and population age
 	</h2>
+	<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-[21px] leading-relaxed text-muted">
+		<p>Dorset's neighbourhoods vary in both their age structure and housing affordability.</p>
+		<p>
+			The chart below shows the relationship between the proportion of residents aged 65 years and over and housing
+			affordability ratios across Dorset.
+		</p>
+	</div>
 {/snippet}
 
 {#snippet section7Heading()}
@@ -282,7 +306,7 @@
 {/snippet}
 
 {#snippet ageingGraphic(step: number)}
-	<ChartPlaceholder label="Age and affordability scatter" {step} />
+	<AgeAffordabilityScatter data={data.ageAffordability} {step} />
 {/snippet}
 
 {#snippet housingTypeGraphic(step: number)}
@@ -354,6 +378,8 @@
 		bind:activeStep={ageingActiveStep}
 		compactGraphic
 		compactSteps
+		triggerOnCaption
+		triggerLine={0.5}
 	/>
 </section>
 

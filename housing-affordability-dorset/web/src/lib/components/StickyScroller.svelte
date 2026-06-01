@@ -90,19 +90,27 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 
 			const vh = window.innerHeight;
 			const markerY = vh * triggerLine;
-			let containingEl: HTMLElement | null = null;
+			let nextStep = 0;
 			for (const el of elements) {
 				const rect = triggerRect(el);
-				// Activate the step whose card currently contains the marker line.
+				const idx = Number(el.dataset.stepIndex);
+				if (Number.isNaN(idx)) continue;
+				// Prefer the highest-index step whose caption contains the marker.
 				if (rect.top <= markerY && rect.bottom >= markerY) {
-					containingEl = el;
-					break;
+					nextStep = Math.max(nextStep, idx);
 				}
 			}
-			if (containingEl) {
-				const idx = Number(containingEl.dataset.stepIndex);
-				if (!Number.isNaN(idx)) activeStep = idx;
+			if (nextStep === 0) {
+				// Between cards: keep the last step whose top has passed the marker.
+				for (const el of elements) {
+					const rect = triggerRect(el);
+					const idx = Number(el.dataset.stepIndex);
+					if (!Number.isNaN(idx) && rect.top <= markerY) {
+						nextStep = Math.max(nextStep, idx);
+					}
+				}
 			}
+			activeStep = nextStep;
 		}
 
 		let scrollRaf = 0;

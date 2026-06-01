@@ -45,3 +45,7 @@ export function ratioExtent(rows: RatioRow[], pad = 0.08): [number, number] {
 export function formatRatio(n: number): string {
 	return `${n.toFixed(1)}×`;
 }
+
+export function formatPercent(n: number, digits = 0): string {
+	return `${n.toFixed(digits)}%`;
+}
