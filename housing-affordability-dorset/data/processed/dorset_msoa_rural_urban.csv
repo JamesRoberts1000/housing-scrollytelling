@@ -1,0 +1,49 @@
+MSOA code,MSOA name,affordability_ratio,rural_urban,ruc21_code,ruc21_name
+E02004243,Alderholt & Sixpenny Handley,12.644784911217467,Rural,RSN1,Smaller rural: Nearer to a major town or city
+E02004244,East Verwood,11.044716943728584,Urban,UN1,Urban: Nearer to a major town or city
+E02004245,West Verwood,11.837670980714226,Urban,UN1,Urban: Nearer to a major town or city
+E02004246,St Leonards,19.15833592931381,Rural,RLN1,Larger rural: Nearer to a major town or city
+E02004247,Sturminster Marshall & Crichel,15.859080739712835,Rural,RSN1,Smaller rural: Nearer to a major town or city
+E02004248,West Moors,10.832318540964572,Urban,UN1,Urban: Nearer to a major town or city
+E02004249,Colehill,14.01829458242474,Urban,UN1,Urban: Nearer to a major town or city
+E02004250,Ferndown Town,10.97391747614058,Urban,UN1,Urban: Nearer to a major town or city
+E02004251,Ferndown West & Canford Bottom,10.761519073376569,Urban,UN1,Urban: Nearer to a major town or city
+E02004252,Wimborne Minster,9.565008071139305,Urban,UN1,Urban: Nearer to a major town or city
+E02004253,Parley & Hampreston,13.45189884172071,Urban,UN1,Urban: Nearer to a major town or city
+E02004254,Corfe Mullen,11.044716943728584,Urban,UN1,Urban: Nearer to a major town or city
+E02004255,Gillingham,6.938347823624366,Urban,UF1,Urban: Further from a major town or city
+E02004256,"Gillingham Outer, Bourton & Motcombe",9.203930786440486,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004257,Shaftesbury,7.292345161564385,Rural,RLF1,Larger rural: Further from a major town or city
+E02004258,Sturminster Newton & Stalbridge,8.963212596641274,Rural,RLF1,Larger rural: Further from a major town or city
+E02004259,Child Okeford & Iwerne Minster,12.007589702925436,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004260,Blandford Outer & Tarrants,11.611112684432612,Rural,RSN1,Smaller rural: Nearer to a major town or city
+E02004261,Blandford Forum Town,7.363144629152389,Urban,UN1,Urban: Nearer to a major town or city
+E02004262,"Milborne, Winterborne & Okeford Fitzpaine",11.54031321684461,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004263,Bere Regis & Lytchett Matravers,11.75271161960862,Rural,RLN1,Larger rural: Nearer to a major town or city
+E02004264,Upton & Lytchett Minster,9.501288550310102,Urban,UN1,Urban: Nearer to a major town or city
+E02004265,"Wareham, Sandford & Holton Heath",10.42168162895415,Rural,RLN1,Larger rural: Nearer to a major town or city
+E02004266,"Bovington, Wool & Lulworth",9.770326527144515,Rural,RSN1,Smaller rural: Nearer to a major town or city
+E02004267,Corfe Castle & Langton Matravers,13.310299906544705,Rural,RSN1,Smaller rural: Nearer to a major town or city
+E02004268,Swanage,9.910509472968764,Rural,RLF1,Larger rural: Further from a major town or city
+E02004269,Sherborne,9.232250573475689,Urban,UF1,Urban: Further from a major town or city
+E02004270,"Yetminster, Bradford Abbas & Longburton",11.257115346492592,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004271,"Beaminster, Maiden Newton & Halstock",9.911925462320523,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004272,"Charlton Down, Cerne Abbas & Puddletown",9.773866500523916,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004273,"Lyme Regis, Charmouth & Marshwood Vale",15.590042762878424,Rural,RLF1,Larger rural: Further from a major town or city
+E02004274,Bridport North,8.566735578148453,Urban,UF1,Urban: Further from a major town or city
+E02004275,Burton Bradstock & Chideock,12.602305230664664,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004276,Bridport South & West Bay,10.549120670612558,Urban,UF1,Urban: Further from a major town or city
+E02004278,Dorchester East,9.203930786440486,Urban,UF1,Urban: Further from a major town or city
+E02004279,"Owermoigne, Broadmayne & Winterbourne",10.384186230919545,Rural,RSF1,Smaller rural: Further from a major town or city
+E02004280,Chickerell & Chesil Bank,9.444648976239698,Rural,RLF1,Larger rural: Further from a major town or city
+E02004281,Broadwey & Littlemoor,6.8250686754835606,Urban,UF1,Urban: Further from a major town or city
+E02004282,Preston & Lodmoor,10.478321203024551,Urban,UF1,Urban: Further from a major town or city
+E02004283,Westham North & Radipole,9.310129987822492,Urban,UF1,Urban: Further from a major town or city
+E02004284,"Weymouth Town, Melcombe Regis & Rodwell",5.947155277392314,Urban,UF1,Urban: Further from a major town or city
+E02004285,Westham South,7.39146441618759,Urban,UF1,Urban: Further from a major town or city
+E02004286,Weymouth West,7.462263883775594,Urban,UF1,Urban: Further from a major town or city
+E02004287,Wyke Regis,7.816261221715613,Urban,UF1,Urban: Further from a major town or city
+E02004288,Underhill & The Grove,5.805556342216306,Rural,RLF1,Larger rural: Further from a major town or city
+E02004289,Southwell & Weston,6.7967488884483584,Rural,RLF1,Larger rural: Further from a major town or city
+E02007006,Dorchester North,8.481068222366968,Urban,UF1,Urban: Further from a major town or city
+E02007007,Poundbury & Dorchester West,9.628727591968508,Urban,UF1,Urban: Further from a major town or city

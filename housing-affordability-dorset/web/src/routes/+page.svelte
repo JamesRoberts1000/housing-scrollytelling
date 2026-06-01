@@ -1,6 +1,7 @@
 <script lang="ts">
 	import AffordabilityBars from '$lib/components/AffordabilityBars.svelte';
 	import ChartPlaceholder from '$lib/components/ChartPlaceholder.svelte';
+	import RuralUrbanComparison from '$lib/components/RuralUrbanComparison.svelte';
 	import DorsetMap from '$lib/components/DorsetMap.svelte';
 	import Hero from '$lib/components/Hero.svelte';
 	import StickyScroller from '$lib/components/StickyScroller.svelte';
@@ -62,8 +63,8 @@
 		},
 		{
 			body: [
-				'The average affordability ratio in rural MSOAs was around 11.1.',
-				'In urban MSOAs it was around 9.6.'
+				'The **median** affordability ratio in rural MSOAs was around 10.4.',
+				'In urban MSOAs the median was around 9.5.'
 			]
 		},
 		{
@@ -191,8 +192,16 @@
 {#snippet section4Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 4</p>
 	<h2 id="section-4-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
-		The rural affordability problem
+		How does affordability differ between rural and urban areas?
 	</h2>
+	<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-[21px] leading-relaxed text-muted">
+		<p>Dorset contains a mixture of rural villages, market towns and urban neighbourhoods.</p>
+		<p>
+			The chart below shows how housing affordability differed between rural and urban areas. On average, rural
+			neighbourhoods were less affordable than urban neighbourhoods — with higher affordability ratios.
+		</p>
+		<p>Of the 48 neighbourhoods (MSOAs) in Dorset, 23 are classed as rural and 25 as urban.</p>		
+	</div>
 {/snippet}
 
 {#snippet section5Heading()}
@@ -242,10 +251,7 @@
 {/snippet}
 
 {#snippet ruralGraphic(step: number)}
-	<ChartPlaceholder
-		label="Rural vs urban affordability distribution"
-		{step}
-	/>
+	<RuralUrbanComparison data={data.ruralUrban} {step} />
 {/snippet}
 
 {#snippet coastalGraphic(step: number)}

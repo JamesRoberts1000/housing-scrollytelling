@@ -4,11 +4,15 @@ import {
 	msoaRatioDistribution,
 	ratioByMsoaCode
 } from '$lib/data/loadAffordabilityData';
+import { loadRuralUrbanFetch } from '$lib/data/loadRuralUrbanData';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
-	const msoaRows = await loadMsoaRatiosFetch(fetch);
-	const bars = await loadNationalContextBarsFetch(fetch);
+	const [msoaRows, bars, ruralUrban] = await Promise.all([
+		loadMsoaRatiosFetch(fetch),
+		loadNationalContextBarsFetch(fetch),
+		loadRuralUrbanFetch(fetch)
+	]);
 	const ratioByMsoa = Object.fromEntries(ratioByMsoaCode(msoaRows));
 	const msoaDistribution = msoaRatioDistribution(msoaRows);
 	const msoaNameByCode = Object.fromEntries(
@@ -18,5 +22,5 @@ export const load: PageLoad = async ({ fetch }) => {
 			return [code, name] as const;
 		}).filter(([code]) => code)
 	);
-	return { msoaRows, bars, ratioByMsoa, msoaDistribution, msoaNameByCode };
+	return { msoaRows, bars, ruralUrban, ratioByMsoa, msoaDistribution, msoaNameByCode };
 };

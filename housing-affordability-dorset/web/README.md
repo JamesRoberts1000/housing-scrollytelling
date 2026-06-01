@@ -74,6 +74,7 @@ Open the URL printed in the terminal (usually `http://localhost:5173`).
 After re-running the Python cleaners / ratio script, copy updated outputs into `static/data/`:
 
 - `dorset_msoa_affordability_ratios.csv`
+- `dorset_msoa_rural_urban.csv` (from `scripts/build_dorset_msoa_rural_urban.py`)
 - `aff1ratioofhousepricetoworkplacebasedearnings_regions_latest.csv`
 - `aff1ratioofhousepricetoworkplacebasedearnings_latest.csv`
 
