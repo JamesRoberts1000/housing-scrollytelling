@@ -6,6 +6,7 @@
 	import RuralUrbanComparison from '$lib/components/RuralUrbanComparison.svelte';
 	import DorsetMap from '$lib/components/DorsetMap.svelte';
 	import Hero from '$lib/components/Hero.svelte';
+import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte';
 	import StickyScroller from '$lib/components/StickyScroller.svelte';
 	import type { PageData } from './$types';
 
@@ -140,25 +141,25 @@
 
 	const housingTypeCaptions: { body: string | string[] }[] = [
 		{
-			body: 'Housing affordability varied by property type.'
+		body: 'Headline affordability combines all property types and can hide important differences within local markets.'
 		},
 		{
-			body: 'Detached homes had the highest prices across most MSOAs.'
+		body: 'Detached homes were typically the least affordable dwelling type across Dorset neighbourhoods.'
 		},
 		{
-			body: 'Flats were generally more affordable than detached or semi-detached homes.'
+		body: 'Semi-detached homes remained expensive in many places, but generally sat below detached prices.'
 		},
 		{
-			body: 'In some areas, flat prices were substantially lower than overall house prices.'
+		body: 'Terraced markets were often more accessible than detached and semi-detached homes.'
 		},
 		{
-			body: 'Parts of Weymouth and Portland had comparatively affordable flat prices.'
+		body: 'When flats are isolated, affordability improves in part of Dorset — though not uniformly.'
 		},
 		{
-			body: 'Some rural areas had relatively few flats or smaller dwellings available.'
+		body: 'Weymouth and Portland stand out as comparatively accessible flat markets.'
 		},
 		{
-			body: 'In several coastal and retirement areas, flat prices remained comparatively high.'
+		body: 'Some retirement and amenity areas still had expensive flats, while some rural places had limited flat-market data.'
 		}
 	];
 
@@ -268,8 +269,14 @@
 {#snippet section7Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 7</p>
 	<h2 id="section-7-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
-		Housing type changes the story
+		How does affordability vary by property type?
 	</h2>
+	<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-[21px] leading-relaxed text-muted">
+		<p>The affordability measures shown so far have combined all property types.</p>
+		<p>
+			The charts below explore how affordability varied for detached, semi-detached, terraced homes and flats.
+		</p>
+	</div>
 {/snippet}
 
 {#snippet section8Heading()}
@@ -310,7 +317,7 @@
 {/snippet}
 
 {#snippet housingTypeGraphic(step: number)}
-	<ChartPlaceholder label="Affordability by housing type" {step} />
+	<HousingTypeMorphChart data={data.housingTypeAffordability} {step} />
 {/snippet}
 
 {#snippet marketsGraphic(step: number)}

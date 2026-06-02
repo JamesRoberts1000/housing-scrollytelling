@@ -15,3 +15,15 @@ export const DORSET_LA_LOWER_QUARTILE_RATIO_COL =
 /** MSOA headline ratio for map choropleth (existing dwellings, all types). */
 export const MSOA_EXISTING_MEDIAN_RATIO_COL =
 	'Table 3a - Median price paid (existing dwellings) by MSOA, England and Wales, year ending December 1995 to year ending September 2025';
+
+export const MSOA_EXISTING_DETACHED_RATIO_COL =
+	'Table 3b - Median price paid (existing dwellings) for detached houses by MSOA, England and Wales, year ending December 1995 to year ending September 2025';
+
+export const MSOA_EXISTING_SEMI_DETACHED_RATIO_COL =
+	'Table 3c - Median price paid (existing dwellings) for semi-detached houses by MSOA, England and Wales, year ending December 1995 to year ending September 2025';
+
+export const MSOA_EXISTING_TERRACED_RATIO_COL =
+	'Table 3d - Median price paid (existing dwellings) for terraced houses by MSOA, England and Wales, year ending December 1995 to year ending September 2025';
+
+export const MSOA_EXISTING_FLAT_RATIO_COL =
+	'Table 3e - Median price paid (existing dwellings) for flats/maisonettes by MSOA, England and Wales, year ending December 1995 to year ending September 2025';

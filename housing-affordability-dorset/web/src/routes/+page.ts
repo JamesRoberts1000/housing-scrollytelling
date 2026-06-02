@@ -6,17 +6,20 @@ import {
 } from '$lib/data/loadAffordabilityData';
 import { loadAgeAffordabilityFetch } from '$lib/data/loadAgeAffordabilityData';
 import { loadCoastalInlandFetch } from '$lib/data/loadCoastalInlandData';
+import { loadHousingTypeAffordabilityFetch } from '$lib/data/loadHousingTypeData';
 import { loadRuralUrbanFetch } from '$lib/data/loadRuralUrbanData';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
-	const [msoaRows, bars, ruralUrban, coastalInland, ageAffordability] = await Promise.all([
-		loadMsoaRatiosFetch(fetch),
-		loadNationalContextBarsFetch(fetch),
-		loadRuralUrbanFetch(fetch),
-		loadCoastalInlandFetch(fetch),
-		loadAgeAffordabilityFetch(fetch)
-	]);
+	const [msoaRows, bars, ruralUrban, coastalInland, ageAffordability, housingTypeAffordability] =
+		await Promise.all([
+			loadMsoaRatiosFetch(fetch),
+			loadNationalContextBarsFetch(fetch),
+			loadRuralUrbanFetch(fetch),
+			loadCoastalInlandFetch(fetch),
+			loadAgeAffordabilityFetch(fetch),
+			loadHousingTypeAffordabilityFetch(fetch)
+		]);
 	const ratioByMsoa = Object.fromEntries(ratioByMsoaCode(msoaRows));
 	const msoaDistribution = msoaRatioDistribution(msoaRows);
 	const msoaNameByCode = Object.fromEntries(
@@ -32,6 +35,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		ruralUrban,
 		coastalInland,
 		ageAffordability,
+		housingTypeAffordability,
 		ratioByMsoa,
 		msoaDistribution,
 		msoaNameByCode
