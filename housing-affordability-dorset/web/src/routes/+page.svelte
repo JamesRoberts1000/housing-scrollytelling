@@ -144,22 +144,35 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		body: 'Headline affordability combines all property types and can hide important differences within local markets.'
 		},
 		{
-		body: 'Detached homes were typically the least affordable dwelling type across Dorset neighbourhoods.'
+		body: [
+			'**Detached** homes were typically the least affordable dwelling type across Dorset neighbourhoods.',
+			'They also showed the greatest variation in price.'
+		]
 		},
 		{
-		body: 'Semi-detached homes remained expensive in many places, but generally sat below detached prices.'
+		body: '**Semi-detached** homes remained expensive in many places, but generally sat below detached prices.'
 		},
 		{
-		body: 'Terraced markets were often more accessible than detached and semi-detached homes.'
+		body: [
+
+		'**Terraced** markets were often more accessible than detached and semi-detached homes.',
+			  'They also generally showed the less variation in price.'
+		]
 		},
 		{
-		body: 'When flats are isolated, affordability improves in part of Dorset — though not uniformly.'
+		body: [
+			'In some parts of Dorset **flats** are relatively affordable.',
+			  'In 15 areas they fall below the ONS threshold for affordability (5x).'
+		]
 		},
 		{
 		body: 'Weymouth and Portland stand out as comparatively accessible flat markets.'
 		},
 		{
 		body: 'Some retirement and amenity areas still had expensive flats, while some rural places had limited flat-market data.'
+		},
+		{
+		body: 'Viewing all dwelling types together shows the full spread of affordability within each neighbourhood, with detached homes typically least affordable and flats often lower where available.'
 		}
 	];
 
@@ -398,6 +411,8 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		bind:activeStep={housingTypeActiveStep}
 		compactGraphic
 		compactSteps
+		triggerOnCaption
+		triggerLine={0.5}
 	/>
 </section>
 

@@ -6,6 +6,24 @@ export const STEP_TERRACED = 3;
 export const STEP_FLATS = 4;
 export const STEP_FLATS_AFFORDABLE = 5;
 export const STEP_FLATS_EXPENSIVE_OR_SCARCE = 6;
+export const STEP_LINKED_ALL_TYPES = 7;
+
+export const LINKED_TYPE_KEYS = ['detached', 'semiDetached', 'terraced', 'flats'] as const;
+export type LinkedTypeKey = (typeof LINKED_TYPE_KEYS)[number];
+
+export const TYPE_LABELS: Record<LinkedTypeKey, string> = {
+	detached: 'Detached',
+	semiDetached: 'Semi-detached',
+	terraced: 'Terraced',
+	flats: 'Flats'
+};
+
+export const TYPE_COLORS: Record<LinkedTypeKey, string> = {
+	detached: '#0b0c0c',
+	semiDetached: '#206095',
+	terraced: '#5694ca',
+	flats: '#85994b'
+};
 
 export const POINT_FILL = '#5C6B7A';
 export const MUTED_POINT_FILL = '#B1B4B6';
