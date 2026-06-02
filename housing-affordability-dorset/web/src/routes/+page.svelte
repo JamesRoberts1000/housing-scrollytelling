@@ -172,7 +172,7 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		body: 'Some retirement and amenity areas still had expensive flats, while some rural places had limited flat-market data.'
 		},
 		{
-		body: 'Viewing all dwelling types together shows the full spread of affordability within each neighbourhood, with detached homes typically least affordable and flats often lower where available.'
+		body: 'Viewing all dwelling types together shows the full spread of affordability within each neighbourhood, with detached homes typically least affordable and flats (where available) most affordable.'
 		}
 	];
 
@@ -409,7 +409,6 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		graphic={housingTypeGraphic}
 		heading={section7Heading}
 		bind:activeStep={housingTypeActiveStep}
-		compactGraphic
 		compactSteps
 		triggerOnCaption
 		triggerLine={0.5}
