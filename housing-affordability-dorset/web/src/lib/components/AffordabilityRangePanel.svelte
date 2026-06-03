@@ -17,10 +17,13 @@
 	const width = 268;
 	/* Inner SVG padding below axis ticks (tick + label) */
 	/* bottom: room for tick marks + numeric axis labels (no clipping) */
-	const padding = { top: 4, right: 10, bottom: 24, left: 10 };
-	/* Vertically compact: small gutter above strip + shorter bar + tighter axis */
-	const stripTop = 6;
+	const padding = { top: 12, right: 10, bottom: 24, left: 10 };
+	/* Room above strip for downward-pointing hover arrow */
+	const stripTop = 12;
 	const stripH = 30;
+	const markerArrowHalf = 7;
+	const markerArrowHeight = 9;
+	const markerColor = '#f47738';
 	const innerW = width - padding.left - padding.right;
 	const svgHeight = stripTop + stripH + padding.bottom;
 
@@ -86,29 +89,46 @@
 			{#each distribution as d (d.code)}
 				{#if Number.isFinite(d.ratio)}
 					{@const cx = xScale(d.ratio)}
-					{#if Number.isFinite(cx)}
+					{#if Number.isFinite(cx) && !(hovered && hovered.code === d.code)}
 						<line
 							x1={cx}
 							y1={stripTop + 2}
 							x2={cx}
 							y2={stripTop + stripH - 2}
 							stroke="#626a6f"
-							stroke-opacity={hovered?.code === d.code ? 0.35 : 0.55}
-							stroke-width={hovered?.code === d.code ? 1 : 1.25}
+							stroke-opacity={hovered ? 0.2 : 0.55}
+							stroke-width="1.25"
 						/>
 					{/if}
 				{/if}
 			{/each}
 
 			{#if markerX !== null}
-				<line
-					x1={markerX}
-					y1={stripTop}
-					x2={markerX}
-					y2={stripTop + stripH}
-					stroke="#f47738"
-					stroke-width="3"
-				/>
+				<g aria-hidden="true">
+					<line
+						x1={markerX}
+						y1={stripTop}
+						x2={markerX}
+						y2={stripTop + stripH}
+						stroke="#ffffff"
+						stroke-width="6"
+					/>
+					<line
+						x1={markerX}
+						y1={stripTop}
+						x2={markerX}
+						y2={stripTop + stripH}
+						stroke={markerColor}
+						stroke-width="3.5"
+					/>
+					<polygon
+						points="{markerX},{stripTop} {markerX - markerArrowHalf},{stripTop - markerArrowHeight} {markerX + markerArrowHalf},{stripTop - markerArrowHeight}"
+						fill={markerColor}
+						stroke="#ffffff"
+						stroke-width="1.5"
+						stroke-linejoin="round"
+					/>
+				</g>
 			{/if}
 
 			<!-- Axis -->

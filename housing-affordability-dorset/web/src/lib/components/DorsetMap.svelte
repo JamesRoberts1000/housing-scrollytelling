@@ -136,12 +136,18 @@
 		mapInstance.setLayoutProperty('msoa-story-outline', 'visibility', 'visible');
 	}
 
-	function fitToCodes(codes: readonly string[], maxZoom = 11): void {
+	function fitToCodes(
+		codes: readonly string[],
+		maxZoom = 11,
+		durationMultiplier = 1
+	): void {
 		if (!mapInstance || !maplibregl || !geojsonForMap) return;
 		const bb = bboxForCodes(geojsonForMap, new Set(codes));
 		if (!bb) return;
 		const b = new maplibregl.LngLatBounds(bb[0], bb[1]);
-		mapInstance.fitBounds(b, { padding: 56, maxZoom, duration: reducedMotionMs() });
+		const baseDur = reducedMotionMs();
+		const duration = baseDur === 0 ? 0 : Math.round(baseDur * durationMultiplier);
+		mapInstance.fitBounds(b, { padding: 56, maxZoom, duration });
 	}
 
 	function placeMarkers(codes: readonly string[]): void {
@@ -191,7 +197,7 @@
 		} else if (s === 2) {
 			const codes = [...MSOA_WEYMOUTH_PORTLAND];
 			setStoryOutlineForCodes(codes);
-			fitToCodes(codes, 11);
+			fitToCodes(codes, 11, 1.5);
 		} else if (s === 3) {
 			const codes = [MSOA_UNDERHILL_GROVE];
 			setStoryOutlineForCodes(codes);
@@ -280,6 +286,7 @@
 
 		resizeObserver = new ResizeObserver(() => {
 			mapInstance?.resize();
+			if (mapReady) queueMicrotask(() => applyStep(step));
 		});
 		resizeObserver.observe(container);
 

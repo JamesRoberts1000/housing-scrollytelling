@@ -3,7 +3,6 @@
 		RURAL_CHART_FILL,
 		RURAL_MAP_FILL,
 		SHOW_GAP,
-		SHOW_URBAN_MEDIAN,
 		UNCLASSIFIED_MAP_FILL,
 		URBAN_CHART_FILL,
 		URBAN_MAP_FILL
@@ -73,7 +72,7 @@
 		];
 	}
 
-	let mapOpacity = $derived(step >= SHOW_URBAN_MEDIAN ? 1 : step >= 1 ? 0.45 : 0.2);
+	let mapOpacity = 1;
 
 	onMount(async () => {
 		if (!container) return;
@@ -185,7 +184,7 @@
 		if (!mapInstance || !mapReady) return;
 		const layer = mapInstance.getLayer('msoa-fill');
 		if (!layer) return;
-		const op = step >= SHOW_GAP ? 0.85 : mapOpacity;
+		const op = step >= SHOW_GAP ? 0.85 : 1;
 		mapInstance.setPaintProperty('msoa-fill', 'fill-opacity', op);
 	});
 </script>
@@ -193,19 +192,17 @@
 <div
 	class="relative h-full w-full overflow-hidden rounded-sm border border-line transition-opacity duration-500 motion-reduce:transition-none"
 	style:opacity={mapReady ? mapOpacity : 0}
-	aria-hidden={step < SHOW_URBAN_MEDIAN}
+	aria-hidden={false}
 >
 	<div bind:this={container} class="h-full min-h-[120px] w-full"></div>
-	{#if step >= SHOW_URBAN_MEDIAN}
-		<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[13px] text-ink">
-			<li class="flex items-center gap-1">
-				<span class="inline-block h-2 w-2 rounded-sm" style:background={RURAL_CHART_FILL}></span>
-				Rural
-			</li>
-			<li class="flex items-center gap-1">
-				<span class="inline-block h-2 w-2 rounded-sm" style:background={URBAN_CHART_FILL}></span>
-				Urban
-			</li>
-		</ul>
-	{/if}
+	<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[13px] text-ink">
+		<li class="flex items-center gap-1">
+			<span class="inline-block h-2 w-2 rounded-sm" style:background={RURAL_CHART_FILL}></span>
+			Rural
+		</li>
+		<li class="flex items-center gap-1">
+			<span class="inline-block h-2 w-2 rounded-sm" style:background={URBAN_CHART_FILL}></span>
+			Urban
+		</li>
+	</ul>
 </div>

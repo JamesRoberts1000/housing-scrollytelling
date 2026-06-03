@@ -149,8 +149,11 @@
 
 	const ticks = [6, 8, 10, 12, 14, 16, 18];
 
-	function labelWidth(name: string): number {
-		return Math.min(292, Math.max(90, Math.ceil(name.length * 6.3) + 18));
+	function calloutLabelWidth(name: string): number {
+		const base = Math.max(90, Math.ceil(name.length * 6.3) + 18);
+		if (name.startsWith('Lyme Regis')) return 320;
+		if (name.includes('Sturminster')) return Math.max(base + 28, Math.ceil(name.length * 7.2) + 26);
+		return base;
 	}
 
 	function clampLabelX(cx: number, labelW: number): number {
@@ -176,7 +179,7 @@
 		const sorted = [...pts].sort((a, b) => a.cx - b.cx);
 		if (sorted.length < 3) {
 			return sorted.map((point, i) => {
-				const labelW = labelWidth(point.row.name);
+				const labelW = calloutLabelWidth(point.row.name);
 				return {
 					point,
 					labelW,
@@ -195,27 +198,27 @@
 		const lymeAbove: CalloutLayout = {
 			point: lyme,
 			placement: 'above',
-			labelW: labelWidth(lyme.row.name),
+			labelW: calloutLabelWidth(lyme.row.name),
 			labelH: CALLOUT_LABEL_H,
-			labelX: clampLabelX(lyme.cx, labelWidth(lyme.row.name)),
+			labelX: clampLabelX(lyme.cx, calloutLabelWidth(lyme.row.name)),
 			labelY: lyme.cy - 52
 		};
 
 		const stLeonardsAbove: CalloutLayout = {
 			point: stLeonards,
 			placement: 'above',
-			labelW: labelWidth(stLeonards.row.name),
+			labelW: calloutLabelWidth(stLeonards.row.name),
 			labelH: CALLOUT_LABEL_H,
-			labelX: clampLabelX(stLeonards.cx, labelWidth(stLeonards.row.name)),
+			labelX: clampLabelX(stLeonards.cx, calloutLabelWidth(stLeonards.row.name)),
 			labelY: stLeonards.cy - CALLOUT_LABEL_H - 24
 		};
 
 		const sturminsterBelow: CalloutLayout = {
 			point: sturminster,
 			placement: 'below',
-			labelW: labelWidth(sturminster.row.name),
+			labelW: calloutLabelWidth(sturminster.row.name),
 			labelH: CALLOUT_LABEL_H,
-			labelX: clampLabelX(sturminster.cx, labelWidth(sturminster.row.name)),
+			labelX: clampLabelX(sturminster.cx, calloutLabelWidth(sturminster.row.name)),
 			labelY: lowerRow2
 		};
 

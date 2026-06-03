@@ -63,7 +63,7 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 
 	const ruralCaptions: { body: string | string[] }[] = [
 		{
-			body: 'Rural areas generally had higher affordability ratios than urban areas.'
+			body: 'Rural areas generally had higher affordability ratios than urban areas, meaning they are less affordable.'
 		},
 		{
 			body: [
@@ -371,6 +371,7 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		heading={section3Heading}
 		bind:activeStep
 		triggerOnCaption
+		graphicFillHeight={false}
 	/>
 </section>
 

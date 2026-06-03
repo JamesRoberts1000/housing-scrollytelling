@@ -4,7 +4,6 @@
 		COASTAL_MAP_FILL,
 		INLAND_CHART_FILL,
 		INLAND_MAP_FILL,
-		SHOW_MEDIANS,
 		UNCLASSIFIED_MAP_FILL
 	} from '$lib/constants/coastalInlandStory';
 	import type { CoastalInlandGroup } from '$lib/types/coastalInland';
@@ -72,7 +71,7 @@
 		];
 	}
 
-	let mapOpacity = $derived(step >= SHOW_MEDIANS ? 1 : step >= 1 ? 0.45 : 0.2);
+	let mapOpacity = 1;
 
 	onMount(async () => {
 		if (!container) return;
@@ -191,19 +190,17 @@
 <div
 	class="relative h-full w-full overflow-hidden rounded-sm border border-line transition-opacity duration-500 motion-reduce:transition-none"
 	style:opacity={mapReady ? mapOpacity : 0}
-	aria-hidden={step < SHOW_MEDIANS}
+	aria-hidden={false}
 >
 	<div bind:this={container} class="h-full min-h-[120px] w-full"></div>
-	{#if step >= SHOW_MEDIANS}
-		<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[13px] text-ink">
-			<li class="flex items-center gap-1">
-				<span class="inline-block h-2 w-2 rounded-sm" style:background={COASTAL_CHART_FILL}></span>
-				Coastal
-			</li>
-			<li class="flex items-center gap-1">
-				<span class="inline-block h-2 w-2 rounded-sm" style:background={INLAND_CHART_FILL}></span>
-				Inland
-			</li>
-		</ul>
-	{/if}
+	<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[13px] text-ink">
+		<li class="flex items-center gap-1">
+			<span class="inline-block h-2 w-2 rounded-sm" style:background={COASTAL_CHART_FILL}></span>
+			Coastal
+		</li>
+		<li class="flex items-center gap-1">
+			<span class="inline-block h-2 w-2 rounded-sm" style:background={INLAND_CHART_FILL}></span>
+			Inland
+		</li>
+	</ul>
 </div>

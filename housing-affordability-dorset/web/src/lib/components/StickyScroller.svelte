@@ -42,6 +42,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		triggerOnCaption?: boolean;
 		/** Extra scroll runway after the last caption so the sticky graphic stays pinned until it scrolls off the top */
 		tailScrollMinHeight?: string;
+		/** Stretch the sticky graphic to fill the viewport (disable for Section 3 map zoom behaviour) */
+		graphicFillHeight?: boolean;
 	};
 
 	let {
@@ -57,7 +59,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		triggerLine = 2 / 3,
 		advanceOnTopEdge = false,
 		triggerOnCaption = false,
-		tailScrollMinHeight = '100svh'
+		tailScrollMinHeight = '100svh',
+		graphicFillHeight = true
 	}: Props = $props();
 
 	let stepsRoot = $state<HTMLDivElement | null>(null);
@@ -212,9 +215,11 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		class:md:order-none={leadWithGraphicOnMobile}
 	>
 		<div
-			class="flex min-h-[280px] w-full flex-col md:sticky md:top-0 md:z-10"
-			class:h-full={!compactGraphic}
-			class:min-h-0={!compactGraphic}
+			class="min-h-[280px] w-full md:sticky md:top-0 md:z-10"
+			class:flex={graphicFillHeight}
+			class:flex-col={graphicFillHeight}
+			class:h-full={graphicFillHeight && !compactGraphic}
+			class:min-h-0={graphicFillHeight && !compactGraphic}
 			class:overflow-hidden={!compactGraphic}
 			class:overflow-visible={compactGraphic}
 			class:max-md:h-[100svh]={!compactGraphic}
