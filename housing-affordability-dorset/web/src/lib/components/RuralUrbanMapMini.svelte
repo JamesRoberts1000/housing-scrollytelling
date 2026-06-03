@@ -9,6 +9,7 @@
 		URBAN_MAP_FILL
 	} from '$lib/constants/ruralUrbanStory';
 	import type { RuralUrbanGroup } from '$lib/types/ruralUrban';
+	import { assetPath } from '$lib/utils/assetPath';
 	import { onDestroy, onMount } from 'svelte';
 
 	type Props = {
@@ -79,7 +80,7 @@
 		maplibregl = (await import('maplibre-gl')).default;
 		await import('maplibre-gl/dist/maplibre-gl.css');
 
-		const response = await fetch('/geo/dorset_msoa_2021.geojson');
+		const response = await fetch(assetPath('/geo/dorset_msoa_2021.geojson'));
 		const geojson = (await response.json()) as FeatureCollection;
 
 		for (const feature of geojson.features) {

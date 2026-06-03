@@ -7,6 +7,7 @@ import {
 	REGION_MEDIAN_RATIO_COL
 } from '$lib/constants/dataColumns';
 import type { BarDatum, DorsetLaRow, MsoaRatioRow, RegionRow } from '$lib/types/affordability';
+import { assetPath } from '$lib/utils/assetPath';
 
 function num(v: string | undefined): number {
 	if (v === undefined || v === '') return NaN;
@@ -14,22 +15,26 @@ function num(v: string | undefined): number {
 	return Number.isFinite(n) ? n : NaN;
 }
 
-export async function loadMsoaRatios(url = '/data/dorset_msoa_affordability_ratios.csv'): Promise<MsoaRatioRow[]> {
+export async function loadMsoaRatios(
+	url = assetPath('/data/dorset_msoa_affordability_ratios.csv')
+): Promise<MsoaRatioRow[]> {
 	const rows = await csv(url);
 	return rows as unknown as MsoaRatioRow[];
 }
 
 export async function loadMsoaRatiosFetch(fetchFn: typeof fetch): Promise<MsoaRatioRow[]> {
-	const text = await fetchFn('/data/dorset_msoa_affordability_ratios.csv').then((r) => r.text());
+	const text = await fetchFn(assetPath('/data/dorset_msoa_affordability_ratios.csv')).then((r) => r.text());
 	return csvParse(text) as unknown as MsoaRatioRow[];
 }
 
 export async function loadNationalContextBarsFetch(fetchFn: typeof fetch): Promise<BarDatum[]> {
 	const [regionsText, laText] = await Promise.all([
-		fetchFn('/data/aff1ratioofhousepricetoworkplacebasedearnings_regions_latest.csv').then((r) =>
-			r.text()
+		fetchFn(assetPath('/data/aff1ratioofhousepricetoworkplacebasedearnings_regions_latest.csv')).then(
+			(r) => r.text()
 		),
-		fetchFn('/data/aff1ratioofhousepricetoworkplacebasedearnings_latest.csv').then((r) => r.text())
+		fetchFn(assetPath('/data/aff1ratioofhousepricetoworkplacebasedearnings_latest.csv')).then((r) =>
+			r.text()
+		)
 	]);
 	const regions = csvParse(regionsText);
 	const la = csvParse(laText);

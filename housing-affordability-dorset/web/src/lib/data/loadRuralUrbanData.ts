@@ -5,6 +5,7 @@ import type {
 	RuralUrbanBundle,
 	RuralUrbanGroup
 } from '$lib/types/ruralUrban';
+import { assetPath } from '$lib/utils/assetPath';
 
 function num(v: string | undefined): number {
 	if (v === undefined || v === '') return NaN;
@@ -92,7 +93,7 @@ export function buildRuralUrbanBundle(rows: MsoaRuralUrbanRow[]): RuralUrbanBund
 }
 
 export async function loadRuralUrbanFetch(fetchFn: typeof fetch): Promise<RuralUrbanBundle> {
-	const text = await fetchFn('/data/dorset_msoa_rural_urban.csv').then((r) => {
+	const text = await fetchFn(assetPath('/data/dorset_msoa_rural_urban.csv')).then((r) => {
 		if (!r.ok) throw new Error(`Failed to load rural/urban data: ${r.status}`);
 		return r.text();
 	});

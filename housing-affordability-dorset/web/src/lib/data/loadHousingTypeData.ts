@@ -11,6 +11,7 @@ import type {
 	HousingTypeAffordabilityRow,
 	HousingTypeAffordabilitySummary
 } from '$lib/types/housingType';
+import { assetPath } from '$lib/utils/assetPath';
 
 function num(v: string | undefined): number {
 	if (v === undefined || v === '') return NaN;
@@ -84,7 +85,7 @@ export function buildHousingTypeBundle(rows: HousingTypeAffordabilityRow[]): Hou
 export async function loadHousingTypeAffordabilityFetch(
 	fetchFn: typeof fetch
 ): Promise<HousingTypeAffordabilityBundle> {
-	const text = await fetchFn('/data/dorset_msoa_affordability_ratios.csv').then((r) => {
+	const text = await fetchFn(assetPath('/data/dorset_msoa_affordability_ratios.csv')).then((r) => {
 		if (!r.ok) throw new Error(`Failed to load housing-type affordability data: ${r.status}`);
 		return r.text();
 	});

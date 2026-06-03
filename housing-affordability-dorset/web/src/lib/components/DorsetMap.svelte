@@ -6,6 +6,7 @@
 		SECTION3_MAP_LABEL
 	} from '$lib/constants/dorsetMapStory';
 	import type { MsoaRatioPoint } from '$lib/data/loadAffordabilityData';
+	import { assetPath } from '$lib/utils/assetPath';
 	import AffordabilityRangePanel from '$lib/components/AffordabilityRangePanel.svelte';
 	import type { MapLayerMouseEvent } from 'maplibre-gl';
 	import { onDestroy, onMount } from 'svelte';
@@ -214,7 +215,7 @@
 		maplibregl = (await import('maplibre-gl')).default;
 		await import('maplibre-gl/dist/maplibre-gl.css');
 
-		const response = await fetch('/geo/dorset_msoa_2021.geojson');
+		const response = await fetch(assetPath('/geo/dorset_msoa_2021.geojson'));
 		const geojson = (await response.json()) as FeatureCollection;
 
 		const labelCodes = new Set<string>([

@@ -5,6 +5,7 @@ import type {
 	CoastalInlandGroupSummary,
 	MsoaCoastalInlandRow
 } from '$lib/types/coastalInland';
+import { assetPath } from '$lib/utils/assetPath';
 import type { RuralUrbanGroup } from '$lib/types/ruralUrban';
 
 function num(v: string | undefined): number {
@@ -87,7 +88,7 @@ export function buildCoastalInlandBundle(rows: MsoaCoastalInlandRow[]): CoastalI
 }
 
 export async function loadCoastalInlandFetch(fetchFn: typeof fetch): Promise<CoastalInlandBundle> {
-	const text = await fetchFn('/data/dorset_msoa_coastal.csv').then((r) => {
+	const text = await fetchFn(assetPath('/data/dorset_msoa_coastal.csv')).then((r) => {
 		if (!r.ok) throw new Error(`Failed to load coastal/inland data: ${r.status}`);
 		return r.text();
 	});

@@ -4,6 +4,7 @@ import type {
 	AgeAffordabilitySummary,
 	MsoaAgeAffordabilityRow
 } from '$lib/types/ageAffordability';
+import { assetPath } from '$lib/utils/assetPath';
 
 function num(v: string | undefined): number {
 	if (v === undefined || v === '') return NaN;
@@ -84,7 +85,7 @@ export function buildAgeAffordabilityBundle(rows: MsoaAgeAffordabilityRow[]): Ag
 }
 
 export async function loadAgeAffordabilityFetch(fetchFn: typeof fetch): Promise<AgeAffordabilityBundle> {
-	const text = await fetchFn('/data/dorset_msoa_age.csv').then((r) => {
+	const text = await fetchFn(assetPath('/data/dorset_msoa_age.csv')).then((r) => {
 		if (!r.ok) throw new Error(`Failed to load age/affordability data: ${r.status}`);
 		return r.text();
 	});
