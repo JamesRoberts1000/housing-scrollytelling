@@ -57,7 +57,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		triggerLine = 2 / 3,
 		advanceOnTopEdge = false,
 		triggerOnCaption = false,
-		tailScrollMinHeight
+		tailScrollMinHeight = '100svh'
 	}: Props = $props();
 
 	let stepsRoot = $state<HTMLDivElement | null>(null);

@@ -41,6 +41,7 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 			body: [
 				'Housing affordability varies widely between Dorset’s neighbourhoods.',
 				'Affordability ratios range from just **under 6 to over 15**.',
+				'Hover over an area on the map to see its position in the range.'
 			]
 		},
 		{
@@ -50,7 +51,7 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 			]
 		},
 		{
-			body: 'More affordable areas were concentrated in parts of Weymouth and Portland.'
+			body: 'More affordable areas were concentrated in parts of **Weymouth and Portland**.'
 		},
 		{
 			body: [
@@ -71,10 +72,10 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 			]
 		},
 		{
-			body: 'Many of the least affordable areas were rural or semi-rural settlements.'
+			body: 'Many of the least affordable areas were **rural or semi-rural** settlements.'
 		},
 		{
-			body: 'Urban areas tended to have a wider mix of housing types and lower median prices.'
+			body: '**Urban** areas tended to have a wider mix of housing types and lower median prices.'
 		}
 	];
 
@@ -421,7 +422,6 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		compactSteps
 		triggerOnCaption
 		triggerLine={0.5}
-		tailScrollMinHeight="100svh"
 	/>
 </section>
 
