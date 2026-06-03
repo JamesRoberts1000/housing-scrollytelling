@@ -1,12 +1,12 @@
 <script lang="ts">
 	import AffordabilityBars from '$lib/components/AffordabilityBars.svelte';
 	import AgeAffordabilityScatter from '$lib/components/AgeAffordabilityScatter.svelte';
-	import ChartPlaceholder from '$lib/components/ChartPlaceholder.svelte';
 	import CoastalInlandComparison from '$lib/components/CoastalInlandComparison.svelte';
+	import HousingMarketTypology from '$lib/components/HousingMarketTypology.svelte';
 	import RuralUrbanComparison from '$lib/components/RuralUrbanComparison.svelte';
 	import DorsetMap from '$lib/components/DorsetMap.svelte';
 	import Hero from '$lib/components/Hero.svelte';
-import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte';
+	import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte';
 	import StickyScroller from '$lib/components/StickyScroller.svelte';
 	import type { PageData } from './$types';
 
@@ -191,13 +191,25 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 			body: 'The data suggests Dorset contains several different housing markets.'
 		},
 		{
-			body: 'Some rural areas had high house prices, limited smaller housing and older populations.'
+			body: [
+				'Some **rural** areas had high house prices, limited smaller housing and older populations.',
+				'These neighbourhoods often form **rural lifestyle markets** where detached homes dominate and flats are scarce.'
+			]
 		},
 		{
-			body: 'Parts of Weymouth and Portland had lower prices and more affordable flats and terraces.'
+			body: [
+				'Parts of **Weymouth**, **Portland** and **Gillingham** had lower prices and more affordable flats and terraces.',
+				'These **urban and working coastal markets** offered comparatively accessible entry-level ownership.'
+			]
 		},
 		{
-			body: 'Some coastal and retirement areas had high prices across multiple property types.'
+			body: [
+				'Some **coastal and retirement** areas — including **St Leonards**, **Swanage** and **Lyme Regis** — had high prices across multiple property types.',
+				'These **retirement and amenity markets** reflect downsizer demand and second-home influence.'
+			]
+		},
+		{
+			body: 'Together, these groupings show that Dorset is not a single housing market — affordability depends on how location, age structure and housing mix combine in each neighbourhood.'
 		}
 	];
 </script>
@@ -305,8 +317,16 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 {#snippet section8Heading()}
 	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 8</p>
 	<h2 id="section-8-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
-		Different Housing Markets
+		Different housing markets across Dorset
 	</h2>
+	<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-[21px] leading-relaxed text-muted">
+		<p>Housing affordability patterns were not the same across all parts of Dorset.</p>
+		<p>
+			Differences in housing type, age structure and geography suggest that some neighbourhoods shared similar housing
+			market characteristics.
+		</p>
+		<p>The map below groups neighbourhoods with similar housing market characteristics.</p>
+	</div>
 {/snippet}
 
 {#snippet barsGraphic(step: number)}
@@ -344,7 +364,7 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 {/snippet}
 
 {#snippet marketsGraphic(step: number)}
-	<ChartPlaceholder label="Housing market typology" {step} />
+	<HousingMarketTypology data={data.housingMarketTypology} {step} />
 {/snippet}
 
 <Hero />
@@ -429,8 +449,8 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		graphic={marketsGraphic}
 		heading={section8Heading}
 		bind:activeStep={marketsActiveStep}
-		compactGraphic
-		compactSteps
+		triggerOnCaption
+		triggerLine={0.5}
 	/>
 </section>
 

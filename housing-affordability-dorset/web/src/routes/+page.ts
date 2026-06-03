@@ -7,18 +7,20 @@ import {
 import { loadAgeAffordabilityFetch } from '$lib/data/loadAgeAffordabilityData';
 import { loadCoastalInlandFetch } from '$lib/data/loadCoastalInlandData';
 import { loadHousingTypeAffordabilityFetch } from '$lib/data/loadHousingTypeData';
+import { loadHousingMarketTypologyFetch } from '$lib/data/loadHousingMarketTypology';
 import { loadRuralUrbanFetch } from '$lib/data/loadRuralUrbanData';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
-	const [msoaRows, bars, ruralUrban, coastalInland, ageAffordability, housingTypeAffordability] =
+	const [msoaRows, bars, ruralUrban, coastalInland, ageAffordability, housingTypeAffordability, housingMarketTypology] =
 		await Promise.all([
 			loadMsoaRatiosFetch(fetch),
 			loadNationalContextBarsFetch(fetch),
 			loadRuralUrbanFetch(fetch),
 			loadCoastalInlandFetch(fetch),
 			loadAgeAffordabilityFetch(fetch),
-			loadHousingTypeAffordabilityFetch(fetch)
+			loadHousingTypeAffordabilityFetch(fetch),
+			loadHousingMarketTypologyFetch(fetch)
 		]);
 	const ratioByMsoa = Object.fromEntries(ratioByMsoaCode(msoaRows));
 	const msoaDistribution = msoaRatioDistribution(msoaRows);
@@ -36,6 +38,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		coastalInland,
 		ageAffordability,
 		housingTypeAffordability,
+		housingMarketTypology,
 		ratioByMsoa,
 		msoaDistribution,
 		msoaNameByCode
