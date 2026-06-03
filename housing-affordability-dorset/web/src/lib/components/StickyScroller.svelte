@@ -212,7 +212,9 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		class:md:order-none={leadWithGraphicOnMobile}
 	>
 		<div
-			class="min-h-[280px] w-full md:sticky md:top-0 md:z-10"
+			class="flex min-h-[280px] w-full flex-col md:sticky md:top-0 md:z-10"
+			class:h-full={!compactGraphic}
+			class:min-h-0={!compactGraphic}
 			class:overflow-hidden={!compactGraphic}
 			class:overflow-visible={compactGraphic}
 			class:max-md:h-[100svh]={!compactGraphic}
@@ -222,6 +224,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 			class:max-md:z-10={compactGraphic}
 			class:max-md:h-[min(56vh,480px)]={compactGraphic}
 			class:md:h-[min(92vh,580px)]={compactGraphic}
+			class:md:min-h-0={compactGraphic}
 		>
 			{@render graphic(activeStep)}
 		</div>

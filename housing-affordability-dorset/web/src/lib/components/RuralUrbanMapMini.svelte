@@ -191,13 +191,13 @@
 </script>
 
 <div
-	class="relative w-full overflow-hidden rounded-sm border border-line transition-opacity duration-500 motion-reduce:transition-none"
+	class="relative h-full w-full overflow-hidden rounded-sm border border-line transition-opacity duration-500 motion-reduce:transition-none"
 	style:opacity={mapReady ? mapOpacity : 0}
 	aria-hidden={step < SHOW_URBAN_MEDIAN}
 >
-	<div bind:this={container} class="h-[200px] w-full sm:h-[220px]"></div>
+	<div bind:this={container} class="h-full min-h-[120px] w-full"></div>
 	{#if step >= SHOW_URBAN_MEDIAN}
-		<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[10px] text-ink">
+		<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[13px] text-ink">
 			<li class="flex items-center gap-1">
 				<span class="inline-block h-2 w-2 rounded-sm" style:background={RURAL_CHART_FILL}></span>
 				Rural

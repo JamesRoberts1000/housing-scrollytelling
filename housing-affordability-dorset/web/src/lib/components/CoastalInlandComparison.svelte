@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { boxStats, formatRatio, jitterOffset, ratioExtent } from '$lib/charts/boxStrip';
 	import {
 		COASTAL_CHART_FILL,
@@ -6,6 +7,7 @@
 		SHOW_MEDIANS
 	} from '$lib/constants/coastalInlandStory';
 	import type { CoastalInlandBundle, CoastalInlandGroup, MsoaCoastalInlandRow } from '$lib/types/coastalInland';
+	import { allocateChartAndMapHeights } from '$lib/utils/stackedGraphicLayout';
 	import { scaleLinear } from 'd3';
 	import CoastalInlandMapMini from './CoastalInlandMapMini.svelte';
 
@@ -23,21 +25,37 @@
 	let { data, step = 0 }: Props = $props();
 
 	let maxStepReached = $state(0);
+	let graphicRoot = $state<HTMLDivElement | null>(null);
 	let chartWrap = $state<HTMLDivElement | null>(null);
 	let hovered = $state<MsoaCoastalInlandRow | null>(null);
 	let tooltipPos = $state({ x: 0, y: 0 });
+	let layoutSize = $state({ w: 640, h: 560 });
 
 	$effect(() => {
 		maxStepReached = Math.max(maxStepReached, step);
 	});
 
-	const width = 640;
-	const chartH = 268;
-	const margin = { top: 44, right: 16, bottom: 32, left: 68 };
-	const plotW = width - margin.left - margin.right;
-	const coastalMidY = margin.top + 52;
-	const inlandMidY = margin.top + 52 + 88;
-	const stripHalf = 26;
+	$effect(() => {
+		if (!graphicRoot || !browser) return;
+		const ro = new ResizeObserver(([entry]) => {
+			const { width: w, height: h } = entry.contentRect;
+			if (w > 0 && h > 0) layoutSize = { w, h };
+		});
+		ro.observe(graphicRoot);
+		return () => ro.disconnect();
+	});
+
+	const margin = { top: 44, right: 12, bottom: 32, left: 88 };
+	const groupLabelX = margin.left - 10;
+	let width = $derived(Math.max(640, Math.round(layoutSize.w)));
+	let layoutHeights = $derived(allocateChartAndMapHeights(layoutSize.h));
+	let chartH = $derived(layoutHeights.chartH);
+	let mapBlockH = $derived(layoutHeights.mapBlockH);
+	let plotW = $derived(width - margin.left - margin.right);
+	let plotInnerH = $derived(chartH - margin.top - margin.bottom);
+	let coastalMidY = $derived(margin.top + plotInnerH * 0.34);
+	let inlandMidY = $derived(margin.top + plotInnerH * 0.72);
+	let stripHalf = $derived(Math.min(26, Math.max(18, Math.round(plotInnerH * 0.11))));
 
 	let domain = $derived(ratioExtent(data.rows));
 	let xScale = $derived(scaleLinear().domain(domain).range([0, plotW]));
@@ -107,16 +125,18 @@
 	}
 </script>
 
-<div class="flex h-full min-h-0 w-full flex-col items-center justify-start px-4 py-6 sm:px-6">
-	<div class="w-full max-w-3xl">
+<div bind:this={graphicRoot} class="flex h-full min-h-0 w-full flex-col px-4 py-4 sm:px-6 sm:py-5">
+	<div class="mx-auto w-full max-w-3xl shrink-0">
 		<h3 class="mb-2 text-center text-[20px] font-bold leading-tight text-ink sm:text-[22px]">
 			Affordability by coastal and inland classification
 		</h3>
-		<p class="mb-4 text-center text-sm text-muted">
+		<p class="mb-3 text-center text-sm text-muted">
 			Each point is one MSOA. Higher ratios mean less affordable housing.
 		</p>
+	</div>
 
-		<div bind:this={chartWrap} class="relative mx-auto w-full max-w-full">
+	<div class="mx-auto flex w-full max-w-3xl flex-col gap-3">
+		<div bind:this={chartWrap} class="relative shrink-0" style:height="{chartH}px">
 			{#if hovered}
 				<div
 					class="pointer-events-none absolute z-10 max-w-[14rem] -translate-x-1/2 -translate-y-full rounded-sm border border-line bg-white px-2.5 py-1.5 text-left shadow-md"
@@ -124,15 +144,15 @@
 					style:top="{tooltipPos.y - 10}px"
 					role="tooltip"
 				>
-					<p class="text-[12px] font-semibold leading-snug text-ink">{hovered.name}</p>
-					<p class="mt-0.5 text-[11px] text-muted">
+					<p class="text-[14px] font-semibold leading-snug text-ink">{hovered.name}</p>
+					<p class="mt-0.5 text-[13px] text-muted">
 						{formatRatio(hovered.ratio)} · {hovered.group}
 					</p>
 				</div>
 			{/if}
 
 			<svg
-				class="mx-auto block w-full"
+				class="mx-auto block h-full w-full"
 				viewBox="0 0 {width} {chartH}"
 				role="img"
 				aria-label={ariaSummary}
@@ -149,24 +169,24 @@
 							stroke="#e5e4e2"
 							stroke-width="1"
 						/>
-						<text x={x} y={chartH - 8} text-anchor="middle" class="fill-muted text-[10px]">{t}×</text>
+						<text x={x} y={chartH - 8} text-anchor="middle" class="fill-muted text-[13px]">{t}×</text>
 					{/if}
 				{/each}
 
 				<text
-					x={margin.left - 8}
+					x={groupLabelX}
 					y={coastalMidY + 4}
 					text-anchor="end"
-					class="fill-ink text-[12px] font-bold"
+					class="fill-ink text-[18px] font-bold"
 					style="font-family: inherit"
 				>
 					Coastal
 				</text>
 				<text
-					x={margin.left - 8}
+					x={groupLabelX}
 					y={inlandMidY + 4}
 					text-anchor="end"
-					class="fill-ink text-[12px] font-bold"
+					class="fill-ink text-[18px] font-bold"
 					style="font-family: inherit"
 				>
 					Inland
@@ -287,7 +307,7 @@
 						x={coastalBox.medX}
 						y={margin.top - 10}
 						text-anchor="middle"
-						class="fill-ink text-[10px] font-semibold"
+						class="fill-ink text-[14px] font-semibold"
 					>
 						Coastal median {formatRatio(coastalMedian)}
 					</text>
@@ -308,7 +328,7 @@
 						x={inlandBox.medX}
 						y={inlandMidY + stripHalf + 26}
 						text-anchor="middle"
-						class="fill-ink text-[10px] font-semibold"
+						class="fill-ink text-[14px] font-semibold"
 					>
 						Inland median {formatRatio(inlandMedian)}
 					</text>
@@ -316,11 +336,13 @@
 			</svg>
 		</div>
 
-		<div class="mt-4">
-			<p class="mb-2 text-center text-xs text-muted">
+		<div class="flex shrink-0 flex-col gap-2" style:height="{mapBlockH}px">
+			<p class="shrink-0 text-center text-sm text-muted">
 				Coastal MSOAs based on Dorset coastal neighbourhood list
 			</p>
-			<CoastalInlandMapMini classificationByMsoa={data.classificationByMsoa} {step} />
+			<div class="min-h-0 flex-1">
+				<CoastalInlandMapMini classificationByMsoa={data.classificationByMsoa} {step} />
+			</div>
 		</div>
 	</div>
 </div>

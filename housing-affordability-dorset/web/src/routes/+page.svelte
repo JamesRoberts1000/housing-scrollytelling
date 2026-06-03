@@ -380,7 +380,6 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		graphic={ruralGraphic}
 		heading={section4Heading}
 		bind:activeStep={ruralActiveStep}
-		compactGraphic
 		compactSteps
 		triggerOnCaption
 		triggerLine={0.5}
@@ -393,7 +392,6 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		graphic={coastalGraphic}
 		heading={section5Heading}
 		bind:activeStep={coastalActiveStep}
-		compactGraphic
 		compactSteps
 		triggerOnCaption
 		triggerLine={0.5}
@@ -406,7 +404,6 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		graphic={ageingGraphic}
 		heading={section6Heading}
 		bind:activeStep={ageingActiveStep}
-		compactGraphic
 		compactSteps
 		triggerOnCaption
 		triggerLine={0.5}

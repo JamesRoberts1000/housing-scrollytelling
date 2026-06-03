@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { boxStats, formatRatio, jitterOffset, ratioExtent } from '$lib/charts/boxStrip';
 	import {
 		HIGHLIGHT_POINT_FILL,
@@ -10,6 +11,7 @@
 	} from '$lib/constants/ruralUrbanStory';
 	import { ruralOutliersAboveUrban } from '$lib/data/loadRuralUrbanData';
 	import type { GroupSummary, MsoaRuralUrbanRow, RuralUrbanBundle } from '$lib/types/ruralUrban';
+	import { allocateChartAndMapHeights } from '$lib/utils/stackedGraphicLayout';
 	import { scaleLinear } from 'd3';
 	import RuralUrbanMapMini from './RuralUrbanMapMini.svelte';
 
@@ -41,9 +43,11 @@
 	let { data, step = 0 }: Props = $props();
 
 	let maxStepReached = $state(0);
+	let graphicRoot = $state<HTMLDivElement | null>(null);
 	let chartWrap = $state<HTMLDivElement | null>(null);
 	let hovered = $state<MsoaRuralUrbanRow | null>(null);
 	let tooltipPos = $state({ x: 0, y: 0 });
+	let layoutSize = $state({ w: 640, h: 560 });
 
 	$effect(() => {
 		maxStepReached = Math.max(maxStepReached, step);
@@ -53,15 +57,30 @@
 		if (step === SHOW_RURAL_ABOVE_URBAN) hovered = null;
 	});
 
-	const width = 640;
-	const panelW = 280;
-	const chartH = 268;
+	$effect(() => {
+		if (!graphicRoot || !browser) return;
+		const ro = new ResizeObserver(([entry]) => {
+			const { width: w, height: h } = entry.contentRect;
+			if (w > 0 && h > 0) layoutSize = { w, h };
+		});
+		ro.observe(graphicRoot);
+		return () => ro.disconnect();
+	});
+
 	const titleY = 14;
 	const margin = { top: 52, right: 12, bottom: 32, left: 12 };
-	const innerH = chartH - margin.top - margin.bottom;
-	const ruralCenterX = margin.left + panelW / 2;
-	const urbanCenterX = margin.left + panelW + 24 + panelW / 2;
-	const stripHalf = 36;
+	const panelGap = 24;
+	let width = $derived(Math.max(640, Math.round(layoutSize.w)));
+	let layoutHeights = $derived(allocateChartAndMapHeights(layoutSize.h));
+	let chartH = $derived(layoutHeights.chartH);
+	let mapBlockH = $derived(layoutHeights.mapBlockH);
+	let panelW = $derived(
+		Math.max(220, Math.floor((width - margin.left - margin.right - panelGap) / 2))
+	);
+	let innerH = $derived(chartH - margin.top - margin.bottom);
+	let ruralCenterX = $derived(margin.left + panelW / 2);
+	let urbanCenterX = $derived(margin.left + panelW + panelGap + panelW / 2);
+	let stripHalf = $derived(Math.min(36, Math.max(20, Math.round(innerH * 0.18))));
 
 	function summaryFor(group: 'Rural' | 'Urban'): GroupSummary | undefined {
 		return data.summary.find((s) => s.group === group);
@@ -241,16 +260,18 @@
 	}
 </script>
 
-<div class="flex h-full min-h-0 w-full flex-col items-center justify-start px-4 py-6 sm:px-6">
-	<div class="w-full max-w-3xl">
+<div bind:this={graphicRoot} class="flex h-full min-h-0 w-full flex-col px-4 py-4 sm:px-6 sm:py-5">
+	<div class="mx-auto w-full max-w-3xl shrink-0">
 		<h3 class="mb-2 text-center text-[20px] font-bold leading-tight text-ink sm:text-[22px]">
 			Affordability by rural and urban classification
 		</h3>
-		<p class="mb-4 text-center text-sm text-muted">
+		<p class="mb-3 text-center text-sm text-muted">
 			Each point is one MSOA. Higher ratios mean less affordable housing.
 		</p>
+	</div>
 
-		<div bind:this={chartWrap} class="relative mx-auto w-full max-w-full">
+	<div class="mx-auto flex w-full max-w-3xl flex-col gap-3">
+		<div bind:this={chartWrap} class="relative shrink-0" style:height="{chartH}px">
 			{#if hovered && !showOutlierCallouts}
 				<div
 					class="pointer-events-none absolute z-10 max-w-[14rem] -translate-x-1/2 -translate-y-full rounded-sm border border-line bg-white px-2.5 py-1.5 text-left shadow-md"
@@ -258,16 +279,16 @@
 					style:top="{tooltipPos.y - 10}px"
 					role="tooltip"
 				>
-					<p class="text-[12px] font-semibold leading-snug text-ink">{hovered.name}</p>
-					<p class="mt-0.5 text-[11px] text-muted">
+					<p class="text-[14px] font-semibold leading-snug text-ink">{hovered.name}</p>
+					<p class="mt-0.5 text-[13px] text-muted">
 						{formatRatio(hovered.ratio)} · {hovered.group}
 					</p>
 				</div>
 			{/if}
 
 			<svg
-				class="mx-auto block w-full"
-				viewBox={`0 0 ${width} ${chartH}`}
+				class="mx-auto block h-full w-full"
+				viewBox="0 0 {width} {chartH}"
 				role="img"
 				aria-label={ariaSummary}
 				preserveAspectRatio="xMidYMid meet"
@@ -276,7 +297,7 @@
 					x={ruralCenterX}
 					y={titleY}
 					text-anchor="middle"
-					class="fill-ink text-[13px] font-bold"
+					class="fill-ink text-[18px] font-bold"
 					style="font-family: inherit"
 				>
 					Rural
@@ -285,7 +306,7 @@
 					x={urbanCenterX}
 					y={titleY}
 					text-anchor="middle"
-					class="fill-ink text-[13px] font-bold"
+					class="fill-ink text-[18px] font-bold"
 					style="font-family: inherit"
 				>
 					Urban
@@ -302,7 +323,7 @@
 							stroke="#e5e4e2"
 							stroke-width="1"
 						/>
-						<text x={x} y={chartH - 8} text-anchor="middle" class="fill-muted text-[10px]">{t}×</text>
+						<text x={x} y={chartH - 8} text-anchor="middle" class="fill-muted text-[13px]">{t}×</text>
 					{/if}
 				{/each}
 
@@ -317,7 +338,7 @@
 							stroke="#e5e4e2"
 							stroke-width="1"
 						/>
-						<text x={x} y={chartH - 8} text-anchor="middle" class="fill-muted text-[10px]">{t}×</text>
+						<text x={x} y={chartH - 8} text-anchor="middle" class="fill-muted text-[13px]">{t}×</text>
 					{/if}
 				{/each}
 
@@ -429,7 +450,7 @@
 						x={ruralBox.medX}
 						y={margin.top - 8}
 						text-anchor="middle"
-						class="fill-ink text-[11px] font-semibold"
+						class="fill-ink text-[14px] font-semibold"
 					>
 						Median {formatRatio(ruralMedian)}
 					</text>
@@ -450,7 +471,7 @@
 						x={urbanBox.medX}
 						y={margin.top - 8}
 						text-anchor="middle"
-						class="fill-ink text-[11px] font-semibold"
+						class="fill-ink text-[14px] font-semibold"
 					>
 						Median {formatRatio(urbanMedian)}
 					</text>
@@ -483,7 +504,7 @@
 							x={c.labelX}
 							y={c.labelY + c.labelH / 2 + 4}
 							text-anchor="middle"
-							class="fill-ink text-[10px] font-semibold"
+							class="fill-ink text-[14px] font-semibold"
 							style="font-family: inherit"
 						>
 							{c.point.row.name}
@@ -494,9 +515,11 @@
 			</svg>
 		</div>
 
-		<div class="mt-4">
-			<p class="mb-2 text-center text-xs text-muted">ONS Rural Urban Classification (2021)</p>
-			<RuralUrbanMapMini classificationByMsoa={data.classificationByMsoa} {step} />
+		<div class="flex shrink-0 flex-col gap-2" style:height="{mapBlockH}px">
+			<p class="shrink-0 text-center text-sm text-muted">ONS Rural Urban Classification (2021)</p>
+			<div class="min-h-0 flex-1">
+				<RuralUrbanMapMini classificationByMsoa={data.classificationByMsoa} {step} />
+			</div>
 		</div>
 	</div>
 </div>

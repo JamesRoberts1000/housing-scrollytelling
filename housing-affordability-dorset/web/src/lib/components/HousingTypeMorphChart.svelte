@@ -335,7 +335,7 @@
 		</p>
 
 		<div
-			class="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-muted"
+			class="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[13px] text-muted"
 			style={layerFadeStyle}
 			style:opacity={linkedLayerOpacity}
 			aria-hidden={!isLinkedView}
@@ -360,8 +360,8 @@
 					style:top="{tooltipPos.y - 10}px"
 					role="tooltip"
 				>
-					<p class="text-[12px] font-semibold leading-snug text-ink">{hoveredDot.row.name}</p>
-					<p class="mt-0.5 text-[11px] text-muted">
+					<p class="text-[14px] font-semibold leading-snug text-ink">{hoveredDot.row.name}</p>
+					<p class="mt-0.5 text-[13px] text-muted">
 						{formatRatio(hoveredDot.ratio)} · {hoveredDot.typeLabel}
 					</p>
 				</div>
@@ -377,7 +377,7 @@
 				{#each xTicks as tick}
 					{@const x = margin.left + xScale(tick)}
 					<line x1={x} y1={margin.top} x2={x} y2={margin.top + plotH} stroke="#e5e4e2" stroke-width="1" />
-					<text x={x} y={margin.top + plotH + 18} text-anchor="middle" class="fill-muted text-[10px]">{tick}×</text>
+					<text x={x} y={margin.top + plotH + 18} text-anchor="middle" class="fill-muted text-[13px]">{tick}×</text>
 				{/each}
 
 				<line
@@ -393,7 +393,7 @@
 					x={margin.left + plotW / 2}
 					y={chartH - 8}
 					text-anchor="middle"
-					class="fill-ink text-[14px] font-semibold"
+					class="fill-ink text-[16px] font-semibold"
 					style="font-family: inherit"
 				>
 					Affordability ratio
@@ -403,7 +403,7 @@
 					y={margin.top + plotH / 2}
 					text-anchor="middle"
 					transform="rotate(-90 16 {margin.top + plotH / 2})"
-					class="fill-ink text-[14px] font-semibold"
+					class="fill-ink text-[16px] font-semibold"
 					style="font-family: inherit"
 				>
 					{yAxisLabel}
@@ -472,7 +472,7 @@
 							<text
 								x={line.xs[line.xs.length - 1]! + 8}
 								y={line.y + (i === 0 ? -8 : 12)}
-								class="fill-ink text-[11px] font-semibold"
+								class="fill-ink text-[14px] font-semibold"
 							>
 								{line.row.name}
 							</text>
@@ -543,7 +543,7 @@
 								<text
 									x={point.x + 8}
 									y={point.y + (i === 0 ? -8 : 12)}
-									class="fill-ink text-[10px] font-semibold"
+									class="fill-ink text-[13px] font-semibold"
 								>
 									{row.name}
 								</text>
@@ -558,7 +558,7 @@
 								<text
 									x={point.x + 8}
 									y={point.y + (i === 0 ? -8 : 12)}
-									class="fill-ink text-[10px] font-semibold"
+									class="fill-ink text-[13px] font-semibold"
 								>
 									{row.name}
 								</text>
@@ -570,7 +570,7 @@
 	</div>
 
 	{#if !isLinkedView && currentStep >= SHOW_MISSING_FLAT_BADGE_FROM_STEP}
-		<p class="mx-auto mt-2 w-full max-w-4xl shrink-0 text-center text-xs text-muted">
+		<p class="mx-auto mt-2 w-full max-w-4xl shrink-0 text-center text-sm text-muted">
 			{missingFlatsCount} MSOAs have limited or missing flat values in this dataset.
 		</p>
 	{/if}

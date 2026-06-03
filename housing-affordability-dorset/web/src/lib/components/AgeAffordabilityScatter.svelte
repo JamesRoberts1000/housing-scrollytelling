@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { formatPercent, formatRatio, ratioExtent } from '$lib/charts/boxStrip';
 	import { linearRegression, regressionLine } from '$lib/charts/regression';
 	import {
@@ -15,6 +16,7 @@
 		YOUNGER_AFFORDABLE_CODES
 	} from '$lib/constants/ageAffordabilityStory';
 	import type { AgeAffordabilityBundle, MsoaAgeAffordabilityRow } from '$lib/types/ageAffordability';
+	import { allocateChartHeight } from '$lib/utils/stackedGraphicLayout';
 	import { scaleLinear } from 'd3';
 
 	type Props = {
@@ -32,19 +34,31 @@
 
 	let currentStep = $derived(Number(step));
 	let maxStepReached = $state(0);
+	let graphicRoot = $state<HTMLDivElement | null>(null);
 	let chartWrap = $state<HTMLDivElement | null>(null);
 	let hovered = $state<MsoaAgeAffordabilityRow | null>(null);
 	let tooltipPos = $state({ x: 0, y: 0 });
+	let layoutSize = $state({ w: 640, h: 560 });
 
 	$effect(() => {
 		maxStepReached = Math.max(maxStepReached, currentStep);
 	});
 
-	const width = 640;
-	const chartH = 320;
+	$effect(() => {
+		if (!graphicRoot || !browser) return;
+		const ro = new ResizeObserver(([entry]) => {
+			const { width: w, height: h } = entry.contentRect;
+			if (w > 0 && h > 0) layoutSize = { w, h };
+		});
+		ro.observe(graphicRoot);
+		return () => ro.disconnect();
+	});
+
 	const margin = { top: 36, right: 20, bottom: 48, left: 52 };
-	const plotW = width - margin.left - margin.right;
-	const plotH = chartH - margin.top - margin.bottom;
+	let width = $derived(Math.max(640, Math.round(layoutSize.w)));
+	let chartH = $derived(allocateChartHeight(layoutSize.h));
+	let plotW = $derived(width - margin.left - margin.right);
+	let plotH = $derived(chartH - margin.top - margin.bottom);
 
 	const olderSet = new Set<string>(OLDER_HIGH_RATIO_CODES);
 	const youngerSet = new Set<string>(YOUNGER_AFFORDABLE_CODES);
@@ -137,16 +151,21 @@
 	}
 </script>
 
-<div class="flex h-full min-h-0 w-full flex-col items-center justify-start px-4 py-6 sm:px-6">
-	<div class="w-full max-w-3xl">
+<div bind:this={graphicRoot} class="flex h-full min-h-0 w-full flex-col px-4 py-4 sm:px-6 sm:py-5">
+	<div class="mx-auto w-full max-w-3xl shrink-0">
 		<h3 class="mb-2 text-center text-[20px] font-bold leading-tight text-ink sm:text-[22px]">
 			Affordability ratio and share of population aged 65+
 		</h3>
-		<p class="mb-4 text-center text-sm text-muted">
+		<p class="mb-3 text-center text-sm text-muted">
 			Each point is one MSOA. Higher on the chart means less affordable housing.
 		</p>
+	</div>
 
-		<div bind:this={chartWrap} class="relative mx-auto w-full max-w-full">
+	<div
+		bind:this={chartWrap}
+		class="relative mx-auto w-full max-w-3xl shrink-0"
+		style:height="{chartH}px"
+	>
 			{#if hovered}
 				<div
 					class="pointer-events-none absolute z-10 max-w-[14rem] -translate-x-1/2 -translate-y-full rounded-sm border border-line bg-white px-2.5 py-1.5 text-left shadow-md"
@@ -154,15 +173,15 @@
 					style:top="{tooltipPos.y - 10}px"
 					role="tooltip"
 				>
-					<p class="text-[12px] font-semibold leading-snug text-ink">{hovered.name}</p>
-					<p class="mt-0.5 text-[11px] text-muted">
+					<p class="text-[14px] font-semibold leading-snug text-ink">{hovered.name}</p>
+					<p class="mt-0.5 text-[14px] text-muted">
 						{formatPercent(hovered.pct65Plus, 1)} aged 65+ · {formatRatio(hovered.ratio)}
 					</p>
 				</div>
 			{/if}
 
 			<svg
-				class="mx-auto block w-full"
+				class="mx-auto block h-full w-full"
 				viewBox="0 0 {width} {chartH}"
 				role="img"
 				aria-label={ariaSummary}
@@ -183,7 +202,7 @@
 							x={x}
 							y={chartH - 28}
 							text-anchor="middle"
-							class="fill-muted text-[10px]"
+							class="fill-muted text-[13px]"
 						>
 							{t}%
 						</text>
@@ -205,7 +224,7 @@
 							x={margin.left - 8}
 							y={y + 3}
 							text-anchor="end"
-							class="fill-muted text-[10px]"
+							class="fill-muted text-[13px]"
 						>
 							{t}×
 						</text>
@@ -227,7 +246,7 @@
 						x={dorsetAverageX}
 						y={margin.top - 6}
 						text-anchor="middle"
-						class="fill-ink text-[10px] font-semibold"
+						class="fill-ink text-[13px] font-semibold"
 					>
 						Dorset average {formatPercent(dorsetPct65, 1)}
 					</text>
@@ -277,7 +296,7 @@
 					x={margin.left + plotW / 2}
 					y={chartH - 8}
 					text-anchor="middle"
-					class="fill-ink text-[11px] font-semibold"
+					class="fill-ink text-[14px] font-semibold"
 					style="font-family: inherit"
 				>
 					% of population aged 65 and over
@@ -287,16 +306,15 @@
 					y={margin.top + plotH / 2}
 					text-anchor="middle"
 					transform="rotate(-90 14 {margin.top + plotH / 2})"
-					class="fill-ink text-[11px] font-semibold"
+					class="fill-ink text-[14px] font-semibold"
 					style="font-family: inherit"
 				>
 					Affordability ratio
 				</text>
 			</svg>
-		</div>
-
-		<p class="mt-3 text-center text-xs text-muted">
-			Population aged 65+, MSOA estimates (2021-based), Office for National Statistics
-		</p>
 	</div>
+
+	<p class="mx-auto mt-2 w-full max-w-3xl shrink-0 text-center text-sm text-muted">
+		Population aged 65+, MSOA estimates (2021-based), Office for National Statistics
+	</p>
 </div>
