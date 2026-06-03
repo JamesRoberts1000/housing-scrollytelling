@@ -173,6 +173,15 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		},
 		{
 		body: 'Viewing all dwelling types together shows the full spread of affordability within each neighbourhood, with detached homes typically least affordable and flats (where available) most affordable.'
+		},
+		{
+		body: 'Looking closely, some interesting patterns emerge. **Sherborne** and **Swanage** both have some of the least affordable detached housing. But their other housing types are average for Dorset.'
+		},
+		{
+		body: 'Similar contrasts can be found in other neighbourhoods across Dorset.'
+		},
+		{
+		body: '**Beaminster** and **West Moors** had some relatively affordable flats, whilst their other housing types are among the least affordable.'
 		}
 	];
 
@@ -412,6 +421,7 @@ import HousingTypeMorphChart from '$lib/components/HousingTypeMorphChart.svelte'
 		compactSteps
 		triggerOnCaption
 		triggerLine={0.5}
+		tailScrollMinHeight="100svh"
 	/>
 </section>
 

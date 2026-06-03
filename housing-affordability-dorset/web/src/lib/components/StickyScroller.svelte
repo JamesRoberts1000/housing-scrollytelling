@@ -40,6 +40,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		advanceOnTopEdge?: boolean;
 		/** Use the caption card box for the trigger line, not the full-height step article */
 		triggerOnCaption?: boolean;
+		/** Extra scroll runway after the last caption so the sticky graphic stays pinned until it scrolls off the top */
+		tailScrollMinHeight?: string;
 	};
 
 	let {
@@ -54,7 +56,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		introGraphicOnly = false,
 		triggerLine = 2 / 3,
 		advanceOnTopEdge = false,
-		triggerOnCaption = false
+		triggerOnCaption = false,
+		tailScrollMinHeight
 	}: Props = $props();
 
 	let stepsRoot = $state<HTMLDivElement | null>(null);
@@ -198,6 +201,9 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 				</div>
 			</article>
 		{/each}
+		{#if tailScrollMinHeight}
+			<div aria-hidden="true" class="pb-6" style:min-height={tailScrollMinHeight}></div>
+		{/if}
 	</div>
 
 	<div

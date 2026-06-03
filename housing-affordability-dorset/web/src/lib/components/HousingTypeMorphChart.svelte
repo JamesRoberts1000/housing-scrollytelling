@@ -14,9 +14,13 @@
 		STEP_FLATS_AFFORDABLE,
 		STEP_FLATS_EXPENSIVE_OR_SCARCE,
 		STEP_LINKED_ALL_TYPES,
+		STEP_LINKED_SHERBORNE_SWANAGE,
+		STEP_LINKED_BEAMINSTER_WEST_MOORS,
 		STEP_OVERALL,
 		STEP_SEMI_DETACHED,
 		STEP_TERRACED,
+		BEAMINSTER_WEST_MOORS_CODES,
+		SHERBORNE_SWANAGE_CODES,
 		TYPE_COLORS,
 		TYPE_LABELS,
 		type LinkedTypeKey
@@ -79,6 +83,12 @@
 	const accessSet = new Set<string>(FLAT_ACCESS_CODES);
 	const expensiveSet = new Set<string>(FLAT_EXPENSIVE_CODES);
 
+	const linkedHighlightSet = $derived.by((): Set<string> => {
+		if (currentStep === STEP_LINKED_SHERBORNE_SWANAGE) return new Set(SHERBORNE_SWANAGE_CODES);
+		if (currentStep === STEP_LINKED_BEAMINSTER_WEST_MOORS) return new Set(BEAMINSTER_WEST_MOORS_CODES);
+		return new Set();
+	});
+
 	const reducedMotion = $derived.by(
 		() =>
 			browser &&
@@ -87,6 +97,7 @@
 	);
 
 	const isLinkedView = $derived(currentStep >= STEP_LINKED_ALL_TYPES);
+	const linkedHighlightActive = $derived(linkedHighlightSet.size > 0);
 	const singleViewStep = $derived(isLinkedView ? lastSingleStep : currentStep);
 
 	const activeMetric = $derived.by((): HousingTypeKey => {
@@ -197,6 +208,10 @@
 			.filter((line) => line.xs.length >= 2)
 	);
 
+	const highlightedLinkedLines = $derived.by(() =>
+		linkedLines.filter((line) => linkedHighlightSet.has(line.row.code))
+	);
+
 	const linkedDots = $derived.by((): LinkedDot[] => {
 		const dots: LinkedDot[] = [];
 		overallRankedRows.forEach((row, i) => {
@@ -262,6 +277,11 @@
 		return 0.88;
 	}
 
+	function linkedRowOpacity(code: string): number {
+		if (!linkedHighlightActive) return 1;
+		return linkedHighlightSet.has(code) ? 1 : 0.2;
+	}
+
 	function setTooltipFromEvent(info: HoveredDot, e: MouseEvent): void {
 		hoveredDot = info;
 		if (!chartWrap) return;
@@ -288,6 +308,9 @@
 
 	const layerFadeStyle = $derived(
 		`transition: opacity ${reducedMotion ? '0.01ms' : '550ms'} ease;`
+	);
+	const linkedStrokeFadeStyle = $derived(
+		`transition: stroke-opacity ${reducedMotion ? '0.01ms' : '550ms'} ease, stroke-width ${reducedMotion ? '0.01ms' : '550ms'} ease;`
 	);
 	const singleLayerOpacity = $derived(isLinkedView ? 0 : 1);
 	const linkedLayerOpacity = $derived(isLinkedView ? 1 : 0);
@@ -396,8 +419,9 @@
 							points={line.xs.map((x) => `${x},${line.y}`).join(' ')}
 							fill="none"
 							stroke="#b1b4b6"
-							stroke-width="1"
-							stroke-opacity="0.55"
+							stroke-width={linkedHighlightActive && linkedHighlightSet.has(line.row.code) ? 1.5 : 1}
+							stroke-opacity={linkedHighlightActive ? (linkedHighlightSet.has(line.row.code) ? 0.85 : 0.15) : 0.55}
+							style={linkedStrokeFadeStyle}
 						/>
 					{/each}
 
@@ -405,11 +429,12 @@
 						{@const isHovered =
 							hoveredDot?.row.code === dot.row.code &&
 							hoveredDot.typeLabel === TYPE_LABELS[dot.typeKey]}
+						{@const rowOpacity = linkedRowOpacity(dot.row.code)}
 						<g
 							transform="translate({dot.x},{dot.y})"
 							class="cursor-pointer"
 							style={transitionStyle}
-							opacity={isHovered ? 1 : 0.9}
+							opacity={isHovered ? 1 : rowOpacity === 1 ? 0.9 : rowOpacity}
 							role="graphics-symbol"
 							aria-label="{dot.row.name}, {TYPE_LABELS[dot.typeKey]}, {formatRatio(dot.row[dot.typeKey])}"
 							onmouseenter={(e) =>
@@ -434,13 +459,25 @@
 						>
 							<circle r="14" fill="transparent" />
 							<circle
-								r={isHovered ? 6 : 4.8}
+								r={isHovered || (linkedHighlightActive && linkedHighlightSet.has(dot.row.code)) ? 6 : 4.8}
 								fill={TYPE_COLORS[dot.typeKey]}
 								stroke="#ffffff"
 								stroke-width="1"
 							/>
 						</g>
 					{/each}
+
+					{#if linkedHighlightActive}
+						{#each highlightedLinkedLines as line, i (line.row.code)}
+							<text
+								x={line.xs[line.xs.length - 1]! + 8}
+								y={line.y + (i === 0 ? -8 : 12)}
+								class="fill-ink text-[11px] font-semibold"
+							>
+								{line.row.name}
+							</text>
+						{/each}
+					{/if}
 				</g>
 
 				<g

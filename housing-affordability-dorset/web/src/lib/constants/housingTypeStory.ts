@@ -7,6 +7,21 @@ export const STEP_FLATS = 4;
 export const STEP_FLATS_AFFORDABLE = 5;
 export const STEP_FLATS_EXPENSIVE_OR_SCARCE = 6;
 export const STEP_LINKED_ALL_TYPES = 7;
+export const STEP_LINKED_SHERBORNE_SWANAGE = 8;
+export const STEP_LINKED_RESET = 9;
+export const STEP_LINKED_BEAMINSTER_WEST_MOORS = 10;
+
+/** Sherborne and Swanage: expensive detached, average other types. */
+export const SHERBORNE_SWANAGE_CODES = [
+	'E02004268', // Swanage
+	'E02004269' // Sherborne
+] as const;
+
+/** Beaminster and West Moors: affordable flats, expensive other types. */
+export const BEAMINSTER_WEST_MOORS_CODES = [
+	'E02004248', // West Moors
+	'E02004271' // Beaminster, Maiden Newton & Halstock
+] as const;
 
 export const LINKED_TYPE_KEYS = ['detached', 'semiDetached', 'terraced', 'flats'] as const;
 export type LinkedTypeKey = (typeof LINKED_TYPE_KEYS)[number];
