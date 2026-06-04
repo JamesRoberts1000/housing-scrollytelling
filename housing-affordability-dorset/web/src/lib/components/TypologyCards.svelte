@@ -40,6 +40,16 @@
 		if (step === STEP_INTRO) return 0.55;
 		return isActive(system) ? 1 : 0.42;
 	}
+
+	function hasOpaqueBackground(system: HousingMarketSystem): boolean {
+		return isActive(system) && step !== STEP_INTRO;
+	}
+
+	function cardSurfaceClass(system: HousingMarketSystem): string {
+		return hasOpaqueBackground(system)
+			? 'bg-white/95 shadow-md backdrop-blur-sm'
+			: 'bg-transparent';
+	}
 </script>
 
 <div
@@ -52,13 +62,13 @@
 	>
 		{#each SYSTEM_ORDER as system (system)}
 			<article
-				class="w-[min(85vw,16rem)] shrink-0 snap-start rounded-sm border bg-white/92 px-3 py-2.5 shadow-sm transition-all duration-500 motion-reduce:transition-none sm:w-auto sm:px-3.5 sm:py-3"
-				class:border-line={!isActive(system)}
-				class:border-ink={isActive(system) && step !== STEP_SYNTHESIS}
-				class:ring-1={isActive(system) && step !== STEP_SYNTHESIS}
-				class:ring-ink={isActive(system) && step !== STEP_SYNTHESIS}
+				class="w-[min(85vw,16rem)] shrink-0 snap-start rounded-sm border px-3 py-2.5 transition-all duration-500 motion-reduce:transition-none sm:w-auto sm:px-3.5 sm:py-3 {cardSurfaceClass(system)}"
+				class:border-line={!hasOpaqueBackground(system)}
+				class:border-ink={hasOpaqueBackground(system) && step !== STEP_SYNTHESIS}
+				class:ring-1={hasOpaqueBackground(system) && step !== STEP_SYNTHESIS}
+				class:ring-ink={hasOpaqueBackground(system) && step !== STEP_SYNTHESIS}
 				style:opacity={cardOpacity(system)}
-				style:transform={isActive(system) && step !== STEP_INTRO && step !== STEP_SYNTHESIS
+				style:transform={hasOpaqueBackground(system) && step !== STEP_SYNTHESIS
 					? 'translateY(-2px)'
 					: 'none'}
 			>

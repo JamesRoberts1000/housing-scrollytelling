@@ -2,8 +2,8 @@
 	import { formatRatio } from '$lib/charts/boxStrip';
 	import {
 		ACTIVE_OPACITY,
-		DIMMED_OPACITY,
 		MUTED_FILL,
+		MUTED_FILL_OPACITY,
 		STEP_INTRO,
 		STEP_SYNTHESIS,
 		SYSTEM_COLORS,
@@ -86,7 +86,7 @@
 		if (!row) return { color: MUTED_FILL, opacity: 0.45 };
 
 		if (s === STEP_INTRO) {
-			return { color: MUTED_FILL, opacity: 0.65 };
+			return { color: MUTED_FILL, opacity: MUTED_FILL_OPACITY };
 		}
 
 		if (s === STEP_SYNTHESIS) {
@@ -99,7 +99,7 @@
 		if (row.system === focus) {
 			return { color: SYSTEM_COLORS[row.system], opacity: ACTIVE_OPACITY };
 		}
-		return { color: SYSTEM_COLORS[row.system], opacity: DIMMED_OPACITY };
+		return { color: MUTED_FILL, opacity: MUTED_FILL_OPACITY };
 	}
 
 	function applyFeatureStyles(s: number): void {
@@ -162,7 +162,7 @@
 			feature.properties = {
 				...feature.properties,
 				fillColor: MUTED_FILL,
-				fillOpacity: 0.65,
+				fillOpacity: MUTED_FILL_OPACITY,
 				system: row?.system ?? '',
 				displayName: row?.name ?? String(feature.properties?.MSOA21NM ?? ''),
 				ratio: row?.ratio ?? -1,

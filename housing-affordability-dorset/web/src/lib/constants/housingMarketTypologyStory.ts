@@ -36,7 +36,7 @@ export const SYSTEM_COLORS: Record<HousingMarketSystem, string> = {
 };
 
 export const MUTED_FILL = 'rgba(227, 224, 218, 0.55)';
-export const DIMMED_OPACITY = 0.22;
+export const MUTED_FILL_OPACITY = 0.65;
 export const ACTIVE_OPACITY = 0.82;
 export const SYNTHESIS_OPACITY = 0.78;
 
