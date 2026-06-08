@@ -215,7 +215,6 @@
 </script>
 
 {#snippet section2Heading()}
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 2</p>
 	<h2 id="section-2-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Dorset in context
 	</h2>
@@ -223,22 +222,26 @@
 		<p>Housing affordability compares house prices with earnings.</p>
 		<p>
 			In this article, affordability is measured by dividing median house prices by median annual earnings. A higher ratio
-			means homes are less affordable relative to local incomes.
-		</p>
-		<p>For example, an affordability ratio of 10 means house prices are around 10 times annual earnings. The Office for National
-		Statistics considers an area affordable if average homes cost up to 5 times the average earnings of those working nearby.</p>
-		<p>
-			The analysis uses data for Middle Super Output Areas (MSOAs). These are statistical neighbourhoods
-			designed to contain similar population sizes.
+			means homes are less affordable relative to earnings.
 		</p>
 		<p>
-			The affordability ratios shown in this analysis are based on median house prices and median workplace-based earnings, unless stated otherwise.
+			For example, an affordability ratio of 10 means median house prices are around 10 times annual earnings. The Office
+			for National Statistics considers housing broadly affordable where median house prices are less than five times annual
+			earnings.
+		</p>
+		<p>
+			House prices are shown for Middle Super Output Areas (MSOAs). These are statistical neighbourhoods designed to contain
+			similar population sizes.
+		</p>
+		<p>
+			The affordability ratios combine neighbourhood-level house prices with workplace-based earnings data for the wider local
+			authority area. This means differences between MSOAs mainly reflect variations in house prices rather than local
+			earnings.
 		</p>
 	</div>
 {/snippet}
 
 {#snippet section3Heading()}
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 3</p>
 	<h2 id="section-3-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Variation Across Dorset
 	</h2>
@@ -259,7 +262,6 @@
 {/snippet}
 
 {#snippet section4Heading()}
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 4</p>
 	<h2 id="section-4-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		How does affordability differ between rural and urban areas?
 	</h2>
@@ -274,7 +276,6 @@
 {/snippet}
 
 {#snippet section5Heading()}
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 5</p>
 	<h2 id="section-5-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		How does affordability differ between coastal and inland areas?
 	</h2>
@@ -288,7 +289,6 @@
 {/snippet}
 
 {#snippet section6Heading()}
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 6</p>
 	<h2 id="section-6-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Housing affordability and population age
 	</h2>
@@ -302,7 +302,6 @@
 {/snippet}
 
 {#snippet section7Heading()}
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 7</p>
 	<h2 id="section-7-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		How does affordability vary by property type?
 	</h2>
@@ -315,7 +314,6 @@
 {/snippet}
 
 {#snippet section8Heading()}
-	<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 8</p>
 	<h2 id="section-8-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 		Different housing markets across Dorset
 	</h2>
@@ -456,7 +454,6 @@
 
 <section id="section-9" class="border-t border-line px-5 py-20 sm:px-10 lg:px-16" aria-labelledby="section-9-heading">
 	<div class="mx-auto max-w-6xl text-center">
-		<p class="text-sm uppercase tracking-[0.18em] text-muted">Section 9</p>
 		<h2 id="section-9-heading" class="mx-auto mt-10 mb-5 w-full max-w-[680px] text-left text-[30px] font-bold leading-[45px] text-ink">
 			Conclusion
 		</h2>
@@ -480,9 +477,19 @@
 			Methodology
 		</h2>
 
-		<h3 class="mt-10 text-xl font-bold text-ink">About the data</h3>
-		<div class="mx-auto mt-4 w-full max-w-[680px] space-y-5 text-left text-lg leading-relaxed text-muted">
-			<p>Housing affordability was measured using median house prices divided by annual earnings.</p>
+		<div class="mx-auto mt-8 w-full max-w-[680px] space-y-5 text-left text-lg leading-relaxed text-muted">
+			<p>
+				Housing affordability ratios were calculated by dividing the median house sales price in an MSOA over a 12-month
+				period by median annual gross full-time workplace earnings for the corresponding local authority area.
+			</p>
+			<p>
+				House price data was sourced from the House Price Statistics for Small Areas (HPSSA) dataset. Earnings data was
+				sourced from the Annual Survey of Hours and Earnings (ASHE).
+			</p>
+			<p>
+				Because earnings data was only available at local authority level, affordability ratios within Dorset mainly
+				reflect differences in house prices between neighbourhoods.
+			</p>
 			<p>Data is shown for Middle Super Output Areas (MSOAs) in Dorset.</p>
 			<p>Supplementary datasets were used to classify areas by:</p>
 		</div>
@@ -493,7 +500,30 @@
 			<li>property type</li>
 		</ul>
 
-		<h3 class="mt-10 text-xl font-bold text-ink">Source</h3>
-		<p class="mx-auto mt-4 w-full max-w-[680px] text-left text-lg leading-relaxed text-muted">Office for National Statistics</p>
+		<p class="mx-auto mt-10 w-full max-w-[680px] text-left text-lg font-bold leading-relaxed text-muted">Sources</p>
+		<p class="mx-auto mt-4 w-full max-w-[680px] text-left text-lg leading-relaxed text-muted">
+			Office for National Statistics:
+		</p>
+		<ul class="mx-auto mt-3 w-full max-w-[680px] list-disc space-y-3 pl-6 text-left text-lg leading-relaxed text-muted">
+			<li>
+				Population estimates – local authority based by five year age band, UK, 2024. Available from Nomis.
+			</li>
+			<li>
+				Population estimates by output areas, electoral, health and other geographies, England and Wales:
+				mid-2024. Small area population estimates by single year of age.
+			</li>
+			<li>
+				Annual Survey of Hours and Earnings (ASHE): Table 7.7a Annual pay – Gross – Full-Time – Work Geography,
+				2025 provisional results.
+			</li>
+			<li>
+				House Price Statistics for Small Areas (HPSSA) and Annual Survey of Hours and Earnings (ASHE), September
+				2025 release.
+			</li>
+			<li>
+				Median price paid by Middle Layer Super Output Area (MSOA), 2025. House Price Statistics for Small Areas
+				dataset.
+			</li>
+		</ul>
 	</div>
 </section>
