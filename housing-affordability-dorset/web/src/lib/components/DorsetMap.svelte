@@ -3,9 +3,13 @@
 		MSOA_ST_LEONARDS,
 		MSOA_UNDERHILL_GROVE,
 		MSOA_WEYMOUTH_PORTLAND,
-		SECTION3_MAP_LABEL
+		SECTION3_MAP_LABEL,
+		section3MapAriaLabel,
+		section3MapDescription
 	} from '$lib/constants/dorsetMapStory';
 	import type { MsoaRatioPoint } from '$lib/data/loadAffordabilityData';
+	import { formatRatio } from '$lib/charts/boxStrip';
+	import AccessibleDataTable from '$lib/components/AccessibleDataTable.svelte';
 	import { assetPath } from '$lib/utils/assetPath';
 	import AffordabilityRangePanel from '$lib/components/AffordabilityRangePanel.svelte';
 	import type { MapLayerMouseEvent } from 'maplibre-gl';
@@ -19,6 +23,11 @@
 	};
 
 	let { ratioByMsoa, msoaDistribution, msoaNameByCode, step = 0 }: Props = $props();
+
+	const sortedDistribution = $derived(
+		[...msoaDistribution].sort((a, b) => a.name.localeCompare(b.name, 'en'))
+	);
+	const mapDescriptionId = 'dorset-map-description';
 
 	let container = $state<HTMLDivElement | null>(null);
 	let mapInstance: import('maplibre-gl').Map | null = null;
@@ -423,10 +432,32 @@
 	});
 </script>
 
-<div class="relative flex h-full min-h-0 w-full flex-col">
+<div
+	class="relative flex h-full min-h-0 w-full flex-col"
+	role="region"
+	aria-label={section3MapAriaLabel(step)}
+	aria-describedby={mapDescriptionId}
+>
+	<a href="#dorset-map-data" class="skip-link">
+		Skip to neighbourhood data table
+	</a>
+	<p id={mapDescriptionId} class="sr-only">{section3MapDescription(step, msoaDistribution.length)}</p>
+
 	<div class="pointer-events-none absolute right-0 top-0 z-[25] flex max-w-full justify-end">
 		<AffordabilityRangePanel distribution={msoaDistribution} hovered={hovered} />
 	</div>
 
-	<div bind:this={container} class="min-h-0 w-full flex-1"></div>
+	<div bind:this={container} class="min-h-0 w-full flex-1" aria-hidden="true"></div>
+
+	<AccessibleDataTable
+		id="dorset-map-data"
+		summaryLabel="View neighbourhood affordability data ({sortedDistribution.length} areas)"
+		caption="Affordability ratios for Dorset MSOAs"
+		rows={sortedDistribution}
+		rowKey={(row) => row.code}
+		columns={[
+			{ header: 'Neighbourhood', value: (row) => row.name },
+			{ header: 'Affordability ratio', value: (row) => formatRatio(row.ratio) }
+		]}
+	/>
 </div>

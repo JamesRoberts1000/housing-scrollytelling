@@ -190,10 +190,11 @@
 <div
 	class="relative h-full w-full overflow-hidden rounded-sm border border-line transition-opacity duration-500 motion-reduce:transition-none"
 	style:opacity={mapReady ? mapOpacity : 0}
-	aria-hidden={false}
+	role="img"
+	aria-label="Small reference map showing coastal and inland MSOAs across Dorset. Coastal areas are teal and inland areas are grey."
 >
-	<div bind:this={container} class="h-full min-h-[120px] w-full"></div>
-	<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[13px] text-ink">
+	<div bind:this={container} class="h-full min-h-[120px] w-full" aria-hidden="true"></div>
+	<ul class="absolute bottom-1 left-2 flex flex-wrap gap-3 text-[13px] text-ink" aria-hidden="true">
 		<li class="flex items-center gap-1">
 			<span class="inline-block h-2 w-2 rounded-sm" style:background={COASTAL_CHART_FILL}></span>
 			Coastal

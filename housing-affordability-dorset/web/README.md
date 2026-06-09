@@ -1,4 +1,4 @@
-# Dorset housing affordability (scrolly MVP)
+# Dorset housing affordability scrollytelling
 
 SvelteKit + TypeScript + Tailwind front end for the Dorset MSOA housing affordability narrative. Data is read from static copies under `static/data/` (synced from the Python pipeline in `../data/processed/`).
 
@@ -71,12 +71,17 @@ Open the URL printed in the terminal (usually `http://localhost:5173`).
 
 ## Refreshing CSV data
 
-After re-running the Python cleaners / ratio script, copy updated outputs into `static/data/`:
+After re-running the Python pipeline, copy updated outputs into `static/data/`. Most build scripts also write a copy to `web/static/data/` automatically.
 
-- `dorset_msoa_affordability_ratios.csv`
-- `dorset_msoa_rural_urban.csv` (from `scripts/build_dorset_msoa_rural_urban.py`)
-- `aff1ratioofhousepricetoworkplacebasedearnings_regions_latest.csv`
-- `aff1ratioofhousepricetoworkplacebasedearnings_latest.csv`
+| File | Typical source script |
+|------|------------------------|
+| `dorset_msoa_affordability_ratios.csv` | `calculate_dorset_msoa_affordability_ratios.py` |
+| `dorset_msoa_rural_urban.csv` | `build_dorset_msoa_rural_urban.py` |
+| `dorset_msoa_coastal.csv` | `build_dorset_msoa_coastal.py` |
+| `dorset_msoa_age.csv` | `build_dorset_msoa_age.py` |
+| `dorset_msoa_housing_market_typology.csv` | `build_dorset_msoa_typology.py` |
+| `aff1ratioofhousepricetoworkplacebasedearnings_regions_latest.csv` | `clean_affordability_ratio.py` |
+| `aff1ratioofhousepricetoworkplacebasedearnings_latest.csv` | `clean_affordability_ratio.py` |
 
 ## MSOA boundaries (GeoJSON)
 
@@ -88,7 +93,7 @@ To regenerate (requires network), query the ArcGIS FeatureServer used in the pro
 
 The map uses **Carto Positron** (`light_all`) raster tiles — light grey roads and settlement labels over OpenStreetMap data, with slight desaturation in MapLibre for a calmer backdrop. Attribution appears on the map (OpenStreetMap + CARTO).
 
-Page typography uses an **Arial-first** stack similar to public ONS/GOV.UK pages. The official **GDS Transport** font is not bundled here (licence); Arial is the usual fallback. Colours follow GOV.UK-style neutrals (e.g. `#0b0c0c` text, `#206095` link/accent blue).
+Page typography uses **Open Sans** with **Arial** and system sans-serif fallbacks, similar to public ONS/GOV.UK pages. The official **GDS Transport** font is not bundled here (licence). Colours follow GOV.UK-style neutrals (e.g. `#0b0c0c` text, `#206095` link/accent blue).
 
 ## Build
 
@@ -97,6 +102,15 @@ npm run build
 npm run preview
 ```
 
+GitHub Pages preview (matches CI base path):
+
+```bash
+npm run build:pages
+npm run preview
+```
+
 ## Accessibility
 
 Global styles respect `prefers-reduced-motion`. Map and charts are progressively enhanced in the client; narrative remains readable without them.
+
+Maps use `role="region"` with step-specific descriptions, skip links to expandable data tables (Sections 3 and 8), and `aria-hidden` on MapLibre canvases so screen readers focus on text alternatives. SVG charts use `role="img"` with summary `aria-label`s and labelled data points where applicable.

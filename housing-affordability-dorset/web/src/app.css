@@ -26,3 +26,28 @@
 		@apply outline-2 outline-offset-2 outline-accent;
 	}
 }
+
+@layer utilities {
+	.skip-link {
+		@apply sr-only;
+	}
+
+	.skip-link:focus {
+		position: absolute;
+		left: 0.75rem;
+		top: 0.75rem;
+		z-index: 40;
+		width: auto;
+		height: auto;
+		overflow: visible;
+		clip: auto;
+		white-space: normal;
+		padding: 0.5rem 0.75rem;
+		border-radius: 0.125rem;
+		background: white;
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #0b0c0c;
+		box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+	}
+}

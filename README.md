@@ -71,10 +71,15 @@ npm run preview
 GitHub Pages build (matches CI):
 
 ```bash
+cd housing-affordability-dorset/web
 npm run build:pages
 ```
 
 Pushes to `main` trigger automatic deployment via GitHub Actions.
+
+## Accessibility
+
+Maps and charts include screen-reader labels, skip links, and expandable data tables — see the [web README](housing-affordability-dorset/web/README.md#accessibility) for detail.
 
 ## Data sources
 

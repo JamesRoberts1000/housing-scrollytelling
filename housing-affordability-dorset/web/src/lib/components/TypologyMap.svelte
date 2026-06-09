@@ -8,7 +8,6 @@
 		STEP_SYNTHESIS,
 		SYSTEM_COLORS,
 		SYSTEM_SHORT_LABELS,
-		stepAriaLabel,
 		stepFocusSystem
 	} from '$lib/constants/housingMarketTypologyStory';
 	import type { HousingMarketTypologyBundle, MsoaHousingMarketTypologyRow } from '$lib/types/housingMarketTypology';
@@ -322,13 +321,14 @@
 	});
 </script>
 
-<div class="relative flex h-full min-h-0 w-full flex-col" aria-label={stepAriaLabel(step)}>
-	<div bind:this={container} class="min-h-0 w-full flex-1"></div>
+<div class="relative flex h-full min-h-0 w-full flex-col">
+	<div bind:this={container} class="min-h-0 w-full flex-1" aria-hidden="true"></div>
 
 	{#if hovered}
 		<div
 			class="pointer-events-none absolute left-3 top-3 z-[30] max-w-[16rem] rounded-sm border border-line bg-white/95 px-3 py-2 text-left shadow-sm"
 			role="status"
+			aria-live="polite"
 		>
 			<p class="text-[13px] font-semibold leading-snug text-ink">{hovered.name}</p>
 			<p class="mt-1 text-[12px] text-muted">{SYSTEM_SHORT_LABELS[hovered.system]}</p>

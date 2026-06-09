@@ -123,3 +123,21 @@ export function stepAriaLabel(step: number): string {
 			return 'Housing market typology map of Dorset';
 	}
 }
+
+export function stepMapDescription(step: number, msoaCount: number): string {
+	const base = `Interactive map grouping ${msoaCount} Dorset neighbourhoods into three housing market types. `;
+	switch (step) {
+		case STEP_INTRO:
+			return `${base}Neighbourhoods appear in neutral grey until each market type is introduced while scrolling. Use the data table below for the full list.`;
+		case STEP_RURAL_LIFESTYLE:
+			return `${base}Rural lifestyle markets are shown in green. Other neighbourhoods remain grey. Expand the data table below for all assignments.`;
+		case STEP_URBAN_WORKING:
+			return `${base}Urban and working coastal markets are shown in dark blue. Other neighbourhoods remain grey. Expand the data table below for all assignments.`;
+		case STEP_RETIREMENT_AMENITY:
+			return `${base}Retirement and amenity markets are shown in yellow-green. Other neighbourhoods remain grey. Expand the data table below for all assignments.`;
+		case STEP_SYNTHESIS:
+			return `${base}All three market types are shown together. Expand the data table below for neighbourhood-level detail.`;
+		default:
+			return `${base}Expand the data table below for neighbourhood-level detail.`;
+	}
+}
