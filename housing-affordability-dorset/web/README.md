@@ -9,7 +9,7 @@ SvelteKit + TypeScript + Tailwind front end for the Dorset MSOA housing affordab
 
 ### If `npm install` fails or `node -v` shows something old (common with conda)
 
-Inside `conda activate scrollytelling`, check:
+Inside the environment you use for this project (for example `conda activate scrollytelling`), check:
 
 ```bash
 which node
@@ -18,11 +18,11 @@ which npm
 npm -v
 ```
 
-If `node` is **below v18** (your log showed **v6.13.1**), that Node/npm pair is too old for this app and can produce errors like `ENOTDIR` in `.staging` and **no `npx`**.
+If `node` is **below v18**, that Node/npm pair is too old for this app and can produce errors like `ENOTDIR` in `.staging` and missing `npx`.
 
 **Fix option A — upgrade Node inside the conda env (conda-forge):**
 
-The `nodejs` package from conda-forge **includes npm**; do not install a separate `npm` package (it often does not exist on your channels and triggers `PackagesNotFoundError`).
+The `nodejs` package from conda-forge **includes npm**; do not install a separate `npm` package (it may be unavailable on some channel configurations and can trigger `PackagesNotFoundError`).
 
 ```bash
 conda activate scrollytelling
@@ -44,7 +44,7 @@ hash -r
 node -v
 ```
 
-Then run `npm install` from `housing-affordability-dorset/web` **without** conda’s old Node earlier on your `PATH` (open a fresh terminal, or put Homebrew’s `bin` before conda’s when working on the web app).
+Then run `npm install` from `housing-affordability-dorset/web` with the intended Node installation first on `PATH` (open a fresh terminal, or ensure Homebrew `bin` appears before conda paths when using Homebrew Node).
 
 ### Clean reinstall after a failed install
 
@@ -82,6 +82,107 @@ After re-running the Python pipeline, copy updated outputs into `static/data/`. 
 | `dorset_msoa_housing_market_typology.csv` | `build_dorset_msoa_typology.py` |
 | `aff1ratioofhousepricetoworkplacebasedearnings_regions_latest.csv` | `clean_affordability_ratio.py` |
 | `aff1ratioofhousepricetoworkplacebasedearnings_latest.csv` | `clean_affordability_ratio.py` |
+
+## Section 8 typology methodology (detailed)
+
+The Section 8 "Different housing markets across Dorset" grouping is produced by
+`scripts/build_dorset_msoa_typology.py` using rule-based scoring (not unsupervised clustering).
+
+### Inputs and joins
+
+The script merges three MSOA-level inputs:
+
+- `web/static/data/dorset_msoa_coastal.csv` for `coastal_inland` and `rural_urban`
+- `web/static/data/dorset_msoa_age.csv` for `pct_65_plus`
+- `web/static/data/dorset_msoa_affordability_ratios.csv` for:
+  - overall affordability ratio
+  - detached affordability ratio
+  - terraced affordability ratio
+  - flat affordability ratio
+
+All joins are one-to-one on `MSOA code`. The script errors if row counts do not match expected Dorset MSOA coverage.
+
+### Median-based thresholds
+
+To keep scoring relative to Dorset-wide conditions, the script calculates medians across merged MSOAs for:
+
+- overall affordability ratio
+- detached affordability ratio
+- terraced affordability ratio
+- flat affordability ratio (non-null)
+- share aged 65+ (`pct_65_plus`)
+
+These medians are used as dynamic cut points in the rules below.
+
+### Score construction by housing market system
+
+For each MSOA, three scores are calculated:
+
+1. `rural_lifestyle`
+2. `urban_working_coastal`
+3. `retirement_amenity`
+
+#### 1) Rural lifestyle score
+
+Points are added when an area shows rural, detached-led, older-population characteristics:
+
+- `+3` if `rural_urban == Rural`
+- `+2` if detached ratio is at or above Dorset median
+- `+2` if overall affordability ratio is at or above Dorset median
+- `+2` if flats are sparse/absent, or (where present) flat ratio is at or above overall ratio
+- `+1` if `% aged 65+` is at or above Dorset median
+- `+1` extra if rural and overall affordability ratio is `>= 11`
+
+#### 2) Urban and working coastal score
+
+Points are added for urban, lower-cost, entry-level market signals:
+
+- `+2` if `rural_urban == Urban`
+- `+2` if overall affordability ratio is at or below Dorset median
+- `+2` if flats exist and flat ratio is at or below Dorset median
+- `+1` if terraced ratio is at or below Dorset median
+- `+2` if coastal and flats exist with flat ratio `< 8`
+- `+2` if coastal, urban, and overall affordability ratio `< 10`
+- `+4` for specific Weymouth/Portland-style "flat access" exemplar MSOAs in the code list
+
+#### 3) Retirement and amenity score
+
+Points are added for coastal, older, higher-cost amenity market patterns:
+
+- `+2` if `coastal_inland == Coastal`
+- `+2` if `% aged 65+` is at or above Dorset median
+- `+2` if flats exist and flat ratio is at or above Dorset median
+- `+1` if overall affordability ratio is `>= 12`
+- `+5` for specific "expensive flats coast" exemplar MSOAs in the code list
+- `+2` extra if coastal + rural + older (`>= median pct65`) + overall ratio `>= 11`
+
+### Assignment and overrides
+
+Initial assignment is the label with the highest score among the three systems above.
+
+After scoring, optional manual/editorial overrides are applied from:
+
+- `data/processed/housing_market_typology_overrides.csv`
+
+This file includes `MSOA code`, final `housing_market_system`, and a short `reason` for traceability to narrative exemplars.
+
+In the current dataset, overrides are present for 16 MSOAs, but only 3 change the final assignment from the raw top-score outcome. In all three cases, the raw outcome was `rural_lifestyle` and the final overridden label is `retirement_amenity`:
+
+- `E02004246` — St Leonards
+- `E02004268` — Swanage
+- `E02004275` — Burton Bradstock & Chideock
+
+### Outputs
+
+Primary output:
+
+- `data/processed/dorset_msoa_housing_market_typology.csv`
+
+A static copy is then written for the web app:
+
+- `web/static/data/dorset_msoa_housing_market_typology.csv`
+
+Both include the final system plus component scores (`score_rural_lifestyle`, `score_urban_working`, `score_retirement_amenity`) and supporting fields used in the assignment.
 
 ## MSOA boundaries (GeoJSON)
 

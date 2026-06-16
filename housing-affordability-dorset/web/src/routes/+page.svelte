@@ -492,13 +492,12 @@
 			</p>
 			<p>Data is shown for Middle Super Output Areas (MSOAs) in Dorset.</p>
 			<p>Supplementary datasets were used to classify areas by:</p>
-		</div>
-		<ul class="mx-auto mt-3 w-full max-w-[680px] list-disc space-y-2 pl-6 text-left text-lg leading-relaxed text-muted">
-			<li>rural and urban status</li>
-			<li>coastal location</li>
-			<li>age structure</li>
-			<li>property type</li>
-		</ul>
+			<p>
+				Section 8 housing market types were assigned using a rule-based scoring approach that combines rurality, coastal
+				status, affordability ratios, property-type ratios and the share of residents aged 65 and over. Each MSOA receives
+				a score for all three market types and is assigned to the highest-scoring group, with a small number of
+				editorial overrides applied.
+			</p>
 
 		<p class="mx-auto mt-10 w-full max-w-[680px] text-left text-lg font-bold leading-relaxed text-muted">Sources</p>
 		<p class="mx-auto mt-4 w-full max-w-[680px] text-left text-lg leading-relaxed text-muted">
