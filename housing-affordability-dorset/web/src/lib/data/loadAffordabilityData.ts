@@ -1,8 +1,12 @@
 import { csv, csvParse } from 'd3';
 import {
+	DORSET_LA_MEDIAN_EARNINGS_COL,
+	DORSET_LA_MEDIAN_HOUSE_PRICE_COL,
 	DORSET_LA_LOWER_QUARTILE_RATIO_COL,
 	DORSET_LA_MEDIAN_RATIO_COL,
 	MSOA_EXISTING_MEDIAN_RATIO_COL,
+	REGION_MEDIAN_EARNINGS_COL,
+	REGION_MEDIAN_HOUSE_PRICE_COL,
 	REGION_LOWER_QUARTILE_RATIO_COL,
 	REGION_MEDIAN_RATIO_COL
 } from '$lib/constants/dataColumns';
@@ -50,6 +54,8 @@ export async function loadNationalContextBarsFetch(fetchFn: typeof fetch): Promi
 		byName.set(name.toLowerCase(), {
 			Code: String(r['Code'] ?? ''),
 			Name: name,
+			medianHousePrice: num(r[REGION_MEDIAN_HOUSE_PRICE_COL]),
+			medianEarnings: num(r[REGION_MEDIAN_EARNINGS_COL]),
 			medianRatio: num(r[REGION_MEDIAN_RATIO_COL]),
 			lowerQuartileRatio: num(r[REGION_LOWER_QUARTILE_RATIO_COL])
 		});
@@ -61,6 +67,8 @@ export async function loadNationalContextBarsFetch(fetchFn: typeof fetch): Promi
 	}
 
 	const dorset: DorsetLaRow = {
+		medianHousePrice: num(dorsetLa[DORSET_LA_MEDIAN_HOUSE_PRICE_COL]),
+		medianEarnings: num(dorsetLa[DORSET_LA_MEDIAN_EARNINGS_COL]),
 		medianRatio: num(dorsetLa[DORSET_LA_MEDIAN_RATIO_COL]),
 		lowerQuartileRatio: num(dorsetLa[DORSET_LA_LOWER_QUARTILE_RATIO_COL])
 	};
@@ -75,6 +83,8 @@ export async function loadNationalContextBarsFetch(fetchFn: typeof fetch): Promi
 		if (!row) throw new Error(`Missing region row for ${key}`);
 		return {
 			label,
+			medianHousePrice: row.medianHousePrice,
+			medianEarnings: row.medianEarnings,
 			medianRatio: row.medianRatio,
 			lowerQuartileRatio: row.lowerQuartileRatio
 		};
@@ -82,6 +92,8 @@ export async function loadNationalContextBarsFetch(fetchFn: typeof fetch): Promi
 
 	bars.push({
 		label: 'Dorset',
+		medianHousePrice: dorset.medianHousePrice,
+		medianEarnings: dorset.medianEarnings,
 		medianRatio: dorset.medianRatio,
 		lowerQuartileRatio: dorset.lowerQuartileRatio
 	});

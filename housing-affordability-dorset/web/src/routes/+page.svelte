@@ -14,23 +14,37 @@
 
 	let activeStep = $state(0);
 	let barsActiveStep = $state(0);
+	let barsGraphicStep = $state(0);
 	let ruralActiveStep = $state(0);
 	let coastalActiveStep = $state(0);
 	let ageingActiveStep = $state(0);
 	let housingTypeActiveStep = $state(0);
 	let marketsActiveStep = $state(0);
 
-	const barsCaptions: { body: string | string[] }[] = [
+	const barsCaptions: { body: string | string[]; spacingBefore?: string }[] = [
 		{
-		body: [
-			'The housing affordability ratio is higher (worse) in Dorset than both the England and South West averages.',
-			'**In Dorset, median house prices were around 9.9 times annual earnings.**',
-			'Across England, the equivalent figure was 7.6.'
-		]
+			body: [
+				'Before looking at affordability ratios, we’ll start by looking at their components.',
+				'Median house prices were **higher** in Dorset than in the South West or England.'
+			]
 		},
 		{
 			body: [
-			'Affordability ratios calculated using **Lower quartile** earnings and house prices were also higher in Dorset.',
+				'Median workplace earnings were **lower** in Dorset than in England.',
+				'That gap between house prices and earnings helps explain Dorset’s affordability pressures.'
+			]
+		},
+		{
+			body: [
+				'The housing affordability ratio is higher (worse) in Dorset than both the England and South West averages.',
+				'**In Dorset, median house prices were around 9.9 times annual earnings.**',
+				'Across England, the equivalent figure was 7.6.'
+			],
+			spacingBefore: 'min(50vh, 420px)'
+		},
+		{
+			body: [
+				'Affordability ratios calculated using **Lower quartile** earnings and house prices were also higher in Dorset.',
 				'This suggests greater affordability pressures for lower-income households.'
 			]
 		}
@@ -373,6 +387,8 @@
 		graphic={barsGraphic}
 		heading={section2Heading}
 		bind:activeStep={barsActiveStep}
+		bind:graphicStep={barsGraphicStep}
+		graphicAdvanceVh={0.42}
 		compactGraphic
 		compactSteps
 		compactStepMinHeight={580}

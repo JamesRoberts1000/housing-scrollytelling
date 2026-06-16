@@ -4,6 +4,8 @@
 	type Caption = {
 		title?: string;
 		body: string | string[];
+		/** Extra scroll runway before this caption (e.g. `min(50vh, 400px)`) */
+		spacingBefore?: string;
 	};
 
 	function bodyParagraphs(body: string | string[]): string[] {
@@ -24,6 +26,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		/** Full-width centred section heading above the scrolly grid */
 		heading?: Snippet;
 		activeStep?: number;
+		/** Graphic step (may lead narrative step when graphicAdvanceVh is set) */
+		graphicStep?: number;
 		/** Shorter sticky panel (e.g. bar chart) instead of full viewport height */
 		compactGraphic?: boolean;
 		/** Shorter min-height on step cards (bar-chart section) */
@@ -44,6 +48,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		tailScrollMinHeight?: string;
 		/** Stretch the sticky graphic to fill the viewport (disable for Section 3 map zoom behaviour) */
 		graphicFillHeight?: boolean;
+		/** Advance the graphic one or more steps before the caption (viewport fraction from top) */
+		graphicAdvanceVh?: number;
 	};
 
 	let {
@@ -51,6 +57,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		graphic,
 		heading,
 		activeStep = $bindable(0),
+		graphicStep = $bindable(0),
 		compactGraphic = false,
 		compactSteps = false,
 	compactStepMinHeight = 560,
@@ -60,7 +67,8 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		advanceOnTopEdge = false,
 		triggerOnCaption = false,
 		tailScrollMinHeight = '100svh',
-		graphicFillHeight = true
+		graphicFillHeight = true,
+		graphicAdvanceVh
 	}: Props = $props();
 
 	let stepsRoot = $state<HTMLDivElement | null>(null);
@@ -70,6 +78,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		void triggerOnCaption;
 		void triggerLine;
 		void advanceOnTopEdge;
+		void graphicAdvanceVh;
 		if (!stepsRoot) return;
 		const elements = [...stepsRoot.querySelectorAll<HTMLElement>('[data-step-index]')];
 		if (!elements.length) return;
@@ -81,42 +90,61 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 		}
 
 		function updateActiveStep(): void {
+			let textStep = 0;
 			if (advanceOnTopEdge) {
-				let nextStep = 0;
 				for (const el of elements) {
 					const rect = triggerRect(el);
 					const idx = Number(el.dataset.stepIndex);
 					if (!Number.isNaN(idx) && rect.top <= 0) {
+						textStep = Math.max(textStep, idx);
+					}
+				}
+				activeStep = textStep;
+			} else {
+				const vh = window.innerHeight;
+				const markerY = vh * triggerLine;
+				let nextStep = 0;
+				for (const el of elements) {
+					const rect = triggerRect(el);
+					const idx = Number(el.dataset.stepIndex);
+					if (Number.isNaN(idx)) continue;
+					// Prefer the highest-index step whose caption contains the marker.
+					if (rect.top <= markerY && rect.bottom >= markerY) {
 						nextStep = Math.max(nextStep, idx);
 					}
 				}
-				activeStep = nextStep;
+				if (nextStep === 0) {
+					// Between cards: keep the last step whose top has passed the marker.
+					for (const el of elements) {
+						const rect = triggerRect(el);
+						const idx = Number(el.dataset.stepIndex);
+						if (!Number.isNaN(idx) && rect.top <= markerY) {
+							nextStep = Math.max(nextStep, idx);
+						}
+					}
+				}
+				textStep = nextStep;
+				activeStep = textStep;
+			}
+
+			if (graphicAdvanceVh === undefined) {
+				graphicStep = textStep;
 				return;
 			}
 
 			const vh = window.innerHeight;
-			const markerY = vh * triggerLine;
-			let nextStep = 0;
+			const graphicMarker = vh * graphicAdvanceVh;
+			let earlyStep = 0;
 			for (const el of elements) {
 				const rect = triggerRect(el);
 				const idx = Number(el.dataset.stepIndex);
-				if (Number.isNaN(idx)) continue;
-				// Prefer the highest-index step whose caption contains the marker.
-				if (rect.top <= markerY && rect.bottom >= markerY) {
-					nextStep = Math.max(nextStep, idx);
+				if (!Number.isNaN(idx) && rect.top <= graphicMarker) {
+					earlyStep = Math.max(earlyStep, idx);
 				}
 			}
-			if (nextStep === 0) {
-				// Between cards: keep the last step whose top has passed the marker.
-				for (const el of elements) {
-					const rect = triggerRect(el);
-					const idx = Number(el.dataset.stepIndex);
-					if (!Number.isNaN(idx) && rect.top <= markerY) {
-						nextStep = Math.max(nextStep, idx);
-					}
-				}
-			}
-			activeStep = nextStep;
+			// Lead ratio steps only — keep house price / earnings in sync with captions.
+			graphicStep =
+				earlyStep >= 2 && earlyStep > textStep ? earlyStep : textStep;
 		}
 
 		let scrollRaf = 0;
@@ -185,6 +213,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 				data-step-index={i}
 				class="flex flex-col justify-end scroll-mt-28 pb-6"
 				style:min-height={compactSteps ? `min(100svh, ${compactStepMinHeight}px)` : '100svh'}
+				style:margin-top={caption.spacingBefore}
 			>
 				<div data-caption class="rounded-sm bg-white p-6 sm:p-8">
 					{#if caption.title}
@@ -231,7 +260,7 @@ function parseBoldSegments(para: string): { text: string; bold: boolean }[] {
 			class:md:h-[min(92vh,580px)]={compactGraphic}
 			class:md:min-h-0={compactGraphic}
 		>
-			{@render graphic(activeStep)}
+			{@render graphic(graphicStep)}
 		</div>
 	</div>
 	</div>

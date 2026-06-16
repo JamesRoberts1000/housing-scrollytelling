@@ -3,8 +3,20 @@
 export const REGION_MEDIAN_RATIO_COL =
 	'Table 1c - Ratio of median house price to median gross annual workplace-based earnings by country and region, England and Wales, 1997 to 2025';
 
+export const REGION_MEDIAN_HOUSE_PRICE_COL =
+	'Table 1a - Median house price by country and region, England and Wales, year ending September 1997 to 2025 (£)';
+
+export const REGION_MEDIAN_EARNINGS_COL =
+	'Table 1b - Median gross annual workplace-based earnings by country and region, England and Wales, 1997 to 2025 (£)';
+
 export const REGION_LOWER_QUARTILE_RATIO_COL =
 	'Table 2c - Ratio of lower quartile house price to lower quartile gross annual workplace-based earnings by country and region, England and Wales, 1997 to 2025';
+
+export const DORSET_LA_MEDIAN_HOUSE_PRICE_COL =
+	'Table 5a - Median house price by local authority district, England and Wales, year ending September 1997 to 2025 (£)';
+
+export const DORSET_LA_MEDIAN_EARNINGS_COL =
+	'Table 5b - Median gross annual workplace-based earnings by local authority district, England and Wales, 1997 to 2025 (£)';
 
 export const DORSET_LA_MEDIAN_RATIO_COL =
 	'Table 5c - Ratio of median house price to median gross annual workplace-based earnings by local authority district, England and Wales, 1997 to 2025';

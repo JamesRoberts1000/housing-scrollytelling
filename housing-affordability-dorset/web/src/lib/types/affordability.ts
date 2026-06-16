@@ -1,11 +1,15 @@
 export type RegionRow = {
 	Code: string;
 	Name: string;
+	medianHousePrice: number;
+	medianEarnings: number;
 	medianRatio: number;
 	lowerQuartileRatio: number;
 };
 
 export type DorsetLaRow = {
+	medianHousePrice: number;
+	medianEarnings: number;
 	medianRatio: number;
 	lowerQuartileRatio: number;
 };
@@ -20,6 +24,8 @@ export type MsoaRatioRow = {
 
 export type BarDatum = {
 	label: string;
+	medianHousePrice: number;
+	medianEarnings: number;
 	medianRatio: number;
 	lowerQuartileRatio: number;
 };
