@@ -23,14 +23,14 @@
 	const barsCaptions: { body: string | string[] }[] = [
 		{
 		body: [
-			'Housing affordability in Dorset is higher (worse) than both the England and South West averages.',
+			'The housing affordability ratio is higher (worse) in Dorset than both the England and South West averages.',
 			'**In Dorset, median house prices were around 9.9 times annual earnings.**',
 			'Across England, the equivalent figure was 7.6.'
 		]
 		},
 		{
 			body: [
-			'**Lower quartile** affordability ratios were also higher in Dorset.',
+			'Affordability ratios calculated using **Lower quartile** earnings and house prices were also higher in Dorset.',
 				'This suggests greater affordability pressures for lower-income households.'
 			]
 		}
@@ -40,7 +40,7 @@
 		{
 			body: [
 				'Housing affordability varies widely between Dorset’s neighbourhoods.',
-				'Affordability ratios range from just **under 6 to over 15**.',
+				'Affordability ratios range from just **under 6 to 19**.',
 				'Hover over an area on the map to see its position in the range.'
 			]
 		},
@@ -105,7 +105,7 @@
 			]
 		},
 		{
-			body: 'This reflects different types of coastal housing markets — working towns and urban coasts compared with smaller amenity and heritage settlements.'
+			body: 'This reflects different types of coastal housing markets — working towns and urban coasts, particularly around Weymouth and Portland, compared with smaller amenity and heritage settlements.'
 		}
 	];
 
@@ -176,7 +176,7 @@
 		body: 'Viewing all dwelling types together shows the full spread of affordability within each neighbourhood, with detached homes typically least affordable and flats (where available) most affordable.'
 		},
 		{
-		body: 'Looking closely, some interesting patterns emerge. **Sherborne** and **Swanage** both have some of the least affordable detached housing. But their other housing types are average for Dorset.'
+		body: 'Looking closely, some interesting patterns emerge. **Sherborne** and **Swanage** both have some of the least affordable detached housing. But their other housing types are more typical for Dorset.'
 		},
 		{
 		body: 'Similar contrasts can be found in other neighbourhoods across Dorset.'

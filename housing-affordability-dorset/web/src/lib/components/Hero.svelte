@@ -14,8 +14,8 @@
 		How does housing affordability vary across Dorset?
 	</h1>
 	<p class="relative max-w-2xl text-[30px] leading-relaxed text-[#EEEEEE]">
-		Housing affordability varies across Dorset’s neighbourhoods — from relatively accessible coastal
-		towns to rural areas where homes cost many times annual earnings.
+		Housing affordability varies across Dorset’s neighbourhoods — from relatively affordable areas in
+		parts of Portland and Weymouth to rural and other coastal settlements where homes cost many times annual earnings.
 	</p>
 	<div class="relative flex items-center text-[#EEEEEE]" aria-hidden="true">
 		<svg
