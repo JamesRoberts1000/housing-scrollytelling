@@ -4,6 +4,7 @@
 	import TypologyCards from '$lib/components/TypologyCards.svelte';
 	import TypologyMap from '$lib/components/TypologyMap.svelte';
 	import {
+		STEP_SYNTHESIS,
 		SYSTEM_SHORT_LABELS,
 		stepAriaLabel,
 		stepMapDescription
@@ -21,6 +22,7 @@
 		[...data.rows].sort((a, b) => a.name.localeCompare(b.name, 'en'))
 	);
 	const mapDescriptionId = 'typology-map-description';
+	const isSynthesis = $derived(step === STEP_SYNTHESIS);
 </script>
 
 <div
@@ -32,10 +34,19 @@
 	<a href="#typology-map-data" class="skip-link">Skip to housing market data table</a>
 	<p id={mapDescriptionId} class="sr-only">{stepMapDescription(step, data.rows.length)}</p>
 
-	<div class="relative min-h-0 flex-1">
-		<TypologyMap {data} {step} />
-		<TypologyCards summary={data.summary} {step} />
-	</div>
+	{#if isSynthesis}
+		<div class="flex min-h-0 flex-1 flex-col">
+			<div class="relative min-h-[220px] w-full flex-[1_1_58%]">
+				<TypologyMap {data} {step} />
+			</div>
+			<TypologyCards summary={data.summary} {step} layout="stacked" />
+		</div>
+	{:else}
+		<div class="relative min-h-0 flex-1">
+			<TypologyMap {data} {step} />
+			<TypologyCards summary={data.summary} {step} layout="overlay" />
+		</div>
+	{/if}
 
 	<AccessibleDataTable
 		id="typology-map-data"

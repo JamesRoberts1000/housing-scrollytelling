@@ -30,13 +30,13 @@
 		},
 		{
 			body: [
-				'Median workplace earnings were **lower** in Dorset than in England.',
+				'Median workplace earnings were **lower** in Dorset than in England or the South West.',
 				'That gap between house prices and earnings helps explain Dorset’s affordability pressures.'
 			]
 		},
 		{
 			body: [
-				'The housing affordability ratio is higher (worse) in Dorset than both the England and South West averages.',
+				'These factors combine to make the housing affordability ratio higher (worse) in Dorset than both the England and South West averages.',
 				'**In Dorset, median house prices were around 9.9 times annual earnings.**',
 				'Across England, the equivalent figure was 7.6.'
 			],
