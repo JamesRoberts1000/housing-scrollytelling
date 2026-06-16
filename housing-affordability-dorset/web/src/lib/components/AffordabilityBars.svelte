@@ -17,6 +17,8 @@
 	const COLOR_MEDIAN_RATIO = '#206095';
 	const COLOR_LQ_RATIO = '#6a9fc4';
 	const REVEAL_MS = 2000;
+	const RAW_CROSSFADE_MS = 650;
+	const RATIO_CROSSFADE_MS = 800;
 
 	type BarElements = {
 		rect: SVGRectElement;
@@ -30,6 +32,7 @@
 		primaryLabels: Map<string, SVGTextElement>;
 		secondaryLabels: Map<string, SVGTextElement>;
 		regionGroups: Map<string, SVGGElement>;
+		subheading: SVGTextElement;
 		legendPrimary: SVGGElement;
 		legendSecondary: SVGGElement;
 		legendPrimarySwatch: SVGRectElement;
@@ -37,6 +40,10 @@
 		legendPrimaryText: SVGTextElement;
 		legendSecondaryText: SVGTextElement;
 		innerH: number;
+		barWidth: number;
+		primaryX: number;
+		secondaryX: number;
+		centerX: number;
 	};
 
 	let handles = $state<ChartHandles | null>(null);
@@ -84,7 +91,7 @@
 		return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	}
 
-	function fadeIn(el: SVGElement, ms: number, animate: boolean): void {
+	function fadeIn(el: SVGElement, ms: number, animate: boolean, delayMs = 0): void {
 		if (!animate || ms <= 0) {
 			el.setAttribute('opacity', '1');
 			return;
@@ -92,10 +99,26 @@
 		el.setAttribute('opacity', '0');
 		el.animate([{ opacity: 0 }, { opacity: 1 }], {
 			duration: ms,
+			delay: delayMs,
 			easing: 'ease-out',
 			fill: 'forwards'
 		}).onfinish = () => {
 			el.setAttribute('opacity', '1');
+		};
+	}
+
+	function fadeOut(el: SVGElement, ms: number, animate: boolean, delayMs = 0): void {
+		if (!animate || ms <= 0) {
+			el.setAttribute('opacity', '0');
+			return;
+		}
+		el.animate([{ opacity: 1 }, { opacity: 0 }], {
+			duration: ms,
+			delay: delayMs,
+			easing: 'ease-out',
+			fill: 'forwards'
+		}).onfinish = () => {
+			el.setAttribute('opacity', '0');
 		};
 	}
 
@@ -106,7 +129,9 @@
 		innerH: number,
 		fill: string,
 		animate: boolean,
-		grownKey: string
+		grownKey: string,
+		delayMs = 0,
+		durationMs = REVEAL_MS
 	): void {
 		if (bar.grow.getAttribute(grownKey) === '1') {
 			return;
@@ -132,7 +157,8 @@
 		rect.setAttribute('opacity', '0');
 
 		grow.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }], {
-			duration: REVEAL_MS,
+			duration: durationMs,
+			delay: delayMs,
 			easing: 'ease-out',
 			fill: 'forwards'
 		}).onfinish = () => {
@@ -140,7 +166,8 @@
 		};
 
 		rect.animate([{ opacity: 0 }, { opacity: 1 }], {
-			duration: REVEAL_MS,
+			duration: durationMs,
+			delay: delayMs,
 			easing: 'ease-out',
 			fill: 'forwards'
 		}).onfinish = () => {
@@ -148,30 +175,43 @@
 		};
 	}
 
-	function hideBar(bar: BarElements, animate: boolean, grownKey: string): void {
+	function hideBar(
+		bar: BarElements,
+		animate: boolean,
+		grownKey: string,
+		durationMs = REVEAL_MS
+	): void {
 		if (bar.grow.getAttribute(grownKey) !== '1') {
 			return;
 		}
 
 		const { rect, grow } = bar;
-		const ms = animate ? REVEAL_MS : 0;
+		const ms = animate ? durationMs : 0;
 
 		if (animate && ms > 0) {
 			grow.animate([{ transform: 'scaleY(1)' }, { transform: 'scaleY(0)' }], {
 				duration: ms,
 				easing: 'ease-out',
 				fill: 'forwards'
-			});
+			}).onfinish = () => {
+				grow.style.transform = 'scaleY(0)';
+			};
 			rect.animate([{ opacity: 1 }, { opacity: 0 }], {
 				duration: ms,
 				easing: 'ease-out',
 				fill: 'forwards'
-			});
+			}).onfinish = () => {
+				rect.setAttribute('opacity', '0');
+			};
+		} else {
+			grow.style.transform = 'scaleY(0)';
+			rect.setAttribute('opacity', '0');
 		}
-
-		grow.style.transform = 'scaleY(0)';
-		rect.setAttribute('opacity', '0');
 		grow.removeAttribute(grownKey);
+	}
+
+	function setSlotX(bar: BarElements, x: number, innerH: number): void {
+		bar.slot.setAttribute('transform', `translate(${x},${innerH})`);
 	}
 
 	function createBarSlot(
@@ -212,25 +252,27 @@
 		const reduced = prefersReducedMotion();
 		const revealMs = reduced ? 0 : REVEAL_MS;
 		const animate = !reduced && !instant;
+		const transitioningToEarnings = mode === 'raw_pair';
+		const transitioningToPrices = mode === 'house_price_only';
 
 		if (mode === 'house_price_only') {
-			h.legendPrimarySwatch.setAttribute('fill', COLOR_HOUSE_PRICE);
-			h.legendPrimaryText.textContent = 'Median house price';
-			h.legendPrimary.setAttribute('opacity', '1');
+			h.subheading.textContent = 'Median house prices';
+			h.subheading.setAttribute('opacity', '1');
+			h.legendPrimary.setAttribute('opacity', '0');
 			h.legendSecondary.setAttribute('opacity', '0');
 		} else if (mode === 'raw_pair') {
-			h.legendPrimarySwatch.setAttribute('fill', COLOR_HOUSE_PRICE);
-			h.legendPrimaryText.textContent = 'Median house price';
-			h.legendSecondarySwatch.setAttribute('fill', COLOR_EARNINGS);
-			h.legendSecondaryText.textContent = 'Median earnings';
-			h.legendPrimary.setAttribute('opacity', '1');
-			h.legendSecondary.setAttribute('opacity', '1');
+			h.subheading.textContent = 'Median earnings';
+			h.subheading.setAttribute('opacity', '1');
+			h.legendPrimary.setAttribute('opacity', '0');
+			h.legendSecondary.setAttribute('opacity', '0');
 		} else if (mode === 'median_ratio') {
+			fadeOut(h.subheading, RATIO_CROSSFADE_MS, animate);
 			h.legendPrimarySwatch.setAttribute('fill', COLOR_MEDIAN_RATIO);
 			h.legendPrimaryText.textContent = 'Median ratio';
-			h.legendPrimary.setAttribute('opacity', '1');
+			fadeIn(h.legendPrimary, RATIO_CROSSFADE_MS, animate, RATIO_CROSSFADE_MS);
 			h.legendSecondary.setAttribute('opacity', '0');
 		} else {
+			h.subheading.setAttribute('opacity', '0');
 			h.legendPrimarySwatch.setAttribute('fill', COLOR_MEDIAN_RATIO);
 			h.legendPrimaryText.textContent = 'Median ratio';
 			h.legendSecondarySwatch.setAttribute('fill', COLOR_LQ_RATIO);
@@ -245,11 +287,23 @@
 			const pLabel = h.primaryLabels.get(row.label);
 			const sLabel = h.secondaryLabels.get(row.label);
 			const group = h.regionGroups.get(row.label);
+			const earningsVisible = secondary?.grow.getAttribute('data-grown-earnings') === '1';
+			const crossfadeToRatio = mode === 'median_ratio' && earningsVisible;
 
 			if (primary) {
+				if (isRawStep(mode)) {
+					setSlotX(primary, h.centerX, h.innerH);
+					if (pLabel) pLabel.setAttribute('x', String(h.centerX + h.barWidth / 2));
+				} else {
+					setSlotX(primary, h.primaryX, h.innerH);
+					if (pLabel) pLabel.setAttribute('x', String(h.primaryX + h.barWidth / 2));
+				}
+
 				const primaryGrownKey = isRawStep(mode) ? 'data-grown-price' : 'data-grown-ratio';
 				const animatePrimary = primary.grow.getAttribute(primaryGrownKey) !== '1';
 				if (isRawStep(mode)) {
+					const crossfadeFromEarnings =
+						transitioningToPrices && secondary?.grow.getAttribute('data-grown-earnings') === '1';
 					if (animatePrimary) {
 						revealBar(
 							primary,
@@ -258,11 +312,31 @@
 							h.innerH,
 							COLOR_HOUSE_PRICE,
 							animate,
-							'data-grown-price'
+							'data-grown-price',
+							crossfadeFromEarnings ? RAW_CROSSFADE_MS : 0,
+							crossfadeFromEarnings ? RAW_CROSSFADE_MS : REVEAL_MS
 						);
 					}
 					primary.grow.removeAttribute('data-grown-ratio');
+					if (secondary?.grow.getAttribute('data-grown-earnings') === '1') {
+						hideBar(secondary, animate, 'data-grown-earnings', RAW_CROSSFADE_MS);
+					}
+					if (sLabel) {
+						sLabel.setAttribute('opacity', '0');
+						sLabel.setAttribute('visibility', 'hidden');
+					}
 				} else {
+					const ratioDelay = crossfadeToRatio ? RATIO_CROSSFADE_MS : 0;
+					const ratioDuration = crossfadeToRatio ? RATIO_CROSSFADE_MS : REVEAL_MS;
+
+					if (crossfadeToRatio && secondary) {
+						hideBar(secondary, animate, 'data-grown-earnings', RATIO_CROSSFADE_MS);
+						if (sLabel) {
+							fadeOut(sLabel, RATIO_CROSSFADE_MS, animate);
+							sLabel.setAttribute('visibility', 'hidden');
+						}
+					}
+
 					revealBar(
 						primary,
 						row.medianRatio,
@@ -270,12 +344,16 @@
 						h.innerH,
 						COLOR_MEDIAN_RATIO,
 						animate,
-						'data-grown-ratio'
+						'data-grown-ratio',
+						ratioDelay,
+						ratioDuration
 					);
 					primary.grow.removeAttribute('data-grown-price');
 				}
 
 				if (pLabel && animatePrimary) {
+					const crossfadeFromEarningsOnPrice =
+						isRawStep(mode) && transitioningToPrices && earningsVisible;
 					if (isRawStep(mode)) {
 						pLabel.textContent = formatCurrency(row.medianHousePrice);
 						pLabel.setAttribute('y', String(yLeft(row.medianHousePrice) - 12));
@@ -286,13 +364,37 @@
 					pLabel.setAttribute('font-weight', '600');
 					pLabel.setAttribute('fill', '#222222');
 					pLabel.setAttribute('visibility', 'visible');
-					fadeIn(pLabel, revealMs, animate);
+					if (crossfadeFromEarningsOnPrice) {
+						fadeIn(pLabel, RAW_CROSSFADE_MS, animate, RAW_CROSSFADE_MS);
+					} else if (crossfadeToRatio) {
+						fadeIn(pLabel, RATIO_CROSSFADE_MS, animate, RATIO_CROSSFADE_MS);
+					} else {
+						fadeIn(pLabel, revealMs, animate);
+					}
 				}
 			}
 
 			if (secondary) {
 				if (mode === 'raw_pair') {
+					setSlotX(secondary, h.centerX, h.innerH);
+					if (sLabel) sLabel.setAttribute('x', String(h.centerX + h.barWidth / 2));
+				} else {
+					setSlotX(secondary, h.secondaryX, h.innerH);
+					if (sLabel) sLabel.setAttribute('x', String(h.secondaryX + h.barWidth / 2));
+				}
+
+				if (mode === 'raw_pair') {
 					const animateEarnings = secondary.grow.getAttribute('data-grown-earnings') !== '1';
+					const crossfadeFromPrices =
+						transitioningToEarnings && primary?.grow.getAttribute('data-grown-price') === '1';
+					const delayMs = crossfadeFromPrices ? RAW_CROSSFADE_MS : 0;
+					if (primary?.grow.getAttribute('data-grown-price') === '1') {
+						hideBar(primary, animate, 'data-grown-price', RAW_CROSSFADE_MS);
+					}
+					if (pLabel) {
+						pLabel.setAttribute('opacity', '0');
+						pLabel.setAttribute('visibility', 'hidden');
+					}
 					revealBar(
 						secondary,
 						row.medianEarnings,
@@ -300,7 +402,9 @@
 						h.innerH,
 						COLOR_EARNINGS,
 						animate,
-						'data-grown-earnings'
+						'data-grown-earnings',
+						delayMs,
+						crossfadeFromPrices ? RAW_CROSSFADE_MS : REVEAL_MS
 					);
 					secondary.grow.removeAttribute('data-grown-lq');
 
@@ -308,7 +412,12 @@
 						sLabel.textContent = formatCurrency(row.medianEarnings);
 						sLabel.setAttribute('y', String(yRight(row.medianEarnings) - 12));
 						sLabel.setAttribute('visibility', 'visible');
-						fadeIn(sLabel, revealMs, animate);
+						fadeIn(
+							sLabel,
+							crossfadeFromPrices ? RAW_CROSSFADE_MS : revealMs,
+							animate,
+							delayMs
+						);
 					}
 				} else if (mode === 'ratio_pair') {
 					const animateLq = secondary.grow.getAttribute('data-grown-lq') !== '1';
@@ -361,6 +470,7 @@
 		const fsLabel = 20;
 		const fsValue = 20;
 		const fsLegend = 18;
+		const fsSubheading = 24;
 
 		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 		svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -378,12 +488,27 @@
 		const labels = rows.map((d) => d.label);
 		const x0 = scaleBand().domain(labels).range([0, innerW]).paddingInner(0.18);
 		const x1 = scaleBand().domain(['primary', 'secondary']).range([0, x0.bandwidth()]).padding(0.12);
+		const barWidth = x1.bandwidth();
+		const primaryX = x1('primary') ?? 0;
+		const secondaryX = x1('secondary') ?? 0;
+		const centerX = (x0.bandwidth() - barWidth) / 2;
 
 		const initialMode = stepMode(step);
 		const yLeft = yScaleLeft(initialMode, rows, innerH);
 
 		const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 		g.setAttribute('transform', `translate(${margin.left},${margin.top})`);
+
+		const subheading = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+		subheading.setAttribute('x', String(innerW / 2));
+		subheading.setAttribute('y', '-18');
+		subheading.setAttribute('text-anchor', 'middle');
+		subheading.setAttribute('font-size', String(fsSubheading));
+		subheading.setAttribute('font-weight', '600');
+		subheading.setAttribute('fill', '#222222');
+		subheading.textContent = initialMode === 'raw_pair' ? 'Median earnings' : 'Median house prices';
+		subheading.setAttribute('opacity', isRawStep(initialMode) ? '1' : '0');
+		g.appendChild(subheading);
 
 		const axisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
 		axisLine.setAttribute('x1', '0');
@@ -426,9 +551,9 @@
 			xg.setAttribute('transform', `translate(${x0(row.label)},0)`);
 			regionGroups.set(row.label, xg);
 
-			const w = x1.bandwidth();
-			const px = x1('primary') ?? 0;
-			const sx = x1('secondary') ?? 0;
+			const w = barWidth;
+			const px = primaryX;
+			const sx = secondaryX;
 
 			const primary = createBarSlot(px, w, innerH, 'bar-primary');
 			const secondary = createBarSlot(sx, w, innerH, 'bar-secondary');
@@ -502,7 +627,16 @@
 		tSecondary.setAttribute('fill', '#222222');
 		tSecondary.setAttribute('font-size', String(fsLegend));
 		legendSecondary.appendChild(tSecondary);
-		legendSecondary.setAttribute('opacity', initialMode === 'raw_pair' ? '1' : '0');
+		if (isRawStep(initialMode)) {
+			legendPrimary.setAttribute('opacity', '0');
+			legendSecondary.setAttribute('opacity', '0');
+		} else if (initialMode === 'median_ratio') {
+			legendPrimary.setAttribute('opacity', '1');
+			legendSecondary.setAttribute('opacity', '0');
+		} else {
+			legendPrimary.setAttribute('opacity', '1');
+			legendSecondary.setAttribute('opacity', '1');
+		}
 		legend.appendChild(legendSecondary);
 
 		g.appendChild(legend);
@@ -515,13 +649,18 @@
 			primaryLabels,
 			secondaryLabels,
 			regionGroups,
+			subheading,
 			legendPrimary,
 			legendSecondary,
 			legendPrimarySwatch: rPrimary,
 			legendSecondarySwatch: rSecondary,
 			legendPrimaryText: tPrimary,
 			legendSecondaryText: tSecondary,
-			innerH
+			innerH,
+			barWidth,
+			primaryX,
+			secondaryX,
+			centerX
 		};
 	}
 
